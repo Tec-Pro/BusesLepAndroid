@@ -3,20 +3,12 @@
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
     android:orientation="vertical"
     android:weightSum="1"
-    style="@style/Theme.Lep"
-    >
+    style="@style/Theme.Lep">
 
-
-    <ImageView
-
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:id="@+id/imageView"
-        android:src="@drawable/buseslep"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -26,33 +18,26 @@
         android:layout_weight="1"
         android:hint="Horarios y Reservas" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Ultimas Busquedas"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10px"
-        android:layout_marginBottom="10px" />
-
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="188dp"
+        android:layout_height="108dp"
         android:id="@+id/listView"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.58" />
 
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="   Ingresar   "
         android:id="@+id/btnLogin"
+        android:layout_weight="1"
         android:layout_gravity="center_horizontal" />
 
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Registrarme"
+        android:layout_weight="0.1"
         android:id="@+id/btnRegister"
         android:layout_gravity="center_horizontal" />
 
