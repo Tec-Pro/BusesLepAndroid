@@ -16,9 +16,9 @@ import java.util.List;
  */
 public class AdaptatorLastSearch extends BaseAdapter {
     private LayoutInflater inflador; // Crea Layouts a partir del XML
-    private TextView nombre, direccion;
+    private TextView arrivalLoc, departureLoc, depHour, arrHour, depDate, arrDate;
     private RatingBar valoracion;
-    private List searches;
+    public static List searches;
 
     public AdaptatorLastSearch(Context contexto) {
         searches = Searches();
@@ -41,12 +41,19 @@ public class AdaptatorLastSearch extends BaseAdapter {
         if (vistaReciclada == null) {
             vistaReciclada= inflador.inflate(R.layout.last_search_element, null);
         }
-        nombre = (TextView) vistaReciclada.findViewById(R.id.localities);
-        direccion = (TextView) vistaReciclada.findViewById(R.id.dates);
+        departureLoc = (TextView) vistaReciclada.findViewById(R.id.departureLoc);
+        arrivalLoc = (TextView) vistaReciclada.findViewById(R.id.arrivalLoc);
+        depHour = (TextView) vistaReciclada.findViewById(R.id.depHour);
+        depDate = (TextView) vistaReciclada.findViewById(R.id.depDate);
+        arrHour = (TextView) vistaReciclada.findViewById(R.id.arrHour);
+        arrDate = (TextView) vistaReciclada.findViewById(R.id.arrDate);
 
-        nombre.setText(s.getDeparture() + " - " +s.getArrival());
-        direccion.setText(s.getDepartureDate() + " > " + s.getArrivalDate());
-
+        departureLoc.setText(s.getDeparture() + "-");
+        arrivalLoc.setText(s.getArrival());
+        depHour.setText("20:45      ");
+        arrHour.setText("      1:00");
+        depDate.setText( "23-10-2015");
+        arrDate.setText("23-10-2015");
 
         //valoracion.setRating(s.getValoracion());
         return vistaReciclada;

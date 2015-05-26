@@ -1,21 +1,26 @@
 package com.tecpro.buseslep;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements OnItemClickListener {
 
     public BaseAdapter adaptador;
     @Override
@@ -26,7 +31,7 @@ public class MainActivity extends ActionBarActivity {
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adaptador);
         EditText searchText = (EditText) findViewById(R.id.editTxtSearch);
-
+        listView.setOnItemClickListener(this);
         searchText.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
@@ -43,6 +48,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
     }
+
 
 
 
@@ -66,5 +72,10 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
     }
 }
