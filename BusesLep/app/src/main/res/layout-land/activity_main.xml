@@ -10,13 +10,13 @@
     style="@style/Theme.Lep">
 
 
-    <EditText
-        android:layout_width="match_parent"
+    <Button
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editTxtSearch"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="1"
-        android:hint="Horarios y Reservas" />
+        android:text="Horarios y Reservas"
+        android:id="@+id/button2"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:onClick="launchSearchSchedules" />
 
     <ListView
         android:layout_width="match_parent"
@@ -31,7 +31,8 @@
         android:text="   Ingresar   "
         android:id="@+id/btnLogin"
         android:layout_weight="1"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:onClick="launchLogin" />
 
     <Button
         android:layout_width="fill_parent"
@@ -39,6 +40,7 @@
         android:text="Registrarme"
         android:layout_weight="0.1"
         android:id="@+id/btnRegister"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:onClick="launchRegister" />
 
 </LinearLayout>
