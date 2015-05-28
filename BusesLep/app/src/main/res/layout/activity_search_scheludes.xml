@@ -31,7 +31,10 @@
         android:text="Ida y vuelta"
         android:id="@+id/chk_round_trip"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginLeft="10dp"
+        android:onClick="clickGoes"
+        android:enabled="true"
+        android:checked="true" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -90,7 +93,7 @@
             android:textSize="20dp"
             android:layout_marginLeft="20dp"
             android:gravity="center"
-            android:onClick="onClickDate" />
+            android:onClick="clickDate" />
 
         <ImageView
             android:src="@drawable/icon_calendar"
@@ -111,7 +114,8 @@
         android:id="@+id/linear_layout_to"
         android:background="@drawable/border"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
+        android:layout_marginRight="5dp"
+        android:visibility="visible">
 
         <TextView
             android:layout_width="wrap_content"
@@ -122,7 +126,7 @@
             android:textSize="20dp"
             android:layout_marginLeft="20dp"
             android:gravity="center"
-            android:onClick="onClickDate" />
+            android:onClick="clickDate" />
 
         <ImageView
             android:src="@drawable/icon_calendar"
@@ -173,12 +177,13 @@
         android:text="BUSCAR"
         android:id="@+id/btn_search"
         android:layout_gravity="center_horizontal"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
         android:background="@drawable/border"
         android:longClickable="true"
         android:textStyle="bold"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="20dp"
+        android:onClick="clickSearch" />
 
 
 </LinearLayout>

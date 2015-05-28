@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.tecpro.buseslep.search_scheludes.ChooseDate"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Selección fecha de ida"
+        android:id="@+id/txtDescriptionDate"
+        android:layout_gravity="center_horizontal"
+        android:background="#86533e38"
+        android:textColor="#ffffffff"
+        android:textStyle="normal|bold"
+        android:gravity="center" />
+
+    <DatePicker
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/datePicker"
+        android:layout_margin="20dp"
+        android:spinnersShown="false" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ACEPTAR"
+        android:id="@+id/btn_accept"
+        android:layout_margin="20dp"
+        android:onClick="clickBtnAccept" />
+</LinearLayout>

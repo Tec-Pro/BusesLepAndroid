@@ -4,4 +4,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_search_scheludes">Buses Lep</string>
+    <string name="title_activity_chose_date">Elegir Fecha</string>
+    <string name="title_activity_choose_date">ChooseDate</string>
 </resources>
