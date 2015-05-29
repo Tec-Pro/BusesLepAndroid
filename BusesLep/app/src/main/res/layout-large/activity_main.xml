@@ -1,33 +1,56 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
-    android:layout_height="fill_parent" android:paddingLeft="0dp"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
     android:orientation="vertical"
     android:weightSum="1"
-    style="@style/Theme.Lep">
+    style="@style/Theme.Lep"
+    >
 
 
-    <ImageView
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:src="@drawable/buseslep"
-        android:layout_weight="0"
-        android:scaleType="fitXY" />
+        android:layout_weight="0.3"
+        android:background="#282828">
 
-    <EditText
-        android:layout_width="match_parent"
+        <ImageView
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView"
+            android:src="@drawable/buseslep"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_margin="0dp"
+            android:scaleType="fitXY"
+            android:layout_weight="0" />
+    </LinearLayout>
+
+
+    <Button
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editTxtSearch"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.17"
-        android:hint="Horarios y Reservas"
+        android:text="Horarios y Reservas"
+        android:id="@+id/button2"
+        android:drawableLeft="@android:drawable/ic_menu_search"
+        android:onClick="launchSearchSchedules"
+        android:background="@drawable/border"
+        android:textStyle="bold"
+        android:layout_marginTop="10px"
+        android:layout_marginBottom="10px"
+        android:layout_marginRight="10px"
+        android:layout_marginLeft="10px"
+        android:layout_weight="0.08"
         android:textSize="25dp" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Ultimas Busquedas"
@@ -36,15 +59,22 @@
         android:layout_marginTop="10px"
         android:layout_marginBottom="10px"
         android:textStyle="bold"
-        android:textSize="40dp"
-        android:layout_weight="0" />
+        android:layout_weight="0.1"
+        android:gravity="center"
+        android:textSize="25dp" />
 
     <ListView
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="188dp"
         android:id="@+id/listView"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="0.42" />
+        android:layout_weight="0.1"
+        android:background="@drawable/border"
+        android:isScrollContainer="false"
+        android:layout_marginTop="10px"
+        android:layout_marginBottom="10px"
+        android:layout_marginLeft="5px"
+        android:layout_marginRight="5px" />
 
     <Button
         android:layout_width="fill_parent"
@@ -52,7 +82,14 @@
         android:text="   Ingresar   "
         android:id="@+id/btnLogin"
         android:layout_gravity="center_horizontal|bottom"
+        android:windowSoftInputMode="stateHidden"
         android:layout_weight="0.2"
+        android:onClick="launchLogin"
+        android:background="@drawable/border"
+        android:textStyle="bold"
+        android:layout_marginBottom="10px"
+        android:layout_marginLeft="10px"
+        android:layout_marginRight="10px"
         android:textSize="25dp" />
 
     <Button
@@ -60,10 +97,16 @@
         android:layout_height="wrap_content"
         android:text="Registrarme"
         android:id="@+id/btnRegister"
+        android:windowSoftInputMode="stateHidden"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginTop="0dp"
-        android:enabled="true"
         android:layout_weight="0.2"
+        android:onClick="launchRegister"
+        android:background="@drawable/border"
+        android:textStyle="bold"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="10px"
+        android:layout_marginLeft="10px"
+        android:layout_marginRight="10px"
         android:textSize="25dp" />
 
 </LinearLayout>

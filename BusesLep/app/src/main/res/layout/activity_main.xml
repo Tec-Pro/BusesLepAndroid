@@ -39,10 +39,16 @@
         android:text="Horarios y Reservas"
         android:id="@+id/button2"
         android:drawableLeft="@android:drawable/ic_menu_search"
-        android:onClick="launchSearchSchedules" />
+        android:onClick="launchSearchSchedules"
+        android:background="@drawable/border"
+        android:textStyle="bold"
+        android:layout_marginTop="10px"
+        android:layout_marginBottom="10px"
+        android:layout_marginRight="10px"
+        android:layout_marginLeft="10px" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Ultimas Busquedas"
@@ -51,15 +57,21 @@
         android:layout_marginTop="10px"
         android:layout_marginBottom="10px"
         android:textStyle="bold"
-        android:layout_weight="0.1" />
+        android:layout_weight="0.1"
+        android:gravity="center" />
 
     <ListView
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="188dp"
         android:id="@+id/listView"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.1"
-        android:isScrollContainer="false"/>
+        android:background="@drawable/border"
+        android:isScrollContainer="false"
+        android:layout_marginTop="10px"
+        android:layout_marginBottom="10px"
+        android:layout_marginLeft="5px"
+        android:layout_marginRight="5px" />
 
     <Button
         android:layout_width="fill_parent"
@@ -69,7 +81,12 @@
         android:layout_gravity="center_horizontal|bottom"
         android:windowSoftInputMode="stateHidden"
         android:layout_weight="0.2"
-        android:onClick="launchLogin" />
+        android:onClick="launchLogin"
+        android:background="@drawable/border"
+        android:textStyle="bold"
+        android:layout_marginBottom="10px"
+        android:layout_marginLeft="10px"
+        android:layout_marginRight="10px" />
 
     <Button
         android:layout_width="fill_parent"
@@ -79,6 +96,12 @@
         android:windowSoftInputMode="stateHidden"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_weight="0.2"
-        android:onClick="launchRegister" />
+        android:onClick="launchRegister"
+        android:background="@drawable/border"
+        android:textStyle="bold"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="10px"
+        android:layout_marginLeft="10px"
+        android:layout_marginRight="10px" />
 
 </LinearLayout>

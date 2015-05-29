@@ -48,8 +48,8 @@ public class AdaptatorLastSearch extends BaseAdapter {
         arrHour = (TextView) vistaReciclada.findViewById(R.id.arrHour);
         arrDate = (TextView) vistaReciclada.findViewById(R.id.arrDate);
 
-        departureLoc.setText(s.getDeparture() + "-");
-        arrivalLoc.setText(s.getArrival());
+        departureLoc.setText(" " +s.getDeparture() + "-");
+        arrivalLoc.setText(" " +s.getArrival());
         depHour.setText("20:45      ");
         arrHour.setText("      1:00");
         depDate.setText( "23-10-2015");
