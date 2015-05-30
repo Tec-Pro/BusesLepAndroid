@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tecpro.buseslep.R;
+import com.tecpro.buseslep.search_scheludes.schedule.ScheduleSearch;
 import com.tecpro.buseslep.webservices.WebServices;
 
 import java.text.ParseException;
@@ -278,8 +279,11 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
             err=true;
             error=error.concat(" fecha de ida incorrecta \n");
         }
-        if(!err)
-            Toast.makeText(getApplicationContext(),"datos perfectos",Toast.LENGTH_SHORT).show();
+        if(!err) {
+            Toast.makeText(getApplicationContext(), "datos perfectos", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this, ScheduleSearch.class);
+            startActivity(i);
+        }
         else
             Toast.makeText(getApplicationContext(),error,Toast.LENGTH_SHORT).show();
     }
@@ -370,5 +374,6 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         }
 
     }
+
 
 }
