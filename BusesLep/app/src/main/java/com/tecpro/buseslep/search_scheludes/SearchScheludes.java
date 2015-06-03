@@ -132,7 +132,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_search_scheludes, menu);
+      //  getMenuInflater().inflate(R.menu.menu_search_scheludes, menu);
         return true;
     }
 
@@ -159,7 +159,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         String descriptionDate="Selección fecha de ida";
         Intent intent = new Intent(this, ChooseDate.class);//lanzo actividad de elegir fecha dependiendo de si es ida o vuelta
         intent.putExtra("day",dayGo);
-        intent.putExtra("month",monthGo);
+        intent.putExtra("month",monthGo-1);
         intent.putExtra("year",yearGo);
         intent.putExtra("description", descriptionDate);
         startActivityForResult(intent, requestCode);
@@ -167,12 +167,11 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
 
 
     public void clickDateReturn(View v){
-        System.out.println("click return");
         int requestCode=2;
         String descriptionDate="Selección fecha de vuelta";
         Intent intent = new Intent(this, ChooseDate.class);//lanzo actividad de elegir fecha dependiendo de si es ida o vuelta
         intent.putExtra("day",dayReturn);
-        intent.putExtra("month",monthReturn);
+        intent.putExtra("month",monthReturn-1);
         intent.putExtra("year",yearReturn);
         intent.putExtra("description", descriptionDate);
         startActivityForResult(intent, requestCode);
