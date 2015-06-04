@@ -110,19 +110,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Prodrá consultar la operación realizada dentro del menú Mis reservas una"
+        android:text="Prodrá consultar la operación realizada dentro del menú Mis reservas una vez que haya salido de esta pantalla."
         android:id="@+id/txtConsult"
-        android:textColor="#ff000000"
-        android:layout_gravity="center_horizontal"
-        android:textSize="10dp"
-        android:gravity="center_horizontal" />
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="vez que haya salido de esta pantalla"
-        android:id="@+id/txtThisScrean"
         android:textColor="#ff000000"
         android:layout_gravity="center_horizontal"
         android:textSize="10dp"

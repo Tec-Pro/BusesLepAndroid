@@ -4,6 +4,16 @@
     android:layout_height="match_parent"
     android:background="#ffffffff">
 
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/scrollView" >
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,10 +41,10 @@
         android:id="@+id/textView13" />
 
 
-    <TextView
-        android:layout_width="wrap_content"
+    <EditText
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text=" DNI"
+        android:hint=" DNI"
         android:id="@+id/textDNI"
         android:editable="true" />
 
@@ -45,10 +55,10 @@
         android:text=""
         android:id="@+id/textView15" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <EditText
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text=" Contraseña"
+        android:hint=" Contraseña"
         android:id="@+id/txtPass"
         android:editable="true" />
 
@@ -70,7 +80,9 @@
         android:text="Ingresar"
         android:id="@+id/btnLogin"
         android:gravity="center_vertical"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:onClick="login"
+        android:nestedScrollingEnabled="false" />
 
 
     <TextView
@@ -132,6 +144,9 @@
         android:text="¿Aún no tienes cuenta?"
         android:id="@+id/btnJoin"
         android:gravity="center_vertical"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:onClick="launchSingin" />
+        </LinearLayout>
 
+    </ScrollView>
 </LinearLayout>
