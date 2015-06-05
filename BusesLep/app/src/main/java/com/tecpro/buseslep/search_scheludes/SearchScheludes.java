@@ -3,6 +3,7 @@ package com.tecpro.buseslep.search_scheludes;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 import com.tecpro.buseslep.R;
 import com.tecpro.buseslep.search_scheludes.schedule.ScheduleSearch;
+import com.tecpro.buseslep.search_scheludes.schedule.SummarySchedules;
 import com.tecpro.buseslep.webservices.WebServices;
 
 import java.text.ParseException;
@@ -36,6 +38,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class SearchScheludes extends Activity implements AdapterView.OnItemSelectedListener {
@@ -60,13 +63,28 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     private int yearReturn=-1;
 
     //datos para la busqueda
-    private Integer idOrigin=-1;
-    private Integer idDestiny=-1;
+    private Integer idOrigin=-1; //id de origen
+    private Integer idDestiny=-1; //id de destino
     private Integer numberOfTickets=1;
-    private Integer dateGo;
-    private Integer dateReturn;
+    private String dateGo; //string para la fecha de ida en formato 20150605
+    private String dateReturn; //string para la fecha de vuelta en formato 20150605
     private AsyncCallerCities asyncCallerCities;
+    private AsyncCallerSchedules asyncCallerSchedules;
 
+    private ArrayList<Map<String,Object>> schedules; //lista con todos los horarios, la misma la uso para ida y  para vuelta
+    private String codeGo; //tengo el codigo del horario para la reserva
+    private String codeReturn; //el codigo del horario apra la reserva pero de la vuelta
+    //datos para la ida
+    private String departTimeGo;
+    private String departDateGo;
+    private String arrivTimeGo;
+    private String arrivDateGo;
+    //datos para la vuelta
+    private String departTimeReturn;
+    private String departDateReturn;
+    private String arrivTimeReturn;
+    private String arrivDateReturn;
+    private String price;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,7 +177,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         String descriptionDate="Selección fecha de ida";
         Intent intent = new Intent(this, ChooseDate.class);//lanzo actividad de elegir fecha dependiendo de si es ida o vuelta
         intent.putExtra("day",dayGo);
-        intent.putExtra("month",monthGo-1);
+        intent.putExtra("month", monthGo - 1);
         intent.putExtra("year",yearGo);
         intent.putExtra("description", descriptionDate);
         startActivityForResult(intent, requestCode);
@@ -182,22 +200,82 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) {return;}
         switch (requestCode){
-            case 1:
+            case 1://retorno de seleccion de ida
                 dayGo= data.getIntExtra("day", 1);
                 monthGo= data.getIntExtra("month",1);
                 yearGo= data.getIntExtra("year",2015);
                 fromDateEtxt.setText(dayGo+"/"+monthGo+"/"+yearGo);
-                dateGo= Integer.valueOf(dayGo+""+monthGo+""+yearGo);// es un entero casteado
+                String auxMonth=String.valueOf(monthGo);
+                String auxDay=String.valueOf(dayGo);
+                if(monthGo<10)
+                    auxMonth= "0"+monthGo;//le agrego un cero adelate
+                if(dayGo<10)
+                    auxDay= "0"+dayGo;//le agrego un cero adelate
+                dateGo=yearGo+""+auxMonth+""+auxDay;// es un entero casteado
                 break;
-            case 2:
+            case 2: //retorno de seleccion de vuelta
                 dayReturn= data.getIntExtra("day", 1);
                 monthReturn= data.getIntExtra("month",1);
                 yearReturn= data.getIntExtra("year",2015);
                 toDateEtxt.setText(dayReturn+"/"+monthReturn+"/"+yearReturn);
-                dateReturn= Integer.valueOf(dayReturn+""+monthReturn+""+yearReturn);// es un entero casteado
-
+                String auxMonthRet=String.valueOf(monthReturn);
+                String auxDayRet=String.valueOf(dayReturn);
+                if(monthReturn<10)
+                    auxMonthRet= "0"+monthReturn;//le agrego un cero adelate
+                if(dayGo<10)
+                    auxDayRet= "0"+dayReturn;//le agrego un cero adelate
+                dateReturn=yearReturn+""+auxMonthRet+""+auxDayRet;// es un entero casteado
+                break;
+            case 3://retorno de seleccion de horario ida
+                codeGo= data.getStringExtra("codigo");
+                departDateGo = data.getStringExtra("departDate");
+                departTimeGo = data.getStringExtra("departTime");
+                arrivDateGo = data.getStringExtra("arrivDate");
+                arrivTimeGo = data.getStringExtra("arrivTime");
+                //debo corroborar si es ida y vuelta, en caso de ser ida y vuelta debo largar la gui para elegir retorno
+                if (chkRoundTrip.isChecked()) {
+                    asyncCallerSchedules = new AsyncCallerSchedules(this);
+                    asyncCallerSchedules.execute("return");
+                }else{
+                    launchBuyReserve(false);
+                }
+                break;
+            case 4: //retorno de la seleccion de horario vuelta
+                codeReturn= data.getStringExtra("codigo");
+                codeGo= data.getStringExtra("codigo");
+                departDateReturn = data.getStringExtra("departDate");
+                departTimeReturn = data.getStringExtra("departTime");
+                arrivDateReturn = data.getStringExtra("arrivDate");
+                arrivTimeReturn = data.getStringExtra("arrivTime");
+                launchBuyReserve(true);
                 break;
         }
+    }
+
+    /**
+     * true si es ida y vuelta, lanza la vista de resumen
+     * @param goReturn
+     */
+    private void launchBuyReserve(boolean goReturn){
+        Intent i= new Intent(this, SummarySchedules.class);
+        i.putExtra("departTimeGo",departTimeGo );
+        i.putExtra("departDateGo",departDateGo );
+        i.putExtra("arrivDateGo",arrivDateGo );
+        i.putExtra("arrivTimeGo",arrivTimeGo );
+        i.putExtra("numberTickets",numberOfTickets.toString() );
+        i.putExtra("Origin",(String)spinnerGo.getSelectedItem() );
+        i.putExtra("Destiny",(String)spinnerDestiny.getSelectedItem() );
+        i.putExtra("codeGo",codeGo );
+        if(goReturn){
+            i.putExtra("departTimeReturn",departTimeReturn );
+            i.putExtra("departDateReturn",departDateReturn );
+            i.putExtra("arrivDateReturn",arrivDateReturn );
+            i.putExtra("arrivTimeReturn",arrivTimeReturn);
+            i.putExtra("codeReturn",codeReturn );
+        }
+        startActivity(i);
+
+
     }
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -214,7 +292,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         if (parent.getId()==  R.id.spinner_destiny){
             String nameCity=spinnerDestiny.getItemAtPosition(position).toString();
             if(nameCity!=null) {
-                idDestiny = CitiesAndId.get(nameCity); //seteo el id de origen
+                idDestiny = CitiesAndId.get(nameCity); //seteo el id de destino
                 if(idDestiny==null)
                     idDestiny=-1;
             }
@@ -279,9 +357,9 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
             error=error.concat(" fecha de ida incorrecta \n");
         }
         if(!err) {
-            Toast.makeText(getApplicationContext(), "datos perfectos", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(this, ScheduleSearch.class);
-            startActivity(i);
+            asyncCallerSchedules= new AsyncCallerSchedules(this);
+            asyncCallerSchedules.execute("go");
+
         }
         else
             Toast.makeText(getApplicationContext(),error,Toast.LENGTH_SHORT).show();
@@ -300,9 +378,6 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
             SimpleDateFormat formateador = new SimpleDateFormat("dd/MM/yyyy");
             Date fechaDate1 = formateador.parse(day1 + "/" + month1 + "/" + year1);
             Date fechaDate2 = formateador.parse(day2 + "/" + month2 + "/" + year2);
-            if (fechaDate1.before(fechaDate2)) {
-                System.out.println("La Fecha 1 es menor ");
-            }
             return fechaDate1.before(fechaDate2) ||fechaDate1.equals(fechaDate2);
         } catch (ParseException e) {
         }
@@ -318,6 +393,10 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
      */
     private class AsyncCallerCities extends AsyncTask<String, Void, Pair<String,List<String>> > {
         ProgressDialog pdLoading = new ProgressDialog(SearchScheludes.this);
+
+        private AsyncCallerCities(){
+            pdLoading.setCancelable(false);
+        }
 
         @Override
         protected void onPreExecute() {
@@ -339,8 +418,10 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
                     CitiesAndId=cities.first;
                     return new Pair("getCities",departureCities);
                 case "getDestinationCities" :
-                    System.out.println("qqqqq");
                     destinationCities= WebServices.getDestinationCities(idOrigin);
+                    return new Pair("getDestinationCities",destinationCities);
+                case "getSchedules" :
+                    schedules= WebServices.getSchedules(idOrigin, idDestiny, dateGo);
                     return new Pair("getDestinationCities",destinationCities);
             }
             //this method will be running on background thread so don't update UI frome here
@@ -353,7 +434,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         @Override
         protected void onPostExecute(Pair<String,List<String>> result) {
             if (result==null)
-                Toast.makeText(getBaseContext(), "No se ha obtenido información del servidor \n Revise su conexión a internet", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "No se han encontrado horarios ciudades", Toast.LENGTH_SHORT).show();
             //this method will be running on UI thread
             else{
                 switch (result.first){
@@ -373,6 +454,71 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         }
 
     }
+
+
+    /**
+     * el primer atributo que es String, son los nombres de los metodos que quiero llamar, lo hardcodeo con 1 solo atributo que es el nombre
+     * del metodo así lo corro
+     */
+    private class AsyncCallerSchedules extends AsyncTask<String, Void, Pair<String,ArrayList<Map<String,Object>>> > {
+        ProgressDialog pdLoading = new ProgressDialog(SearchScheludes.this);
+        Context context; //contexto para largar la activity aca adentro
+
+        private AsyncCallerSchedules(Context context) {
+            this.context = context.getApplicationContext();
+            pdLoading.setCancelable(false);
+
+        }
+
+        @Override
+        protected Pair<String,ArrayList<Map<String,Object>>> doInBackground(String... params) {
+            if(params[0]=="go")
+                return new Pair(params[0],WebServices.getSchedules(idOrigin, idDestiny, dateGo));
+            else
+                return new Pair(params[0],WebServices.getSchedules(idDestiny,idOrigin, dateReturn));
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setTitle("Por favor, espere.");
+            pdLoading.setMessage("Obteniendo horarios");
+            pdLoading.show();
+        }
+
+
+        @Override
+        protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
+            if (result==null || result.second.isEmpty())
+                Toast.makeText(getBaseContext(), "No se han encontrado horarios ", Toast.LENGTH_SHORT).show();
+                //this method will be running on UI thread
+            else{
+                schedules= result.second;
+                Intent i = new Intent(context, ScheduleSearch.class);
+                i.putExtra("schedules", schedules);
+                int codeResult=-1;
+                switch (result.first){
+                    case "go":
+                        codeResult=3;
+                        i.putExtra("departCity",(String)spinnerGo.getSelectedItem());
+                        i.putExtra("arrivCity",(String)spinnerDestiny.getSelectedItem());
+                        i.putExtra("goOrReturn","ida");
+                        break;
+                    case "return":
+                        codeResult=4;
+                        i.putExtra("departCity",(String)spinnerDestiny.getSelectedItem());
+                        i.putExtra("arrivCity",(String)spinnerGo.getSelectedItem());
+                        i.putExtra("goOrReturn","vuelta");
+                        break;
+                }
+                startActivityForResult(i,codeResult);
+                }
+            pdLoading.dismiss();
+        }
+        }
+
 
 
 }

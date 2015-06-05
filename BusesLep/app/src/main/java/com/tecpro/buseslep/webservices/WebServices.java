@@ -2,13 +2,23 @@ package com.tecpro.buseslep.webservices;
 
 import android.os.StrictMode;
 import android.util.Pair;
+import android.widget.Toast;
 
+import com.tecpro.buseslep.search_scheludes.SearchScheludes;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.io.EOFException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -32,48 +42,37 @@ public class WebServices  {
      * @return
      */
     public static Pair<TreeMap<String, Integer>, LinkedList<String>> getCities(){
-        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); //pongo esto para correrlo en en onCreate, sino va con un zyncTask
-        //StrictMode.setThreadPolicy(policy);
         String result;
-        String[] results;
-        TreeMap<String, Integer> CitiesAndId = new TreeMap<String, Integer>();
+        TreeMap<String, Integer> citiesAndId = new TreeMap<String, Integer>();
         LinkedList<String> cities = new LinkedList<>();
         cities.add("Ciudad de origen");
         request = new SoapObject(NAMESPACE, LocalidadesDesde); //le digo que metodo voy a llamar
         request.addProperty("user","UsuarioLep"); //paso los parametros que pide el metodo
         request.addProperty("pass","Lep1234");
         envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
-        //envelope.dotNet = true; //pero anda asi
-        //envelope.xsd = SoapSerializationEnvelope.XSD;
-        //envelope.setAddAdornments(false);
         envelope.enc = SoapSerializationEnvelope.ENC2003;
         envelope.setOutputSoapObject(request);
         httpTransportSE = new HttpTransportSE(VALIDATION_URI); //paso la uri donde transportaré
         try {
+            try{
             httpTransportSE.call(NAMESPACE + "#" + LocalidadesDesde, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
-            //System.out.println((String) envelope.getResponse());
+            }catch (java.io.EOFException e){
+                httpTransportSE.call(NAMESPACE + "#" + LocalidadesDesde, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+            }
             result= (String)envelope.getResponse();
-            int start= result.indexOf("<rs:data>")+9;
-            int finish = result.indexOf("</rs:data>");
-            result = result.substring(start, finish);//busco la info que sirve que esta en <data> info </data>
-            result=result.replaceAll("<z:row ", "");//elimino la primer parte de cada renglon que es siemre asi
-            result=result.replaceAll("' ", ";"); //separo los atributos por un ;
-            result=result.replaceAll("='", "="); //elimino las ' así tengo clave=valor
-            result=result.replaceAll("Ã±", "ñ"); //pongo la ñ
-            results=result.split("'/>");//elimino la ultima parte de cada renglon, el resultado ahora es clave=valor;clave2=valor2...;clave3=valor3
-            for (int i=0; i<results.length-2; i++) { //elimino el ultimo elemento porque es basura de algun split
-                String[] aux= results[i].split(";"); //obtengo las claves, en este caso son 3, pero solo uso 2
-                String name=aux[1].split("=")[1];
-                int id=Integer.valueOf(aux[0].split("=")[1]);
-                CitiesAndId.put(name, id);
-                cities.add(name);
+            JSONArray json= new JSONObject(result).getJSONArray("Data");
+            int i=0;
+            while(i<json.length()){
+                JSONObject jsonObject= json.getJSONObject(i);
+                citiesAndId.put(jsonObject.getString("Localidad"),jsonObject.getInt("ID_Localidad"));
+                cities.add(jsonObject.getString("Localidad"));
+                i++;
             }
         }
-
         catch(Exception e){
             e.printStackTrace();
         }
-        return new Pair(CitiesAndId,cities);
+        return new Pair(citiesAndId,cities);
     }
 
     /**
@@ -84,36 +83,28 @@ public class WebServices  {
         LinkedList<String> cities = new LinkedList<>();
         cities.add("Ciudad de destino");
         if(idOrigin!=-1) {
-            //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build(); //pongo esto para correrlo en en onCreate, sino va con un zyncTask
-            //StrictMode.setThreadPolicy(policy);
             String result;
-            String[] results;
             request = new SoapObject(NAMESPACE, LocalidadesHasta); //le digo que metodo voy a llamar
             request.addProperty("user", "UsuarioLep"); //paso los parametros que pide el metodo
             request.addProperty("pass", "Lep1234");
             request.addProperty("IdLocalidadOrigen", idOrigin);
             envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
-            //envelope.dotNet = true; //pero anda asi
-            //envelope.xsd = SoapSerializationEnvelope.XSD;
-            //envelope.setAddAdornments(false);
             envelope.enc = SoapSerializationEnvelope.ENC2003;
             envelope.setOutputSoapObject(request);
             httpTransportSE = new HttpTransportSE(VALIDATION_URI); //paso la uri donde transportaré
             try {
+                try {
                 httpTransportSE.call(NAMESPACE + "#" + LocalidadesHasta, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                 }catch (java.io.EOFException e){
+                    httpTransportSE.call(NAMESPACE + "#" + LocalidadesHasta, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                }
                 result = (String) envelope.getResponse();
-                int start = result.indexOf("<rs:data>") + 9;
-                int finish = result.indexOf("</rs:data>");
-                result = result.substring(start, finish);//busco la info que sirve que esta en <data> info </data>
-                result = result.replaceAll("<z:row ", "");//elimino la primer parte de cada renglon que es siemre asi
-                result = result.replaceAll("' ", ";"); //separo los atributos por un ;
-                result = result.replaceAll("='", "="); //elimino las ' así tengo clave=valor
-                result = result.replaceAll("Ã±", "ñ"); //pongo la ñ
-                results = result.split("'/>");//elimino la ultima parte de cada renglon, el resultado ahora es clave=valor;clave2=valor2...;clave3=valor3
-                for (int i = 0; i < results.length - 2; i++) { //elimino el ultimo elemento porque es basura de algun split
-                    String[] aux = results[i].split(";"); //obtengo las claves, en este caso son 3, pero solo uso 2
-                    String name = aux[3].split("=")[1];
-                    cities.add(name);
+                JSONArray json= new JSONObject(result).getJSONArray("Data");
+                int i=0;
+                while(i<json.length()){
+                    JSONObject jsonObject= json.getJSONObject(i);
+                    cities.add(jsonObject.getString("hasta"));
+                    i++;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -122,6 +113,43 @@ public class WebServices  {
         return cities;
     }
 
-
+    public static ArrayList<Map<String,Object>> getSchedules(Integer idOrigin, Integer idDestiny, String date){
+            ArrayList<Map<String,Object>> ret= new ArrayList<>();
+            request = new SoapObject(NAMESPACE, ListarHorarios); //le digo que metodo voy a llamar
+            request.addProperty("user", "UsuarioLep"); //paso los parametros que pide el metodo
+            request.addProperty("pass", "Lep1234");
+            request.addProperty("IdLocalidadOrigen", idOrigin);
+            request.addProperty("IdLocalidadDestino", idDestiny);
+            request.addProperty("Fecha", date);
+            envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
+            envelope.enc = SoapSerializationEnvelope.ENC2003;
+            envelope.setOutputSoapObject(request);
+            httpTransportSE = new HttpTransportSE(VALIDATION_URI); //paso la uri donde transportaré
+            try {
+                try{
+                httpTransportSE.call(NAMESPACE + "#" + ListarHorarios, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                }catch (java.io.EOFException e){
+                    httpTransportSE.call(NAMESPACE + "#" + ListarHorarios, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                }
+                String result = (String) envelope.getResponse();
+                JSONArray json= new JSONObject(result).getJSONArray("Data");
+                int i=0;
+                while(i<json.length()){
+                     Map<String, Object> map= new HashMap<>();
+                    JSONObject jsonObject= json.getJSONObject(i);
+                    map.put("estado",jsonObject.get("ServicioPrestado"));
+                    map.put("fecha_llega",jsonObject.getString("FechaHoraLlegada").split(" ")[0].replace('-', '/'));
+                    map.put("hora_llega",jsonObject.getString("FechaHoraLlegada").split(" ")[1].substring(0, 5));
+                    map.put("fecha_sale",jsonObject.getString("fechahora").split(" ")[0].replace('-', '/'));
+                    map.put("hora_sale", jsonObject.getString("fechahora").split(" ")[1].substring(0, 5));
+                    map.put("codigo",jsonObject.getString("cod_horario"));
+                    ret.add(map);
+                    i++;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        return ret;
+    }
 
 }

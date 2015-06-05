@@ -13,6 +13,7 @@ import com.tecpro.buseslep.Search;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by agustin on 26/05/15.
@@ -20,18 +21,23 @@ import java.util.List;
 public class AdaptatorSchedule extends BaseAdapter {
     private LayoutInflater inflador; // Crea Layouts a partir del XML
     private TextView departDate, departTIme, arrivDate, arrivTime, status;
-    public static List schedules;
+    public static List<Map> schedules;
 
-    public AdaptatorSchedule(Context contexto) {
-        schedules = Schedules();
+    public AdaptatorSchedule(Context contexto, ArrayList<Map<String,Object>> schedules) {
+        this.schedules = Schedules(schedules);
         inflador =(LayoutInflater)contexto
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    static List Schedules(){
+    /**
+     * transformo una lista de map a una lista de Schedule
+     * @param schedules
+     * @return
+     */
+    static List Schedules( ArrayList<Map<String,Object>> schedules){
         ArrayList result = new ArrayList();
-        for (int i=0; i<20; i++){
-            Schedule s = new Schedule( "29/05/2015",  "17:30", "29/05/2015","en destino", "20:30");
+        for (int i=0; i<schedules.size();i++){
+            Schedule s = new Schedule( (String)schedules.get(i).get("fecha_sale"),  (String)schedules.get(i).get("hora_sale"), (String)schedules.get(i).get("fecha_llega"),(String)schedules.get(i).get("estado"), (String)schedules.get(i).get("hora_llega"), (String)schedules.get(i).get("codigo"));
             result.add(s);
         }
         return result;
