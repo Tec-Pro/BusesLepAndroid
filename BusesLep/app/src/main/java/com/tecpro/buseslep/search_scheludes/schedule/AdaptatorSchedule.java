@@ -1,6 +1,7 @@
 package com.tecpro.buseslep.search_scheludes.schedule;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,10 @@ public class AdaptatorSchedule extends BaseAdapter {
         departTIme.setText(s.getDepartTIme());
         arrivDate.setText(s.getArrivDate());
         arrivTime.setText(s.getArrivTime());
+        if(s.getStatus().contains("viaje")||s.getStatus().contains("destino"))//si esta en viaje o destino lo pongo en rojo
+            status.setTextColor(Color.RED);
+        else
+            status.setTextColor(Color.BLUE);
         status.setText(s.getStatus());
 
         return vistaReciclada;

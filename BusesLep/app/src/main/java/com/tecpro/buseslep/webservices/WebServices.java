@@ -56,7 +56,7 @@ public class WebServices  {
         try {
             try{
             httpTransportSE.call(NAMESPACE + "#" + LocalidadesDesde, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
-            }catch (java.io.EOFException e){
+            }catch (Exception e){
                 httpTransportSE.call(NAMESPACE + "#" + LocalidadesDesde, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
             }
             result= (String)envelope.getResponse();
@@ -95,7 +95,7 @@ public class WebServices  {
             try {
                 try {
                 httpTransportSE.call(NAMESPACE + "#" + LocalidadesHasta, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
-                 }catch (java.io.EOFException e){
+                 }catch (Exception e){
                     httpTransportSE.call(NAMESPACE + "#" + LocalidadesHasta, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
                 }
                 result = (String) envelope.getResponse();
@@ -128,7 +128,7 @@ public class WebServices  {
             try {
                 try{
                 httpTransportSE.call(NAMESPACE + "#" + ListarHorarios, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
-                }catch (java.io.EOFException e){
+                }catch (Exception e){
                     httpTransportSE.call(NAMESPACE + "#" + ListarHorarios, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
                 }
                 String result = (String) envelope.getResponse();

@@ -49,15 +49,19 @@ public class ScheduleSearch extends Activity implements AdapterView.OnItemClickL
     }
 
     private void resultIntent(Schedule scheduleSelected){
-        Intent intent= new Intent();
-        intent.putExtra("arrivDate",scheduleSelected.getArrivDate());
-        intent.putExtra("arrivTime",scheduleSelected.getArrivTime());
-        intent.putExtra("departTime",scheduleSelected.getDepartTIme());
-        intent.putExtra("departDate",scheduleSelected.getDepartDate());
-        //intent.putExtra("estado",scheduleSelected.getStatus());
-        intent.putExtra("codigo",scheduleSelected.getCode());
-        setResult(RESULT_OK, intent);
-        finish();
+        if(scheduleSelected.getStatus().contains("viaje")||scheduleSelected.getStatus().contains("destino"))
+            Toast.makeText(this,"El bus se encuentra "+scheduleSelected.getStatus()+", seleccione uno disponible",Toast.LENGTH_SHORT );
+        else {
+            Intent intent = new Intent();
+            intent.putExtra("arrivDate", scheduleSelected.getArrivDate());
+            intent.putExtra("arrivTime", scheduleSelected.getArrivTime());
+            intent.putExtra("departTime", scheduleSelected.getDepartTIme());
+            intent.putExtra("departDate", scheduleSelected.getDepartDate());
+            //intent.putExtra("estado",scheduleSelected.getStatus());
+            intent.putExtra("codigo", scheduleSelected.getCode());
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
 }

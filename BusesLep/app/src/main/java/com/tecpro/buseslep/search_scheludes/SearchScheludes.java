@@ -367,7 +367,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
             err=true;//ocurrio un error
         }
         if (chkRoundTrip.isChecked()){
-            if(fromDateEtxt.getText().charAt(0)=='F'||
+            if(toDateEtxt.getText().charAt(0)=='F'||
                     !dateIsValid(currentDay,currentMonth,currentYear,dayReturn,monthReturn,yearReturn)||
                     !dateIsValid(dayGo,monthGo,yearGo,dayReturn,monthReturn,yearReturn)) { //valido la fecha de regreso
                 err=true;

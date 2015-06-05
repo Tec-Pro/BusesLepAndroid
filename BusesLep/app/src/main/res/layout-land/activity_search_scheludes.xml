@@ -167,7 +167,11 @@
         android:longClickable="true"
         android:textStyle="bold"
         android:onClick="clickSearch"
-        android:layout_weight="0.5" />
+        android:layout_weight="0.5"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="15dp" />
 
 
 </LinearLayout>
