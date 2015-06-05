@@ -30,7 +30,7 @@ public class WebServices  {
     private static String LocalidadesHasta = "LocalidadesHasta"; //nombre del metodo del ws, fijarse en el binding
     private static String ListarHorarios = "ListarHorarios"; //nombre del metodo del ws, fijarse en el binding
 
-    private static String VALIDATION_URI = "http://webservices.buseslep.com.ar/WebServices/WebServiceLep.dll/soap/ILepWebService";//tiene que ser la uri que muestra el xml, por donde bindea
+    private static String VALIDATION_URI = "http://webservices.buseslep.com.ar:8080/WebServices/WebServiceLep.dll/soap/ILepWebService";//tiene que ser la uri que muestra el xml, por donde bindea
     private static SoapSerializationEnvelope envelope = null;
     private static SoapObject request = null;
     private static HttpTransportSE httpTransportSE = null;
