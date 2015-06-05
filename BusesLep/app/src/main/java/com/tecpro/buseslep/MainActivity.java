@@ -56,21 +56,23 @@ public class MainActivity extends Activity implements OnItemClickListener {
     private String price;
     private String codeGoSchedule; //tengo el codigo del horario para la reserva
     private String codeReturnSchedule; //el codigo del horario apra la reserva pero de la vuelta
-
+    private DataBaseHelper dbh;
 
     public BaseAdapter adaptador;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        adaptador = new AdaptatorLastSearch(this);
+        dbh = new DataBaseHelper(this);
+        adaptador = new AdaptatorLastSearch(this,dbh);
         ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adaptador);
+        listView.setOnItemClickListener(this);
         /**
          * UN DOS TRES PROBANDO
          */
-        DataBaseHelper dbh = new DataBaseHelper(this);
-        loadSearch(dbh.getSearches().get(0)); //SUPONGO QUE HAY UN HORARIO CARGADO
+        /*DataBaseHelper dbh = new DataBaseHelper(this);
+        loadSearch(dbh.getSearches().get(0)); //SUPONGO QUE HAY UN HORARIO CARGADO*/
         /**
          * TERMINO LA PRUEBA
          */
@@ -100,7 +102,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        loadSearch(dbh.getSearches().get(position));
     }
 
     public void launchSearchSchedules(View v){

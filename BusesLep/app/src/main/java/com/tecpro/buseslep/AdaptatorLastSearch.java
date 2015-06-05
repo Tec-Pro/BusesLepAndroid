@@ -8,22 +8,35 @@ import android.widget.BaseAdapter;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.tecpro.buseslep.batabase.DataBaseHelper;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by agustin on 26/05/15.
  */
 public class AdaptatorLastSearch extends BaseAdapter {
     private LayoutInflater inflador; // Crea Layouts a partir del XML
-    private TextView arrivalLoc, departureLoc, depHour, arrHour, depDate, arrDate;
+    private TextView arrivalLoc, departureLoc, depDate, arrDate;
     private RatingBar valoracion;
-    public static List searches;
+    //public static List searches;
+    private DataBaseHelper dbh;
+    private List<Map<String,Object>> searches;
 
-    public AdaptatorLastSearch(Context contexto) {
-        searches = Searches();
+    public AdaptatorLastSearch(Context contexto, DataBaseHelper dbh) {
+        //searches = Searches();
+        this.dbh = dbh;
+
+        dbh.deleteOldsSearches();
+     //   dbh.insert("Rio Cuarto", "Cordoba", 22, 23, "15-7-2015", "16-7-2015", 1, true);
+       // dbh.insert("Rio Cuarto", "Cordoba2", 24, 25, "14-7-2015", "20-7-2015", 1, true);
+        searches = dbh.getSearches();
+
         inflador =(LayoutInflater)contexto
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
     }
 
     static List Searches(){
@@ -37,7 +50,7 @@ public class AdaptatorLastSearch extends BaseAdapter {
 
     public View getView(int posicion, View vistaReciclada,
                         ViewGroup padre) {
-        Search s = (Search)searches.get(posicion);
+        Map<String,Object> s = searches.get(posicion);
         if (vistaReciclada == null) {
             vistaReciclada= inflador.inflate(R.layout.last_search_element, null);
         }
@@ -47,12 +60,12 @@ public class AdaptatorLastSearch extends BaseAdapter {
         arrDate = (TextView) vistaReciclada.findViewById(R.id.arrDate);
         depDate = (TextView) vistaReciclada.findViewById(R.id.depDate);
 
-        departureLoc.setText(" " +s.getDeparture() + "-");
-        arrivalLoc.setText(" " +s.getArrival());
-        depDate.setText( "23-10-2015");
-        arrDate.setText("23-10-2015");
+        departureLoc.setText(s.get("city_origin").toString());
+        arrivalLoc.setText(s.get("city_destiny").toString());
+        depDate.setText( s.get("date_go").toString());
+        arrDate.setText(s.get("date_return").toString());
 
-        //valoracion.setRating(s.getValoracion());
+
         return vistaReciclada;
     }
     public int getCount() {
