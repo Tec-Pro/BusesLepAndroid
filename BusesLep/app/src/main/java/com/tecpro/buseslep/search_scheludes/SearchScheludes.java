@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tecpro.buseslep.R;
+import com.tecpro.buseslep.batabase.DataBaseHelper;
 import com.tecpro.buseslep.search_scheludes.schedule.ScheduleSearch;
 import com.tecpro.buseslep.search_scheludes.schedule.SummarySchedules;
 import com.tecpro.buseslep.webservices.WebServices;
@@ -43,16 +44,16 @@ import java.util.TreeMap;
 
 public class SearchScheludes extends Activity implements AdapterView.OnItemSelectedListener {
 
-    private Spinner spinnerGo;
-    private Spinner spinnerDestiny;
+    private static Spinner spinnerGo;
+    private static Spinner spinnerDestiny;
     private TreeMap<String, Integer>CitiesAndId; //nombre e id de las ciudades de origen, la clave es el nombre para facilitar las cosas
     private List<String> departureCities; //los nombres de ciudades de origen
     private List<String> destinationCities; //los nombres de ciudades de origen
-    private Spinner spinnerTickets;
-    private CheckBox chkRoundTrip;
+    private static Spinner spinnerTickets;
+    private static CheckBox chkRoundTrip;
     //UI References
-    private TextView fromDateEtxt;
-    private TextView toDateEtxt;
+    private static TextView fromDateEtxt;
+    private static TextView toDateEtxt;
     //dia mes y año de ida
     private int dayGo=-1;
     private int monthGo=-1;
@@ -63,17 +64,19 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     private int yearReturn=-1;
 
     //datos para la busqueda
-    private Integer idOrigin=-1; //id de origen
-    private Integer idDestiny=-1; //id de destino
-    private Integer numberOfTickets=1;
-    private String dateGo; //string para la fecha de ida en formato 20150605
-    private String dateReturn; //string para la fecha de vuelta en formato 20150605
+    private static Integer idOrigin=-1; //id de origen
+    private static Integer idDestiny=-1; //id de destino
+    private static String cityOrigin;
+    private static String cityDestiny;
+    private static Integer numberOfTickets=1;
+    private static String dateGo; //string para la fecha de ida en formato 20150605
+    private static String dateReturn; //string para la fecha de vuelta en formato 20150605
     private AsyncCallerCities asyncCallerCities;
     private AsyncCallerSchedules asyncCallerSchedules;
 
     private ArrayList<Map<String,Object>> schedules; //lista con todos los horarios, la misma la uso para ida y  para vuelta
-    private String codeGo; //tengo el codigo del horario para la reserva
-    private String codeReturn; //el codigo del horario apra la reserva pero de la vuelta
+    private String codeGoSchedule; //tengo el codigo del horario para la reserva
+    private String codeReturnSchedule; //el codigo del horario apra la reserva pero de la vuelta
     //datos para la ida
     private String departTimeGo;
     private String departDateGo;
@@ -85,6 +88,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     private String arrivTimeReturn;
     private String arrivDateReturn;
     private String price;
+    private DataBaseHelper dbh; //databasehelper para la db
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +103,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         monthReturn = cal.get(Calendar.MONTH)+1;
         yearReturn = cal.get(Calendar.YEAR);
         loadSpinnerTickets();
+        dbh= new DataBaseHelper(this);
     }
 
     private void loadOrigin(){
@@ -109,6 +114,19 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     private void loadDestiny(){
         asyncCallerCities= new AsyncCallerCities();
         asyncCallerCities.execute("getDestinationCities");
+    }
+
+    public static void loadSearch(String city_origin,String city_destiny, Integer code_city_origin, Integer code_city_destiny, String date_go, String date_return, Integer number_tickets, boolean is_roundtrip){
+        cityOrigin= city_origin;
+        cityDestiny= city_destiny;
+        idOrigin= code_city_origin;
+        idDestiny= code_city_destiny;
+        dateGo = date_go.replaceAll("-","");
+        if(is_roundtrip){
+            dateReturn= date_return.replaceAll("-","");
+        }
+        numberOfTickets= number_tickets;
+        chkRoundTrip.setChecked(is_roundtrip);
     }
 
     private void loadSpinnerTickets(){
@@ -132,7 +150,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     /**
      * busco los txtView de fecha y los seteo
      */
-    private void findViewsById() {
+    private  void findViewsById() {
         fromDateEtxt = (TextView) findViewById(R.id.txt_date_from);
         toDateEtxt = (TextView) findViewById(R.id.txt_date_to);
         spinnerGo = (Spinner) findViewById(R.id.spinner_go);
@@ -227,7 +245,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
                 dateReturn=yearReturn+""+auxMonthRet+""+auxDayRet;// es un entero casteado
                 break;
             case 3://retorno de seleccion de horario ida
-                codeGo= data.getStringExtra("codigo");
+                codeGoSchedule= data.getStringExtra("codigo");
                 departDateGo = data.getStringExtra("departDate");
                 departTimeGo = data.getStringExtra("departTime");
                 arrivDateGo = data.getStringExtra("arrivDate");
@@ -241,8 +259,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
                 }
                 break;
             case 4: //retorno de la seleccion de horario vuelta
-                codeReturn= data.getStringExtra("codigo");
-                codeGo= data.getStringExtra("codigo");
+                codeReturnSchedule= data.getStringExtra("codigo");
                 departDateReturn = data.getStringExtra("departDate");
                 departTimeReturn = data.getStringExtra("departTime");
                 arrivDateReturn = data.getStringExtra("arrivDate");
@@ -263,15 +280,15 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         i.putExtra("arrivDateGo",arrivDateGo );
         i.putExtra("arrivTimeGo",arrivTimeGo );
         i.putExtra("numberTickets",numberOfTickets.toString() );
-        i.putExtra("Origin",(String)spinnerGo.getSelectedItem() );
-        i.putExtra("Destiny",(String)spinnerDestiny.getSelectedItem() );
-        i.putExtra("codeGo",codeGo );
+        i.putExtra("Origin",cityOrigin );
+        i.putExtra("Destiny",cityDestiny );
+        i.putExtra("codeGo",codeGoSchedule );
         if(goReturn){
             i.putExtra("departTimeReturn",departTimeReturn );
             i.putExtra("departDateReturn",departDateReturn );
             i.putExtra("arrivDateReturn",arrivDateReturn );
             i.putExtra("arrivTimeReturn",arrivTimeReturn);
-            i.putExtra("codeReturn",codeReturn );
+            i.putExtra("codeReturn",codeReturnSchedule );
         }
         startActivity(i);
 
@@ -284,8 +301,11 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
             String nameCity=spinnerGo.getItemAtPosition(position).toString();
             if(nameCity!=null) {
                 idOrigin = CitiesAndId.get(nameCity); //seteo el id de origen
-                if(idOrigin==null)
-                    idOrigin=-1;
+                cityOrigin=nameCity;
+                if(idOrigin==null) {
+                    idOrigin = -1;
+                    cityOrigin = null;
+                }
                 loadDestiny();
             }
         }
@@ -293,8 +313,11 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
             String nameCity=spinnerDestiny.getItemAtPosition(position).toString();
             if(nameCity!=null) {
                 idDestiny = CitiesAndId.get(nameCity); //seteo el id de destino
-                if(idDestiny==null)
-                    idDestiny=-1;
+                cityDestiny= nameCity;
+                if(idDestiny==null) {
+                    idDestiny = -1;
+                    cityDestiny=null;
+                }
             }
         }
         if (parent.getId()==  R.id.spinner_number_tickets){
@@ -357,6 +380,26 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
             error=error.concat(" fecha de ida incorrecta \n");
         }
         if(!err) {
+            //guardo la busqueda realizada en la base de datos
+            String auxMonth=String.valueOf(monthGo);
+            String auxDay=String.valueOf(dayGo);
+            if(monthGo<10)
+                 auxMonth= "0"+monthGo;//le agrego un cero adelate
+            if(dayGo<10)
+                 auxDay= "0"+dayGo;//le agrego un cero adelate
+            dateGo=yearGo+""+auxMonth+""+auxDay;// es un entero casteado
+            String auxDateReturn= null;
+            boolean isRoundtrip= chkRoundTrip.isChecked();
+            if(isRoundtrip){
+                String auxMonthRet=String.valueOf(monthReturn);
+                String auxDayRet=String.valueOf(dayReturn);
+                if(monthReturn<10)
+                    auxMonthRet= "0"+monthReturn;//le agrego un cero adelate
+                if(dayReturn<10)
+                    auxDayRet= "0"+dayReturn;//le agrego un cero adelate
+                auxDateReturn= yearReturn+"-"+auxMonthRet+"-"+auxDayRet;
+            }
+            dbh.insert(cityOrigin,cityDestiny,idOrigin,idDestiny,yearGo+"-"+auxMonth+"-"+auxDay,auxDateReturn,numberOfTickets,isRoundtrip);
             asyncCallerSchedules= new AsyncCallerSchedules(this);
             asyncCallerSchedules.execute("go");
 
@@ -502,14 +545,14 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
                 switch (result.first){
                     case "go":
                         codeResult=3;
-                        i.putExtra("departCity",(String)spinnerGo.getSelectedItem());
-                        i.putExtra("arrivCity",(String)spinnerDestiny.getSelectedItem());
+                        i.putExtra("departCity",cityOrigin);
+                        i.putExtra("arrivCity",cityDestiny);
                         i.putExtra("goOrReturn","ida");
                         break;
                     case "return":
                         codeResult=4;
-                        i.putExtra("departCity",(String)spinnerDestiny.getSelectedItem());
-                        i.putExtra("arrivCity",(String)spinnerGo.getSelectedItem());
+                        i.putExtra("departCity",cityDestiny);
+                        i.putExtra("arrivCity",cityOrigin);
                         i.putExtra("goOrReturn","vuelta");
                         break;
                 }
