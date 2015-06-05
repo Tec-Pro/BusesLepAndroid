@@ -60,10 +60,10 @@ public class AdaptatorLastSearch extends BaseAdapter {
         arrDate = (TextView) vistaReciclada.findViewById(R.id.arrDate);
         depDate = (TextView) vistaReciclada.findViewById(R.id.depDate);
 
-        departureLoc.setText(s.get("city_origin").toString());
-        arrivalLoc.setText(s.get("city_destiny").toString());
-        depDate.setText( s.get("date_go").toString());
-        arrDate.setText(s.get("date_return").toString());
+        departureLoc.setText((String)s.get("city_origin"));
+        arrivalLoc.setText((String)s.get("city_destiny"));
+        depDate.setText((String) s.get("date_go"));
+        arrDate.setText((String)s.get("date_return"));
 
 
         return vistaReciclada;
