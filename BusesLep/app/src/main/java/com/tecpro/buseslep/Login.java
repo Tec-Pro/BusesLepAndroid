@@ -53,7 +53,7 @@ public class Login extends Activity {
         }
     }
 
-    public void launchSingin(View v){
+    public void launchSignin(View v){
         Intent i = new Intent(this, Singin.class);
         startActivity(i);
     }

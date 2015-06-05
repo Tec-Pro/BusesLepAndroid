@@ -4,16 +4,6 @@
     android:layout_height="match_parent"
     android:background="#ffffffff">
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/scrollView" >
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,13 +22,6 @@
         android:layout_gravity="center_horizontal"
         android:elegantTextHeight="false"
         android:gravity="center_horizontal" />
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/textView13" />
 
 
     <EditText
@@ -69,28 +52,52 @@
         android:text=""
         android:id="@+id/textView18" />
 
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Ingresar"
+                android:text="   Ingresar   "
                 android:id="@+id/btnLogin"
-                android:windowSoftInputMode="stateHidden"
                 android:layout_gravity="center_horizontal|bottom"
-                android:layout_weight="0"
+                android:windowSoftInputMode="stateHidden"
+                android:layout_weight="0.5"
                 android:onClick="login"
                 android:background="@drawable/border"
                 android:textStyle="bold"
                 android:layout_marginBottom="0dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="5dp"
+                android:paddingLeft="20dp"
+                android:drawablePadding="-50sp"
+                android:singleLine="true" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="¿Aún no tienes cuenta?"
+                android:id="@+id/btnJoin"
+                android:windowSoftInputMode="stateHidden"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_weight="0.5"
+                android:onClick="launchSignin"
+                android:background="@drawable/border"
+                android:textStyle="bold"
+                android:layout_marginBottom="0dp"
                 android:layout_marginTop="0dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="15dp" />
 
+    </LinearLayout>
 
-            <TextView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:id="@+id/textView8" />
+        android:id="@+id/textView13" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -114,28 +121,5 @@
 
     </LinearLayout>
 
-            <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/textView1" />
 
-
-        <Button
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="¿Aún no tienes cuenta?"
-                android:id="@+id/btnJoin"
-                android:windowSoftInputMode="stateHidden"
-                android:layout_gravity="center_horizontal|bottom"
-                android:layout_weight="0"
-                android:onClick="launchSignin"
-                android:background="@drawable/border"
-                android:textStyle="bold"
-                android:layout_marginBottom="0dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
-        </LinearLayout>
-    </ScrollView>
 </LinearLayout>
