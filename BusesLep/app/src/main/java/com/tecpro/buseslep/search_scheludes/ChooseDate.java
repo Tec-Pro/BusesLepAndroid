@@ -93,11 +93,12 @@ public class ChooseDate extends FragmentActivity {
         cal = Calendar.getInstance();
         args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
         args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+        args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, false);
         caldroidFragment.setArguments(args);
 
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.calendar1, caldroidFragment);
-        t.commit();
+       t.commit();
 
     }
 

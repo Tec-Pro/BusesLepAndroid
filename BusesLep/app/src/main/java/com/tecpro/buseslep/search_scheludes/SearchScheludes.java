@@ -150,7 +150,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-      //  getMenuInflater().inflate(R.menu.menu_search_scheludes, menu);
+        getMenuInflater().inflate(R.menu.menu_search_scheludes, menu);
         return true;
     }
 

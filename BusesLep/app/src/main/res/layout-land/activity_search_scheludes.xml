@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Búsqueda de horarios"
+        android:id="@+id/textView6"
+        android:textColor="#ff000000"
+        android:textStyle="bold|normal|italic"
+        android:layout_gravity="center_horizontal"
+        android:elegantTextHeight="false"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="5dp" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ida y vuelta"
+        android:id="@+id/chk_round_trip"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:onClick="clickGoes"
+        android:enabled="true"
+        android:checked="true" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@drawable/border"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/spinner_go"
+            android:layout_gravity="center"
+            android:spinnerMode="dialog"
+            android:paddingLeft="20dp"
+            android:layout_weight="0.5" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/spinner_destiny"
+            android:spinnerMode="dialog"
+            android:paddingLeft="20dp"
+            android:layout_weight="0.5" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/border"
+        android:visibility="visible"
+        android:layout_marginTop="5dp"
+        android:id="@+id/linear_layout_from"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:baselineAligned="false"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Fecha ida"
+                android:id="@+id/txt_date_from"
+                android:editable="false"
+                android:textSize="20dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:onClick="clickDateGo" />
+
+            <ImageView
+                android:src="@drawable/icon_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView2"
+                android:scaleType="fitEnd"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center"
+                android:onClick="clickDateGo" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/linear_layout_to"
+            android:background="@drawable/border"
+            android:visibility="visible"
+            android:layout_weight="0.5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Fecha vuelta"
+                android:id="@+id/txt_date_to"
+                android:editable="false"
+                android:textSize="20dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center"
+                android:onClick="clickDateReturn" />
+
+            <ImageView
+                android:src="@drawable/icon_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView3"
+                android:scaleType="fitEnd"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center"
+                android:onClick="clickDateReturn" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@drawable/border"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/spinner_number_tickets"
+            android:spinnerMode="dialog"
+            android:layout_weight="0.5"
+            android:entries="@array/numbersTickets"
+            android:prompt="@string/numbersTicketsName"
+            android:paddingLeft="20dp" />
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BUSCAR"
+        android:id="@+id/btn_search"
+        android:background="@drawable/border"
+        android:longClickable="true"
+        android:textStyle="bold"
+        android:onClick="clickSearch"
+        android:layout_weight="0.5" />
+
+
+</LinearLayout>
