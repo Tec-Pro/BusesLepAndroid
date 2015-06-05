@@ -82,7 +82,8 @@
         android:layout_marginTop="5dp"
         android:id="@+id/linear_layout_from"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
+        android:layout_marginRight="5dp"
+        android:onClick="clickDateGo">
 
         <TextView
             android:layout_width="wrap_content"
@@ -93,7 +94,8 @@
             android:textSize="20dp"
             android:layout_marginLeft="20dp"
             android:gravity="center"
-            android:onClick="clickDateGo" />
+            android:onClick="clickDateGo"
+            android:clickable="true" />
 
         <ImageView
             android:src="@drawable/icon_calendar"
@@ -116,7 +118,8 @@
         android:background="@drawable/border"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:onClick="clickDateReturn">
 
         <TextView
             android:layout_width="wrap_content"
@@ -127,7 +130,8 @@
             android:textSize="20dp"
             android:layout_marginLeft="20dp"
             android:gravity="center"
-            android:onClick="clickDateReturn" />
+            android:onClick="clickDateReturn"
+            android:clickable="true" />
 
         <ImageView
             android:src="@drawable/icon_calendar"

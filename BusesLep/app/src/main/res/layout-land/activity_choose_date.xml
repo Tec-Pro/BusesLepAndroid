@@ -27,31 +27,4 @@
         android:layout_weight="0.94">
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:weightSum="1">
-
-        <TextView
-            android:id="@+id/txt_select_date"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="15dp"
-            android:textStyle="normal|bold"
-            android:layout_weight="0.5"
-            android:gravity="center" />
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="ACEPTAR"
-            android:id="@+id/btn_accept"
-            android:onClick="clickBtnAccept"
-            android:elegantTextHeight="true"
-            android:layout_gravity="center"
-            android:layout_weight="0.5"
-            android:textSize="15dp" />
-    </LinearLayout>
 </LinearLayout>

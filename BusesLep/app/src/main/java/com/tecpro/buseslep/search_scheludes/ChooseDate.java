@@ -32,7 +32,6 @@ public class ChooseDate extends FragmentActivity {
     private int year;
     private Date dateSelected;
     final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
-    private TextView txtSelectedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +42,8 @@ public class ChooseDate extends FragmentActivity {
         day=bundle.getInt("day");
         month=bundle.getInt("month");
         year=bundle.getInt("year");
-        txtSelectedDate = (TextView)findViewById(R.id.txt_select_date);
         Calendar cal= new GregorianCalendar(year,month,day);
         dateSelected= cal.getTime();
-        txtSelectedDate.setText("Fecha elegida: "+formatter.format(dateSelected));
         // Setup caldroid fragment
         // **** If you want normal CaldroidFragment, use below line ****
         caldroidFragment = new CaldroidFragment();
@@ -56,8 +53,8 @@ public class ChooseDate extends FragmentActivity {
 
             @Override
             public void onSelectDate(Date date, View view) {
-                txtSelectedDate.setText("Fecha elegida: "+formatter.format(date));
                 dateSelected= date;
+                accept();
 
             }
 
@@ -125,7 +122,7 @@ public class ChooseDate extends FragmentActivity {
     }
     */
 
-    public void clickBtnAccept(View view){
+    public void accept(){
         Intent intent = new Intent();
         Calendar cal= new GregorianCalendar();
         cal.setTime(dateSelected);

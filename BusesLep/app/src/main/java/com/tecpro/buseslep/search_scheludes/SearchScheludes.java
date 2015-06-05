@@ -433,7 +433,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
 
         @Override
         protected void onPostExecute(Pair<String,List<String>> result) {
-            if (result==null)
+            if (result==null )
                 Toast.makeText(getBaseContext(), "No se han encontrado horarios ciudades", Toast.LENGTH_SHORT).show();
             //this method will be running on UI thread
             else{
