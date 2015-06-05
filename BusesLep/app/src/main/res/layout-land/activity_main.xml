@@ -21,67 +21,74 @@
         android:textStyle="bold"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="0dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_weight="0" />
 
     <Space
-        android:layout_width="20dp"
+        android:layout_width="fill_parent"
         android:layout_height="20dp" />
 
     <ListView
         android:layout_width="fill_parent"
-        android:layout_height="75dp"
+        android:layout_height="45dp"
         android:id="@+id/listView"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/border"
         android:isScrollContainer="false"
         android:layout_marginTop="0dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_weight="0.68" />
 
     <Space
-        android:layout_width="20dp"
-        android:layout_height="20dp" />
-
-    <Button
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="   Ingresar   "
-        android:id="@+id/btnLogin"
-        android:layout_gravity="center_horizontal|bottom"
-        android:windowSoftInputMode="stateHidden"
-        android:layout_weight="0.1"
-        android:onClick="launchLogin"
-        android:background="@drawable/border"
-        android:textStyle="bold"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:drawableLeft="@drawable/user_icon"
-        android:paddingLeft="20dp"
-        android:drawablePadding="-50sp"
-        android:singleLine="true" />
+        android:layout_height="15dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="   Ingresar   "
+            android:id="@+id/btnLogin"
+            android:layout_gravity="center_horizontal|bottom"
+            android:windowSoftInputMode="stateHidden"
+            android:layout_weight="0.5"
+            android:onClick="launchLogin"
+            android:background="@drawable/border"
+            android:textStyle="bold"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="5dp"
+            android:drawableLeft="@drawable/user_icon"
+            android:paddingLeft="20dp"
+            android:drawablePadding="-50sp"
+            android:singleLine="true" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Registrarme"
+            android:id="@+id/btnRegister"
+            android:windowSoftInputMode="stateHidden"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_weight="0.5"
+            android:onClick="launchRegister"
+            android:background="@drawable/border"
+            android:textStyle="bold"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="15dp" />
+    </LinearLayout>
 
     <Space
         android:layout_width="20dp"
         android:layout_height="2dp" />
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Registrarme"
-        android:id="@+id/btnRegister"
-        android:windowSoftInputMode="stateHidden"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_weight="0.1"
-        android:onClick="launchRegister"
-        android:background="@drawable/border"
-        android:textStyle="bold"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp" />
 
 </LinearLayout>

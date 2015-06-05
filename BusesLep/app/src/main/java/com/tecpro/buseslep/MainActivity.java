@@ -67,12 +67,12 @@ public class MainActivity extends Activity implements OnItemClickListener {
     }
 
     public void launchLogin(View v){
-        //Intent i =  new Intent(this, SearchScheludes.class);
-        //startActivity(i);
+        Intent i =  new Intent(this, Login.class);
+        startActivity(i);
     }
 
     public void launchRegister(View v){
-        //Intent i =  new Intent(this, SearchScheludes.class);
-        //startActivity(i);
+        Intent i =  new Intent(this, Singin.class);
+        startActivity(i);
     }
 }

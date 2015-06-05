@@ -14,14 +14,15 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.4"
-        android:background="#282828">
+        android:layout_weight="0"
+        android:background="#282828"
+        android:weightSum="1">
 
         <ImageView
 
             android:layout_width="0dp"
             android:layout_height="72dp"
-            android:layout_weight="0.53"
+            android:layout_weight="1"
             android:id="@+id/imageView"
             android:src="@drawable/buseslep"
             android:layout_gravity="center_horizontal"
@@ -52,7 +53,7 @@
         android:layout_marginLeft="10dp" />
 
     <Space
-        android:layout_width="20dp"
+        android:layout_width="fill_parent"
         android:layout_height="10dp" />
 
     <TextView
@@ -63,10 +64,10 @@
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="0dp"
         android:background="@drawable/border"
         android:textStyle="bold"
-        android:layout_weight="0.1"
+        android:layout_weight="0"
         android:gravity="center"
         android:layout_marginRight="5dp"
         android:layout_marginLeft="5dp" />
@@ -84,8 +85,8 @@
         android:layout_marginRight="5dp" />
 
     <Space
-        android:layout_width="20dp"
-        android:layout_height="55dp" />
+        android:layout_width="fill_parent"
+        android:layout_height="50dp" />
 
     <Button
         android:layout_width="fill_parent"
@@ -94,7 +95,7 @@
         android:id="@+id/btnLogin"
         android:layout_gravity="center_horizontal|bottom"
         android:windowSoftInputMode="stateHidden"
-        android:layout_weight="0.1"
+        android:layout_weight="0"
         android:onClick="launchLogin"
         android:background="@drawable/border"
         android:textStyle="bold"
@@ -117,7 +118,7 @@
         android:id="@+id/btnRegister"
         android:windowSoftInputMode="stateHidden"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_weight="0.1"
+        android:layout_weight="0"
         android:onClick="launchRegister"
         android:background="@drawable/border"
         android:textStyle="bold"
