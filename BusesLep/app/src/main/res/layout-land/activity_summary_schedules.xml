@@ -1,4 +1,11 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout_summary_schedules"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+<LinearLayout
+
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.tecpro.buseslep.search_scheludes.schedule.SummarySchedules"
@@ -246,7 +253,8 @@
             android:id="@+id/txt_number_tickets"
             android:background="@drawable/border"
             android:layout_weight="0.5"
-            android:gravity="center" />
+            android:gravity="center"
+            android:onClick="clickNumberTicktes" />
     </LinearLayout>
 
     <LinearLayout
@@ -310,3 +318,13 @@
         android:onClick="onClickReserve" />
 
 </LinearLayout>
+
+    <ListView
+        android:id="@+id/options_summary_schedules"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#EEE"
+        />
+
+</android.support.v4.widget.DrawerLayout>

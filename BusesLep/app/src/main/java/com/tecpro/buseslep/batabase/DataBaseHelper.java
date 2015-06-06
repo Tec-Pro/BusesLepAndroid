@@ -55,9 +55,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         register.put("date_return", date_return);
         register.put("number_tickets", number_tickets);
         register.put("is_roundtrip", is_roundtrip);
-        long i = db.insert("searches",null,register);
-        db.close();
-        return i;
+        String sql;
+             sql=  "SELECT * FROM searches WHERE code_city_origin = '"+ code_city_origin+"' AND code_city_destiny = '"+code_city_destiny+"' AND date_go = '"+date_go+"' AND date_return ='"+date_return+"' ;" ;
+
+        Cursor c = db.rawQuery(sql,null);
+        if(c.getCount()==0) {
+            long i = db.insert("searches", null, register);
+            db.close();
+            return i;
+        }
+        return 0;
     }
 
     /**

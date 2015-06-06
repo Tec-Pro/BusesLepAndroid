@@ -182,12 +182,12 @@
 
 </LinearLayout>
 
-<ListView
-android:id="@+id/options_search_schedules"
-android:layout_width="wrap_content"
-android:layout_height="match_parent"
-android:layout_gravity="start"
-android:background="#EEE"
-    />
+    <ListView
+        android:id="@+id/options_summary_schedules"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#EEE"
+        />
 
-    </android.support.v4.widget.DrawerLayout>
+</android.support.v4.widget.DrawerLayout>
