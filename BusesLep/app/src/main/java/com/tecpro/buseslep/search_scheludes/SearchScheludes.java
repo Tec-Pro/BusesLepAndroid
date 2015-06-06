@@ -6,6 +6,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.internal.widget.AdapterViewCompat;
@@ -20,6 +23,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -89,10 +93,18 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     private String arrivDateReturn;
     private String price;
     private DataBaseHelper dbh; //databasehelper para la db
+
+    //menu
+    private DrawerLayout drawerLayout;
+    private ListView drawer;
+    private ActionBarDrawerToggle toggle;
+    private static final String[] opciones = {"Recargar ciudades"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_scheludes);
+        loadMenuOptions();
         findViewsById();
         loadOrigin();
         Calendar cal = Calendar.getInstance();
@@ -106,6 +118,77 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         dbh= new DataBaseHelper(this);
     }
 
+    private void loadMenuOptions(){
+        // Rescatamos el Action Bar y activamos el boton Home
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
+        // Declarar e inicializar componentes para el Navigation Drawer
+        drawer = (ListView) findViewById(R.id.options_search_schedules);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_search_schedules);
+
+        // Declarar adapter y eventos al hacer click
+        drawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, opciones));
+
+        drawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+               // Toast.makeText(SearchScheludes.this, "Pulsado: " + opciones[arg2], Toast.LENGTH_SHORT).show();
+                switch (arg2){
+                    case 0://presione recargar ciudades
+                        loadOrigin();
+                        idOrigin=-1;
+                        loadDestiny();
+                        break;
+                }
+
+                drawerLayout.closeDrawers();
+
+            }
+        });
+
+        // Sombra del panel Navigation Drawer
+        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+        // Integracion boton oficial
+        toggle = new ActionBarDrawerToggle(
+                this, // Activity
+                drawerLayout, // Panel del Navigation Drawer
+                R.drawable.ic_navigation_drawer, // Icono que va a utilizar
+                R.string.options, // Descripcion al abrir el drawer
+                R.string.app_name // Descripcion al cerrar el drawer
+        ){
+            public void onDrawerClosed(View view) {
+                // Drawer cerrado
+                getActionBar().setTitle(getResources().getString(R.string.app_name));
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                // Drawer abierto
+                getActionBar().setTitle(R.string.options);
+                invalidateOptionsMenu();
+            }
+        };
+
+        drawerLayout.setDrawerListener(toggle);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // Activamos el toggle con el icono
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toggle.syncState();
+    }
+
     private void loadOrigin(){
         asyncCallerCities= new AsyncCallerCities();
         asyncCallerCities.execute("getCities");
@@ -116,18 +199,6 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         asyncCallerCities.execute("getDestinationCities");
     }
 
-    public static void loadSearch(String city_origin,String city_destiny, Integer code_city_origin, Integer code_city_destiny, String date_go, String date_return, Integer number_tickets, boolean is_roundtrip){
-        cityOrigin= city_origin;
-        cityDestiny= city_destiny;
-        idOrigin= code_city_origin;
-        idDestiny= code_city_destiny;
-        dateGo = date_go.replaceAll("-","");
-        if(is_roundtrip){
-            dateReturn= date_return.replaceAll("-","");
-        }
-        numberOfTickets= number_tickets;
-        chkRoundTrip.setChecked(is_roundtrip);
-    }
 
     private void loadSpinnerTickets(){
         LinkedList<String> numberTickets = new LinkedList<>();
@@ -165,30 +236,30 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
 
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_search_scheludes, menu);
-        return true;
-    }
+//        getMenuInflater().inflate(R.menu.menu_search_scheludes, menu);
+//        return true;
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+//        int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_update_cities) {
-            loadOrigin();
-            idOrigin=-1;
-            loadDestiny();
-            return true;
-        }
+//        if (id == R.id.action_update_cities) {
+//            loadOrigin();
+//            idOrigin=-1;
+//            loadDestiny();
+//            return true;
+//        }
 
-        return super.onOptionsItemSelected(item);
-    }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     public void clickDateGo(View v){
         int requestCode=1;

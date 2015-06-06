@@ -8,6 +8,7 @@
 
     <string name="numbersTicketsName">Seleccione la cantidad de pasajes</string>
     <string name="title_activity_summary_schedules">"Resumen "</string>
+    <string name="options">Menú de opciones</string>
 
 
 </resources>
