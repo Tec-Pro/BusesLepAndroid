@@ -24,28 +24,15 @@ public class AdaptatorLastSearch extends BaseAdapter {
     //public static List searches;
     private DataBaseHelper dbh;
     private List<Map<String,Object>> searches;
+    private final int StringMaxSize = 20;
 
-    public AdaptatorLastSearch(Context contexto, DataBaseHelper dbh) {
+    public AdaptatorLastSearch(Context contexto,  List<Map<String,Object>> searches) {
         //searches = Searches();
-        this.dbh = dbh;
-
-        dbh.deleteOldsSearches();
-     //   dbh.insert("Rio Cuarto", "Cordoba", 22, 23, "15-7-2015", "16-7-2015", 1, true);
-       // dbh.insert("Rio Cuarto", "Cordoba2", 24, 25, "14-7-2015", "20-7-2015", 1, true);
-        searches = dbh.getSearches();
+        this.searches = searches;
 
         inflador =(LayoutInflater)contexto
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-    }
-
-    static List Searches(){
-        ArrayList resultado = new ArrayList();
-        for (int i=0; i<20; i++){
-            Search s = new Search("RioCuarto"+i,"Cordoba"+i,i,i+2);
-            resultado.add(s);
-        }
-        return resultado;
     }
 
     public View getView(int posicion, View vistaReciclada,
@@ -59,9 +46,14 @@ public class AdaptatorLastSearch extends BaseAdapter {
 
         arrDate = (TextView) vistaReciclada.findViewById(R.id.arrDate);
         depDate = (TextView) vistaReciclada.findViewById(R.id.depDate);
-
-        departureLoc.setText((String)s.get("city_origin"));
-        arrivalLoc.setText((String)s.get("city_destiny"));
+        String origin = (String)s.get("city_origin");
+        if(origin.length()>StringMaxSize)
+            origin = origin.substring(0, StringMaxSize);
+        String destiny = (String)s.get("city_destiny");
+        if(destiny.length()>StringMaxSize)
+            destiny = destiny.substring(0,StringMaxSize);
+        departureLoc.setText(origin);
+        arrivalLoc.setText(destiny);
         depDate.setText((String) s.get("date_go"));
         arrDate.setText((String)s.get("date_return"));
 
@@ -77,4 +69,5 @@ public class AdaptatorLastSearch extends BaseAdapter {
     public long getItemId(int posicion) {
         return posicion;
     }
+
 }

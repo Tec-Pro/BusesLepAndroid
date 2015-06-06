@@ -57,6 +57,8 @@ public class MainActivity extends Activity implements OnItemClickListener {
     private String codeGoSchedule; //tengo el codigo del horario para la reserva
     private String codeReturnSchedule; //el codigo del horario apra la reserva pero de la vuelta
     private DataBaseHelper dbh;
+    private List<Map<String,Object>> searches;
+    ListView listView; //lista de busquedas recientes
 
     public BaseAdapter adaptador;
     @Override
@@ -64,25 +66,27 @@ public class MainActivity extends Activity implements OnItemClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         dbh = new DataBaseHelper(this);
-        adaptador = new AdaptatorLastSearch(this,dbh);
-        ListView listView = (ListView) findViewById(R.id.listView);
+        dbh.deleteOldsSearches();
+        searches = dbh.getSearches();
+        adaptador = new AdaptatorLastSearch(this,searches);
+        listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adaptador);
         listView.setOnItemClickListener(this);
-        /**
-         * UN DOS TRES PROBANDO
-         */
-        /*DataBaseHelper dbh = new DataBaseHelper(this);
-        loadSearch(dbh.getSearches().get(0)); //SUPONGO QUE HAY UN HORARIO CARGADO*/
-        /**
-         * TERMINO LA PRUEBA
-         */
-
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public void onResume(){ //actualiza la listview cada vez que regresa de otra activity
+        super.onResume();
+        searches = dbh.getSearches();
+        adaptador = new AdaptatorLastSearch(this,searches);
+        listView.setAdapter(adaptador);
     }
 
     @Override
@@ -102,7 +106,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        loadSearch(dbh.getSearches().get(position));
+        loadSearch(searches.get(position));
     }
 
     public void launchSearchSchedules(View v){
