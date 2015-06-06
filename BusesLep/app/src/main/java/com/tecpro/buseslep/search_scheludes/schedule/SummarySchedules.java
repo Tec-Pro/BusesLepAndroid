@@ -15,7 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.tecpro.buseslep.PurchaseDetails;
 import com.tecpro.buseslep.R;
+import com.tecpro.buseslep.ReserveDetails;
 import com.tecpro.buseslep.search_scheludes.ChooseDate;
 
 import org.w3c.dom.Text;
@@ -179,15 +181,18 @@ public class SummarySchedules extends Activity {
      * @param v
      */
     public void onClickReserve(View v){
-        //Intent i =  new Intent(this, Reserve.class);
-        //startActivity(i);
-        // bundleCityDestiny: //nombre destino
-        //bundleCityOrigin;//nombre origen
-        //bundleDepartDateGo;// fecha salida ida
-        //bundleDepartTimeGo;// hora salida ida
-        //bundleDepartDateRet; //fecha salida vuelta
-        //bundleDepartTimeRet: //hora salida vuelta
-        //if (codeReturn == -1)   ES UNICAMENTE IDA, LOS CAMPOS DE LA VUELTA SERÁN VACÍOS NO NULOS
+        Intent i =  new Intent(this, ReserveDetails.class);
+        i.putExtra("city_from",bundleCityOrigin);
+        i.putExtra("city_to",bundleCityDestiny);
+        i.putExtra("arrival_date1",bundleDepartDateGo);
+        i.putExtra("arrival_hour1",bundleDepartTimeGo);
+        i.putExtra("arrival_date2",bundleDepartDateRet);
+        i.putExtra("arrival_hour2",bundleDepartTimeRet);
+        i.putExtra("cant_tickets",numberTickets.getText());
+        i.putExtra("roundtrip",codeReturn);
+
+        startActivity(i);
+
     }
 
     /**
@@ -195,8 +200,17 @@ public class SummarySchedules extends Activity {
      * @param v
      */
     public void onClickBuy(View v){
-        //Intent i =  new Intent(this, Buy.class);
-        //startActivity(i);
+        Intent i =  new Intent(this, PurchaseDetails.class);
+        i.putExtra("city_from",bundleCityOrigin);
+        i.putExtra("city_to",bundleCityDestiny);
+        i.putExtra("arrival_date1",bundleDepartDateGo);
+        i.putExtra("arrival_hour1",bundleDepartTimeGo);
+        i.putExtra("arrival_date2",bundleDepartDateRet);
+        i.putExtra("arrival_hour2",bundleDepartTimeRet);
+        i.putExtra("cant_tickets",numberTickets.getText());
+        i.putExtra("roundtrip",codeReturn);
+
+        startActivity(i);
     }
 
     @Override
