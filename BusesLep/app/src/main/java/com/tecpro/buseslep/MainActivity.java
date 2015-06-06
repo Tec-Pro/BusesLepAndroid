@@ -97,6 +97,8 @@ public class MainActivity extends Activity implements OnItemClickListener {
         listView.setAdapter(adaptador);
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -123,6 +125,14 @@ public class MainActivity extends Activity implements OnItemClickListener {
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         loadSearch(searches.get(position));
+    }
+
+
+    public void deleteSearches(View v){
+        dbh.delete();
+        searches = dbh.getSearches();
+        adaptador = new AdaptatorLastSearch(this,searches);
+        listView.setAdapter(adaptador);
     }
 
     public void launchSearchSchedules(View v){

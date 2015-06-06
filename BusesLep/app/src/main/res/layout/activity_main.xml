@@ -1,3 +1,5 @@
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
     android:layout_height="fill_parent" android:paddingLeft="0dp"
@@ -56,21 +58,22 @@
             android:layout_marginLeft="10dp"
             android:layout_weight="1.1" />
 
-        <TextView
+        <Button
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Ultimas Busquedas"
-            android:id="@+id/textView"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="0dp"
             android:background="@drawable/border"
-            android:textStyle="bold"
+            android:drawableRight="@drawable/icon_trash"
+            android:text="Ultimas Busquedas"
+            android:onClick="deleteSearches"
+            android:drawablePadding="-10dp"
+            android:id="@+id/btnTrash"
             android:layout_weight="1.2"
-            android:gravity="center"
+            android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp" />
+            android:paddingRight="15dp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:nestedScrollingEnabled="false" />
 
         <ListView
             android:layout_width="fill_parent"
@@ -135,3 +138,4 @@
     </LinearLayout>
 
 </LinearLayout>
+
