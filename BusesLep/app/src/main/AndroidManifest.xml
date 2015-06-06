@@ -42,7 +42,16 @@
         <activity
             android:theme="@style/Base.Theme.AppCompat.Light.Dialog"
             android:name=".search_scheludes.schedule.ChooseNumberTickets"
-            android:label="@string/title_activity_choose_number_tickets" >
+            android:label="@string/title_activity_choose_number_tickets">
+    </activity>
+
+    <activity
+            android:name=".PurchaseDetails"
+            android:label="@string/app_name"  >
+        </activity>
+        <activity
+            android:name=".ReserveDetails"
+            android:label="@string/app_name"  >
         </activity>
     </application>
 
