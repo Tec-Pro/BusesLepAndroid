@@ -60,7 +60,7 @@ public class AdaptatorSchedule extends BaseAdapter {
         departTIme.setText(s.getDepartTIme());
         arrivDate.setText(s.getArrivDate());
         arrivTime.setText(s.getArrivTime());
-        if(s.getStatus().contains("viaje")||s.getStatus().contains("destino"))//si esta en viaje o destino lo pongo en rojo
+        if(s.getStatus().contains("viaje")||s.getStatus().contains("destino") ||s.getStatus().contains("completo") )//si esta en viaje o destino lo pongo en rojo
             status.setTextColor(Color.RED);
         else
             status.setTextColor(Color.BLUE);

@@ -49,7 +49,7 @@ public class ScheduleSearch extends Activity implements AdapterView.OnItemClickL
     }
 
     private void resultIntent(Schedule scheduleSelected){
-        if(scheduleSelected.getStatus().contains("viaje")||scheduleSelected.getStatus().contains("destino"))
+        if(scheduleSelected.getStatus().contains("viaje")||scheduleSelected.getStatus().contains("destino")||scheduleSelected.getStatus().contains("completo"))
             Toast.makeText(this,"El bus se encuentra "+scheduleSelected.getStatus()+", seleccione uno disponible",Toast.LENGTH_SHORT ).show();
         else {
             Intent intent = new Intent();
