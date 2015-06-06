@@ -24,6 +24,7 @@ import com.tecpro.buseslep.batabase.DataBaseHelper;
 import com.tecpro.buseslep.search_scheludes.SearchScheludes;
 import com.tecpro.buseslep.search_scheludes.schedule.ScheduleSearch;
 import com.tecpro.buseslep.search_scheludes.schedule.SummarySchedules;
+import com.tecpro.buseslep.utils.SecurePreferences;
 import com.tecpro.buseslep.webservices.WebServices;
 
 import java.util.ArrayList;
@@ -72,6 +73,13 @@ public class MainActivity extends Activity implements OnItemClickListener {
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adaptador);
         listView.setOnItemClickListener(this);
+        SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+        if (preferences.getString("login") != null ) {
+            if (preferences.getString("login").equals("true")) {
+                findViewById(R.id.btnLogin).setVisibility(View.INVISIBLE);
+                findViewById(R.id.btnRegister).setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     @Override
@@ -101,6 +109,14 @@ public class MainActivity extends Activity implements OnItemClickListener {
             return true;
         }
 
+        if (id == R.id.action_logout) {
+            SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+            preferences.put("login", "false");
+            findViewById(R.id.btnLogin).setVisibility(View.VISIBLE);
+            findViewById(R.id.btnRegister).setVisibility(View.VISIBLE);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -116,11 +132,13 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
     public void launchLogin(View v){
         Intent i =  new Intent(this, Login.class);
+        i.putExtra("next","main");
         startActivity(i);
     }
 
     public void launchRegister(View v){
         Intent i =  new Intent(this, Singin.class);
+        i.putExtra("next","main");
         startActivity(i);
     }
 

@@ -36,6 +36,7 @@ public class Login extends Activity {
             SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
             preferences.put("dni", dni);
             preferences.put("pass", pass);
+            preferences.put("login", "true");
           /*  Bundle bundle = getIntent().getExtras();
             if (bundle.getString("next").equals("main")) {
                 Intent i = new Intent(this, MainActivity.class);
