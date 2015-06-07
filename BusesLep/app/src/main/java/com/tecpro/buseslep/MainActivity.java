@@ -92,6 +92,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
                 findViewById(R.id.btnRegister).setVisibility(View.INVISIBLE);
             }
         }
+        getActionBar().setDisplayShowHomeEnabled(false);
     }
     private void loadMenuOptions(){
         // Rescatamos el Action Bar y activamos el boton Home
