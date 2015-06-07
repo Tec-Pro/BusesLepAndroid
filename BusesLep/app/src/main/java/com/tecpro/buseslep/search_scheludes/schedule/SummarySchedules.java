@@ -15,10 +15,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.tecpro.buseslep.Login;
 import com.tecpro.buseslep.PurchaseDetails;
 import com.tecpro.buseslep.R;
 import com.tecpro.buseslep.ReserveDetails;
 import com.tecpro.buseslep.search_scheludes.ChooseDate;
+import com.tecpro.buseslep.utils.SecurePreferences;
 
 import org.w3c.dom.Text;
 
@@ -181,7 +183,19 @@ public class SummarySchedules extends Activity {
      * @param v
      */
     public void onClickReserve(View v){
-        Intent i =  new Intent(this, ReserveDetails.class);
+        SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+        Intent i;
+        if (preferences.getString("login") != null ) {
+            if (preferences.getString("login").equals("true")) {
+                i =  new Intent(this, ReserveDetails.class);
+            } else {
+                i =  new Intent(this, Login.class);
+                i.putExtra("next","reserve");
+            }
+        } else {
+            i =  new Intent(this, Login.class);
+            i.putExtra("next","reserve");
+        }
         i.putExtra("city_from",bundleCityOrigin);
         i.putExtra("city_to",bundleCityDestiny);
         i.putExtra("arrival_date1",bundleDepartDateGo);
@@ -190,7 +204,6 @@ public class SummarySchedules extends Activity {
         i.putExtra("arrival_hour2",bundleDepartTimeRet);
         i.putExtra("cant_tickets",numberTickets.getText());
         i.putExtra("roundtrip",codeReturn);
-
         startActivity(i);
 
     }
@@ -200,7 +213,19 @@ public class SummarySchedules extends Activity {
      * @param v
      */
     public void onClickBuy(View v){
-        Intent i =  new Intent(this, PurchaseDetails.class);
+        SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+        Intent i;
+        if (preferences.getString("login") != null ) {
+            if (preferences.getString("login").equals("true")) {
+                i =  new Intent(this, PurchaseDetails.class);
+            } else {
+                i =  new Intent(this, Login.class);
+                i.putExtra("next","purchase");
+            }
+        } else {
+            i =  new Intent(this, Login.class);
+            i.putExtra("next","purchase");
+        }
         i.putExtra("city_from",bundleCityOrigin);
         i.putExtra("city_to",bundleCityDestiny);
         i.putExtra("arrival_date1",bundleDepartDateGo);

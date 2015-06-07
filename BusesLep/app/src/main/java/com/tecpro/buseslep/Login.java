@@ -31,23 +31,31 @@ public class Login extends Activity {
         String pass = ((EditText) findViewById(R.id.txtPass)).getText().toString();
         //mandar por json login
         //si se logeo correctamente en lep.
+        Intent i;
         if (true) {
             Toast.makeText(getApplicationContext(), "Iniciando sesion", Toast.LENGTH_LONG).show();
             SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
             preferences.put("dni", dni);
             preferences.put("pass", pass);
             preferences.put("login", "true");
-          /*  Bundle bundle = getIntent().getExtras();
+            Bundle bundle = getIntent().getExtras();
             if (bundle.getString("next").equals("main")) {
-                Intent i = new Intent(this, MainActivity.class);
+                i = new Intent(this, MainActivity.class);
             } else {
                 if (bundle.getString("next").equals("purchase")) {
-                    //  Intent i = new Intent(this, purchase.class);
+                    i = new Intent(this, PurchaseDetails.class);
                 } else {
-                    //  Intent i = new Intent(this, reserve.class);
+                    i = new Intent(this, ReserveDetails.class);
                 }
-            }*/
-            Intent i = new Intent(this, MainActivity.class); //borrar esta linea
+                i.putExtra("city_from",bundle.getString("city_from"));
+                i.putExtra("city_to",bundle.getString("city_to"));
+                i.putExtra("arrival_date1",bundle.getString("arrival_date1"));
+                i.putExtra("arrival_hour1",bundle.getString("arrival_hour1"));
+                i.putExtra("arrival_date2",bundle.getString("arrival_date2"));
+                i.putExtra("arrival_hour2",bundle.getString("arrival_hour2"));
+                i.putExtra("cant_tickets", bundle.getString("cant_tickets"));
+                i.putExtra("roundtrip",bundle.getInt("roundtrip"));
+            }
             startActivity(i);
         } else {         //si no se logea
             Toast.makeText(getApplicationContext(), "Ocurrio un error", Toast.LENGTH_LONG).show();
@@ -56,6 +64,24 @@ public class Login extends Activity {
 
     public void launchSignin(View v){
         Intent i = new Intent(this, Singin.class);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle.getString("next").equals("main")) {
+            i.putExtra("next","main");
+        } else {
+            if (bundle.getString("next").equals("purchase")) {
+                i.putExtra("next","purchase");
+            } else {
+                i.putExtra("next","reserve");
+            }
+            i.putExtra("city_from", bundle.getString("city_from"));
+            i.putExtra("city_to", bundle.getString("city_to"));
+            i.putExtra("arrival_date1", bundle.getString("arrival_date1"));
+            i.putExtra("arrival_hour1", bundle.getString("arrival_hour1"));
+            i.putExtra("arrival_date2", bundle.getString("arrival_date2"));
+            i.putExtra("arrival_hour2", bundle.getString("arrival_hour2"));
+            i.putExtra("cant_tickets", bundle.getString("cant_tickets"));
+            i.putExtra("roundtrip", bundle.getInt("roundtrip"));
+        }
         startActivity(i);
     }
 
