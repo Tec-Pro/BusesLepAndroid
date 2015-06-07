@@ -65,11 +65,14 @@ public class MainActivity extends Activity implements OnItemClickListener{
     private List<Map<String,Object>> searches;
     ListView listView; //lista de busquedas recientes
 
+    private boolean userSesion; //para saber si hay sesion iniciada o no
 
     private DrawerLayout drawerLayout;
     private ListView drawer;
     private ActionBarDrawerToggle toggle;
-    private static final String[] opciones = {"Cerrar Sesion"};
+    private static final String[] opciones = {"Editar Perfil" , "Cerrar Sesion"};
+    private static final String[] optionsNotSesion= {"Iniciar Sesion"};
+    SecurePreferences preferences;
 
     public BaseAdapter adaptador;
 
@@ -77,7 +80,8 @@ public class MainActivity extends Activity implements OnItemClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        loadMenuOptions();
+        preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+
         dbh = new DataBaseHelper(this);
         dbh.deleteOldsSearches();
         searches = dbh.getSearches();
@@ -85,13 +89,18 @@ public class MainActivity extends Activity implements OnItemClickListener{
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(adaptador);
         listView.setOnItemClickListener(this);
-        SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+
         if (preferences.getString("login") != null ) {
             if (preferences.getString("login").equals("true")) {
                 findViewById(R.id.btnLogin).setVisibility(View.INVISIBLE);
                 findViewById(R.id.btnRegister).setVisibility(View.INVISIBLE);
+                userSesion = true;
             }
+            else
+                userSesion = false;
+
         }
+        loadMenuOptions();
         getActionBar().setDisplayShowHomeEnabled(false);
     }
     private void loadMenuOptions(){
@@ -102,27 +111,47 @@ public class MainActivity extends Activity implements OnItemClickListener{
         // Declarar e inicializar componentes para el Navigation Drawer
         drawer = (ListView) findViewById(R.id.options_activity_main);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_activity_main);
-
         // Declarar adapter y eventos al hacer click
-        drawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, opciones));
+
+        if(userSesion)
+            drawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, opciones));
+        else
+            drawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, optionsNotSesion));
+
+
 
         drawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 // Toast.makeText(SearchScheludes.this, "Pulsado: " + opciones[arg2], Toast.LENGTH_SHORT).show();
-                switch (arg2){
-                    case 0://presione cerrar sesion
-                        SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
-                        preferences.put("login", "false");
-                        findViewById(R.id.btnLogin).setVisibility(View.VISIBLE);
-                        findViewById(R.id.btnRegister).setVisibility(View.VISIBLE);
+                if(userSesion){ //si el usuario tiene una sesion
+                    switch (arg2){
+                        case 0:
 
-                        break;
+                            break;
+                        case 1://presione cerrar sesion
+                            SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+                            preferences.put("login", "false");
+                            findViewById(R.id.btnLogin).setVisibility(View.VISIBLE);
+                            findViewById(R.id.btnRegister).setVisibility(View.VISIBLE);
+                            userSesion = false;
+                            loadMenuOptions();
+                            break;
+                    }
                 }
+                else{
+                    switch (arg2){
+                        case 0:
+                            Intent i =  new Intent(MainActivity.this, Login.class);
+                            i.putExtra("next","main");
+                            startActivity(i);
+                            break;
 
+                    }
+                }
                 drawerLayout.closeDrawers();
-
             }
+
         });
 
         // Sombra del panel Navigation Drawer
@@ -190,12 +219,10 @@ public class MainActivity extends Activity implements OnItemClickListener{
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         if (id == R.id.action_logout) {
             SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
             preferences.put("login", "false");
@@ -203,7 +230,6 @@ public class MainActivity extends Activity implements OnItemClickListener{
             findViewById(R.id.btnRegister).setVisibility(View.VISIBLE);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }*/
 
@@ -289,29 +315,29 @@ public class MainActivity extends Activity implements OnItemClickListener{
         if (data == null) {return;}
         switch (requestCode){
             case 3://retorno de seleccion de horario ida
-            codeGoSchedule= data.getStringExtra("codigo");
-            departDateGo = data.getStringExtra("departDate");
-            departTimeGo = data.getStringExtra("departTime");
-            arrivDateGo = data.getStringExtra("arrivDate");
-            arrivTimeGo = data.getStringExtra("arrivTime");
-            //debo corroborar si es ida y vuelta, en caso de ser ida y vuelta debo largar la gui para elegir retorno
-            if (isRoundtrip==1) {
-                asyncCallerSchedules = new AsyncCallerSchedules(this);
-                asyncCallerSchedules.execute("return");
-            }else{
-                launchBuyReserve(false);
-            }
-    break;
-    case 4: //retorno de la seleccion de horario vuelta
-    codeReturnSchedule= data.getStringExtra("codigo");
-    departDateReturn = data.getStringExtra("departDate");
-    departTimeReturn = data.getStringExtra("departTime");
-    arrivDateReturn = data.getStringExtra("arrivDate");
-    arrivTimeReturn = data.getStringExtra("arrivTime");
-    launchBuyReserve(true);
-    break;
-}
-}
+                codeGoSchedule= data.getStringExtra("codigo");
+                departDateGo = data.getStringExtra("departDate");
+                departTimeGo = data.getStringExtra("departTime");
+                arrivDateGo = data.getStringExtra("arrivDate");
+                arrivTimeGo = data.getStringExtra("arrivTime");
+                //debo corroborar si es ida y vuelta, en caso de ser ida y vuelta debo largar la gui para elegir retorno
+                if (isRoundtrip==1) {
+                    asyncCallerSchedules = new AsyncCallerSchedules(this);
+                    asyncCallerSchedules.execute("return");
+                }else{
+                    launchBuyReserve(false);
+                }
+                break;
+            case 4: //retorno de la seleccion de horario vuelta
+                codeReturnSchedule= data.getStringExtra("codigo");
+                departDateReturn = data.getStringExtra("departDate");
+                departTimeReturn = data.getStringExtra("departTime");
+                arrivDateReturn = data.getStringExtra("arrivDate");
+                arrivTimeReturn = data.getStringExtra("arrivTime");
+                launchBuyReserve(true);
+                break;
+        }
+    }
     /**
      * el primer atributo que es String, son los nombres de los metodos que quiero llamar, lo hardcodeo con 1 solo atributo que es el nombre
      * del metodo así lo corro
