@@ -116,6 +116,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         yearReturn = cal.get(Calendar.YEAR);
         loadSpinnerTickets();
         dbh= new DataBaseHelper(this);
+        getActionBar().setDisplayShowHomeEnabled(false);
     }
 
     private void loadMenuOptions(){
