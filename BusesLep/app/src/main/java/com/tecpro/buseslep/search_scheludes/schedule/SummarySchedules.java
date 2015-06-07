@@ -2,6 +2,7 @@ package com.tecpro.buseslep.search_scheludes.schedule;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -85,8 +86,8 @@ public class SummarySchedules extends Activity {
 
         bundleDepartTimeGo = bundle.getString("departTimeGo","");
         bundleDepartDateGo = bundle.getString("departDateGo","");
-        bundleDepartTimeRet = bundle.getString("departTimeRet","");
-        bundleDepartDateRet = bundle.getString("departDateRet","");
+        bundleDepartTimeRet = bundle.getString("departTimeReturn","");
+        bundleDepartDateRet = bundle.getString("departDateReturn","");
         bundleCityOrigin=bundle.getString("Origin","");
         bundleCityDestiny=bundle.getString("Destiny","");
 
@@ -117,6 +118,7 @@ public class SummarySchedules extends Activity {
         // Rescatamos el Action Bar y activamos el boton Home
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
 
         // Declarar e inicializar componentes para el Navigation Drawer
         drawer = (ListView) findViewById(R.id.options_summary_schedules);
@@ -203,7 +205,7 @@ public class SummarySchedules extends Activity {
         i.putExtra("arrival_date2",bundleDepartDateRet);
         i.putExtra("arrival_hour2",bundleDepartTimeRet);
         i.putExtra("cant_tickets",numberTickets.getText());
-        i.putExtra("roundtrip",codeReturn);
+        i.putExtra("roundtrip",Integer.valueOf(codeReturn));
         startActivity(i);
 
     }
@@ -233,7 +235,7 @@ public class SummarySchedules extends Activity {
         i.putExtra("arrival_date2",bundleDepartDateRet);
         i.putExtra("arrival_hour2",bundleDepartTimeRet);
         i.putExtra("cant_tickets",numberTickets.getText());
-        i.putExtra("roundtrip",codeReturn);
+        i.putExtra("roundtrip",Integer.valueOf(codeReturn));
 
         startActivity(i);
     }

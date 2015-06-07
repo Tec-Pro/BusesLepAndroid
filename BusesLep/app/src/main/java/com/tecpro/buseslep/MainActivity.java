@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -101,12 +102,12 @@ public class MainActivity extends Activity implements OnItemClickListener{
 
         }
         loadMenuOptions();
-        getActionBar().setDisplayShowHomeEnabled(false);
     }
     private void loadMenuOptions(){
         // Rescatamos el Action Bar y activamos el boton Home
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
 
         // Declarar e inicializar componentes para el Navigation Drawer
         drawer = (ListView) findViewById(R.id.options_activity_main);

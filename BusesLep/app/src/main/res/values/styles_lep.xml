@@ -38,6 +38,7 @@
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_lep</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_lep</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Lep</item>
+        <item name="android:titleTextStyle">@style/Theme.Lep.ActionBar.Text</item>
     </style>
 
     <style name="ActionBar.Transparent.Lep" parent="@android:style/Widget.Holo.Light.ActionBar">
@@ -75,6 +76,12 @@
     <style name="Theme.Lep.Widget" parent="@android:style/Theme.Holo">
         <item name="android:popupMenuStyle">@style/PopupMenu.Lep</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListView.Lep</item>
+    </style>
+
+    <style name="Theme.Lep.ActionBar.Text" parent="@android:style/Theme.Holo">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>
