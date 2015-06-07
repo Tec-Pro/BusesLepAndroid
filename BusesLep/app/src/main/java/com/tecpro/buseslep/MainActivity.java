@@ -5,6 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 
@@ -14,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 
 import android.widget.ListView;
@@ -32,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MainActivity extends Activity implements OnItemClickListener {
+public class MainActivity extends Activity implements OnItemClickListener{
     //datos para la busqueda cuando clickeas en un horario
     private static Integer idOrigin=-1; //id de origen
     private static Integer idDestiny=-1; //id de destino
@@ -61,11 +65,19 @@ public class MainActivity extends Activity implements OnItemClickListener {
     private List<Map<String,Object>> searches;
     ListView listView; //lista de busquedas recientes
 
+
+    private DrawerLayout drawerLayout;
+    private ListView drawer;
+    private ActionBarDrawerToggle toggle;
+    private static final String[] opciones = {"Cerrar Sesion"};
+
     public BaseAdapter adaptador;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        loadMenuOptions();
         dbh = new DataBaseHelper(this);
         dbh.deleteOldsSearches();
         searches = dbh.getSearches();
@@ -81,13 +93,85 @@ public class MainActivity extends Activity implements OnItemClickListener {
             }
         }
     }
+    private void loadMenuOptions(){
+        // Rescatamos el Action Bar y activamos el boton Home
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
+        // Declarar e inicializar componentes para el Navigation Drawer
+        drawer = (ListView) findViewById(R.id.options_activity_main);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_activity_main);
+
+        // Declarar adapter y eventos al hacer click
+        drawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, opciones));
+
+        drawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                // Toast.makeText(SearchScheludes.this, "Pulsado: " + opciones[arg2], Toast.LENGTH_SHORT).show();
+                switch (arg2){
+                    case 0://presione cerrar sesion
+                        SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+                        preferences.put("login", "false");
+                        findViewById(R.id.btnLogin).setVisibility(View.VISIBLE);
+                        findViewById(R.id.btnRegister).setVisibility(View.VISIBLE);
+
+                        break;
+                }
+
+                drawerLayout.closeDrawers();
+
+            }
+        });
+
+        // Sombra del panel Navigation Drawer
+        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+        // Integracion boton oficial
+        toggle = new ActionBarDrawerToggle(
+                this, // Activity
+                drawerLayout, // Panel del Navigation Drawer
+                R.drawable.ic_navigation_drawer, // Icono que va a utilizar
+                R.string.options, // Descripcion al abrir el drawer
+                R.string.app_name // Descripcion al cerrar el drawer
+        ){
+            public void onDrawerClosed(View view) {
+                // Drawer cerrado
+                getActionBar().setTitle(getResources().getString(R.string.app_name));
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                // Drawer abierto
+                getActionBar().setTitle(R.string.options);
+                invalidateOptionsMenu();
+            }
+        };
+
+        drawerLayout.setDrawerListener(toggle);
+    }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // Activamos el toggle con el icono
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toggle.syncState();
+    }
+
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }
+    }*/
 
     @Override
     public void onResume(){ //actualiza la listview cada vez que regresa de otra activity
@@ -99,7 +183,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 
 
-    @Override
+   /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -120,7 +204,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
