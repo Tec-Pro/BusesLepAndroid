@@ -29,8 +29,7 @@
         <item name="android:actionModeBackground">@drawable/cab_background_top_lep</item>
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_lep</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Lep</item>
-        
-        
+        <item name="android:editTextBackground">@drawable/lep_edit_text_holo_light</item>
     </style>
 
     <style name="ActionBar.Solid.Lep" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
@@ -83,5 +82,7 @@
         <item name="android:textSize">25sp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+
 
 </resources>

@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffffff">
+    android:background="#F7F7F7">
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,7 +27,8 @@
         android:textStyle="bold|normal|italic"
         android:layout_gravity="center_horizontal"
         android:elegantTextHeight="false"
-        android:gravity="center_horizontal" />
+        android:gravity="center_horizontal"
+        android:autoText="false" />
 
 
     <EditText
@@ -117,9 +124,18 @@
             android:layout_height="wrap_content"
             android:text=" click aquí"
             android:id="@+id/txtClicHere"
-            android:textColor="#ffff0a15" />
+            android:textColor="#F90008" />
 
     </LinearLayout>
 
 
 </LinearLayout>
+    <ListView
+        android:id="@+id/options_login"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#EEE"
+        />
+
+</android.support.v4.widget.DrawerLayout>
