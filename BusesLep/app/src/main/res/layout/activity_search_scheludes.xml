@@ -256,24 +256,43 @@
         android:onClick="clickSearch"
         android:layout_marginBottom="15dp" />
 
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="   Ingresar / Registrarme   "
-        android:id="@+id/btnLogin"
-        android:layout_gravity="center_horizontal|bottom"
-        android:windowSoftInputMode="stateHidden"
-        android:onClick="launchLogin"
-        android:background="@drawable/border"
-        android:textStyle="bold"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:drawableLeft="@drawable/user_icon"
-        android:paddingLeft="20dp"
-        android:drawablePadding="-50sp"
-        android:singleLine="true"
-        android:layout_marginTop="25dp" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0"
+        android:weightSum="3">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="2">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="   Ingresar / Registrarme   "
+                android:id="@+id/btnLogin"
+                android:layout_gravity="center_horizontal|bottom"
+                android:windowSoftInputMode="stateHidden"
+                android:onClick="launchLogin"
+                android:background="@drawable/border"
+                android:textStyle="bold"
+                android:drawableLeft="@drawable/user_icon"
+                android:paddingLeft="20dp"
+                android:drawablePadding="-50sp"
+                android:singleLine="true"
+                android:layout_weight="1"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="15dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp" />
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </LinearLayout>
 
