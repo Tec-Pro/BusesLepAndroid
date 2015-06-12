@@ -30,12 +30,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tecpro.buseslep.Dialog;
 import com.tecpro.buseslep.LastSearches;
 import com.tecpro.buseslep.Login;
 import com.tecpro.buseslep.R;
 import com.tecpro.buseslep.batabase.DataBaseHelper;
+import com.tecpro.buseslep.search_scheludes.schedule.ChooseNumberTickets;
 import com.tecpro.buseslep.search_scheludes.schedule.ScheduleSearch;
 import com.tecpro.buseslep.search_scheludes.schedule.SummarySchedules;
+import com.tecpro.buseslep.search_scheludes.select_city.AdaptatorCity;
+import com.tecpro.buseslep.search_scheludes.select_city.ChooseCity;
 import com.tecpro.buseslep.webservices.WebServices;
 
 import java.text.ParseException;
@@ -49,14 +53,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class SearchScheludes extends Activity implements AdapterView.OnItemSelectedListener {
+public class SearchScheludes extends Activity  {
 
-    private static Spinner spinnerGo;
-    private static Spinner spinnerDestiny;
-    private TreeMap<String, Integer>CitiesAndId; //nombre e id de las ciudades de origen, la clave es el nombre para facilitar las cosas
-    private List<String> departureCities; //los nombres de ciudades de origen
-    private List<String> destinationCities; //los nombres de ciudades de origen
-    private static Spinner spinnerTickets;
+    private static TextView txtViewCityGo;
+    private static TextView txtViewCityDestiny;
+    private ArrayList<Map<String,Object>> departureCities; //los nombres de ciudades de origen
+    private ArrayList<Map<String,Object>> destinationCities; //los nombres de ciudades de origen
+    private static TextView txtNumerTickets;
     private static CheckBox chkRoundTrip;
     //UI References
     private static TextView fromDateEtxt;
@@ -97,6 +100,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     private String price;
     private DataBaseHelper dbh; //databasehelper para la db
 
+
     //menu
     private DrawerLayout drawerLayout;
     private ListView drawer;
@@ -117,7 +121,6 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         dayReturn = cal.get(Calendar.DAY_OF_MONTH);
         monthReturn = cal.get(Calendar.MONTH)+1;
         yearReturn = cal.get(Calendar.YEAR);
-        loadSpinnerTickets();
         dbh= new DataBaseHelper(this);
     }
 
@@ -211,23 +214,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     }
 
 
-    private void loadSpinnerTickets(){
-        LinkedList<String> numberTickets = new LinkedList<>();
-        numberTickets.add("Cantidad de pasajes");
-        numberTickets.add("1");
-        numberTickets.add("2");
-        numberTickets.add("3");
-        numberTickets.add("4");
-        numberTickets.add("5");
-        numberTickets.add("6");
-        numberTickets.add("7");
-        numberTickets.add("8");
-        numberTickets.add("9");
-        numberTickets.add("10");
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(SearchScheludes.this, android.R.layout.simple_spinner_item, numberTickets);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTickets.setAdapter(adapter);
-    }
+
 
     /**
      * busco los txtView de fecha y los seteo
@@ -235,12 +222,9 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     private  void findViewsById() {
         fromDateEtxt = (TextView) findViewById(R.id.txt_date_from);
         toDateEtxt = (TextView) findViewById(R.id.txt_date_to);
-        spinnerGo = (Spinner) findViewById(R.id.spinner_go);
-        spinnerGo.setOnItemSelectedListener(this);
-        spinnerDestiny = (Spinner) findViewById(R.id.spinner_destiny);
-        spinnerDestiny.setOnItemSelectedListener(this);
-        spinnerTickets = (Spinner) findViewById(R.id.spinner_number_tickets);
-        spinnerTickets.setOnItemSelectedListener(this);
+        txtViewCityGo = (TextView) findViewById(R.id.txt_city_origin);
+        txtViewCityDestiny = (TextView) findViewById(R.id.txt_city_destiny);
+        txtNumerTickets = (TextView) findViewById(R.id.txt_number_tickets);
         chkRoundTrip = (CheckBox) findViewById(R.id.chk_round_trip);
 
     }
@@ -251,30 +235,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         i.putExtra("next", "main");
         startActivity(i);
     }
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_search_scheludes, menu);
-//        return true;
-//    }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_update_cities) {
-//            loadOrigin();
-//            idOrigin=-1;
-//            loadDestiny();
-//            return true;
-//        }
-
-//        return super.onOptionsItemSelected(item);
-//    }
 
     public void clickDateGo(View v){
         int requestCode=1;
@@ -352,6 +313,22 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
                 arrivTimeReturn = data.getStringExtra("arrivTime");
                 launchBuyReserve(true);
                 break;
+            case 5: //retorno de elegir el numero de pasajeros
+                numberOfTickets = Integer.valueOf(data.getStringExtra("number"));
+                txtNumerTickets.setText(String.valueOf(numberOfTickets));
+                break;
+            case 6: //retorno de elegir ciudad de origen
+                idOrigin= data.getIntExtra("id", -1);
+                cityOrigin = data.getStringExtra("name");
+                txtViewCityGo.setText(cityOrigin);
+                loadDestiny();
+                break;
+            case 7: //retorno de elegir ciudad de destino
+                idDestiny= data.getIntExtra("id", -1);
+                cityDestiny = data.getStringExtra("name");
+                txtViewCityDestiny.setText(cityDestiny);
+                break;
+
         }
     }
 
@@ -380,44 +357,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
 
 
     }
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // Aquí se codifica la lógica que se ejecutará al seleccionar un elemento del Spinner.
-        if (parent.getId()==  R.id.spinner_go){
-            String nameCity=spinnerGo.getItemAtPosition(position).toString();
-            if(nameCity!=null) {
-                idOrigin = CitiesAndId.get(nameCity); //seteo el id de origen
-                cityOrigin=nameCity;
-                if(idOrigin==null) {
-                    idOrigin = -1;
-                    cityOrigin = null;
-                }
-                loadDestiny();
-            }
-        }
-        if (parent.getId()==  R.id.spinner_destiny){
-            String nameCity=spinnerDestiny.getItemAtPosition(position).toString();
-            if(nameCity!=null) {
-                idDestiny = CitiesAndId.get(nameCity); //seteo el id de destino
-                cityDestiny= nameCity;
-                if(idDestiny==null) {
-                    idDestiny = -1;
-                    cityDestiny=null;
-                }
-            }
-        }
-        if (parent.getId()==  R.id.spinner_number_tickets){
-            if(position>0)
-                numberOfTickets=Integer.valueOf((String)spinnerTickets.getItemAtPosition(position));
-            else
-                numberOfTickets=-1;
-        }
-    }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
 
     /**
      * cada vez que haga click en el box de ida y vuelta debe poner invisible el field de vuelta
@@ -453,7 +393,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
             err=true;//ocurrio un error
         }
         if (chkRoundTrip.isChecked()){
-            if(toDateEtxt.getText().charAt(0)=='F'||
+            if(toDateEtxt.getText().length()==0||
                     !dateIsValid(currentDay,currentMonth,currentYear,dayReturn,monthReturn,yearReturn)||
                     !dateIsValid(dayGo,monthGo,yearGo,dayReturn,monthReturn,yearReturn)) { //valido la fecha de regreso
                 err=true;
@@ -461,7 +401,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
             }
         }
         //la forma crota de ver si elegi una fecha, me fijo si hay una F de 'F'echa
-        if(fromDateEtxt.getText().charAt(0)=='F'||!dateIsValid(currentDay,currentMonth,currentYear,dayGo,monthGo,yearGo)) { //valido la fecha de regreso y que haya algo
+        if(fromDateEtxt.getText().length()==0||!dateIsValid(currentDay,currentMonth,currentYear,dayGo,monthGo,yearGo)) { //valido la fecha de regreso y que haya algo
             err=true;
             error=error.concat(" fecha de ida incorrecta \n");
         }
@@ -542,9 +482,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
             //dependiendo de que le paso por parametro, me fijo que hago
             switch (params[0]){
                 case "getCities" :
-                    Pair<TreeMap<String, Integer>, LinkedList<String>> cities=WebServices.getCities(getApplicationContext());
-                    departureCities=cities.second;
-                    CitiesAndId=cities.first;
+                    departureCities=WebServices.getCities(getApplicationContext());
                     return new Pair("getCities",departureCities);
                 case "getDestinationCities" :
                     destinationCities= WebServices.getDestinationCities(idOrigin, getApplicationContext());
@@ -566,18 +504,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
                 Toast.makeText(getBaseContext(), "No se han encontrado horarios ciudades", Toast.LENGTH_SHORT).show();
             //this method will be running on UI thread
             else{
-                switch (result.first){
-                    case "getCities":
-                        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(SearchScheludes.this, android.R.layout.simple_spinner_item, departureCities);
-                        adaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinnerGo.setAdapter(adaptador);
-                        break;
-                    case "getDestinationCities":
-                        ArrayAdapter<String> adapterDestiny = new ArrayAdapter<String>(SearchScheludes.this, android.R.layout.simple_spinner_item, destinationCities);
-                        adapterDestiny.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinnerDestiny.setAdapter(adapterDestiny);
-                        break;
-                }
+
             }
             pdLoading.dismiss();
         }
@@ -633,13 +560,13 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
                         codeResult=3;
                         i.putExtra("departCity",cityOrigin);
                         i.putExtra("arrivCity",cityDestiny);
-                        i.putExtra("goOrReturn","ida");
+                        i.putExtra("goOrReturn","Ida");
                         break;
                     case "return":
                         codeResult=4;
                         i.putExtra("departCity",cityDestiny);
                         i.putExtra("arrivCity",cityOrigin);
-                        i.putExtra("goOrReturn","vuelta");
+                        i.putExtra("goOrReturn","Vuelta");
                         break;
                 }
                 startActivityForResult(i,codeResult);
@@ -648,6 +575,30 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         }
         }
 
+    public void clickNumberTickets(View v){
+        int requestCode=5;
+        Intent intent = new Intent(this, ChooseNumberTickets.class);//lanzo actividad de elegir fecha dependiendo de si es ida o vuelta
+        startActivityForResult(intent, requestCode);
+    }
 
+    public void clickCityOrigin(View v){
+        int requestCode=6;
+        Intent intent = new Intent(this, ChooseCity.class);//lanzo actividad de elegir fecha dependiendo de si es ida o vuelta
+        intent.putExtra("cities",departureCities);
+        startActivityForResult(intent, requestCode);
+    }
+
+    public void clickCityDestiny(View v){
+        if(destinationCities==null || destinationCities.size()==0){
+            Intent i= new Intent(this, Dialog.class);
+            i.putExtra("message", "Primero seleccione una ciudad de destino");
+            startActivity(i);
+        }else {
+            int requestCode = 7;
+            Intent intent = new Intent(this, ChooseCity.class);//lanzo actividad de elegir fecha dependiendo de si es ida o vuelta
+            intent.putExtra("cities", destinationCities);
+            startActivityForResult(intent, requestCode);
+        }
+    }
 
 }

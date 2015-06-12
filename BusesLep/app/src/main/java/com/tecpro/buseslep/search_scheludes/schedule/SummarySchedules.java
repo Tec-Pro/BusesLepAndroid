@@ -1,13 +1,17 @@
 package com.tecpro.buseslep.search_scheludes.schedule;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tecpro.buseslep.Login;
 import com.tecpro.buseslep.PurchaseDetails;
@@ -22,8 +27,12 @@ import com.tecpro.buseslep.R;
 import com.tecpro.buseslep.ReserveDetails;
 import com.tecpro.buseslep.search_scheludes.ChooseDate;
 import com.tecpro.buseslep.utils.SecurePreferences;
+import com.tecpro.buseslep.webservices.WebServices;
 
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 public class SummarySchedules extends Activity {
 
@@ -247,7 +256,7 @@ public class SummarySchedules extends Activity {
         }
         switch (requestCode) {
             case 1:
-                numberTickets.setText(String.valueOf(data.getIntExtra("number",1)));
+                numberTickets.setText((data.getStringExtra("number")));
                 break;
         }
     }
@@ -257,4 +266,76 @@ public class SummarySchedules extends Activity {
         Intent intent = new Intent(this, ChooseNumberTickets.class);//lanzo actividad de elegir fecha dependiendo de si es ida o vuelta
         startActivityForResult(intent, requestCode);
     }
+
+
+
+    /**
+     * el primer atributo que es String, son los nombres de los metodos que quiero llamar, lo hardcodeo con 1 solo atributo que es el nombre
+     * del metodo así lo corro
+     */
+ /*   private class AsyncCallerSchedules extends AsyncTask<String, Void, Pair<String,ArrayList<Map<String,Object>>> > {
+        ProgressDialog pdLoading = new ProgressDialog(SearchScheludes.this);
+        Context context; //contexto para largar la activity aca adentro
+
+        private AsyncCallerSchedules(Context context) {
+            this.context = context.getApplicationContext();
+            pdLoading.setCancelable(false);
+
+        }
+
+        @Override
+        protected Pair<String,ArrayList<Map<String,Object>>> doInBackground(String... params) {
+            if(params[0]=="go") {
+                String[] aux = bundleDepartDateGo.split("/");
+                String dateGo= aux[2]+aux[1]+aux[0];
+                return new Pair(params[0], WebServices.getSchedules(Integer.valueOf(codeGo), Integer.valueOf(codeReturn), dateGo, getApplicationContext()));
+            }
+            else {
+                String[] aux = bundleDepartDateRet.split("/");
+                String dateReturn= aux[2]+aux[1]+aux[0];
+                return new Pair(params[0], WebServices.getSchedules(Integer.valueOf(codeReturn), Integer.valueOf(codeGo), dateReturn, getApplicationContext()));
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setTitle("Por favor, espere.");
+            pdLoading.setMessage("Obteniendo horarios");
+            pdLoading.show();
+        }
+
+
+        @Override
+        protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
+            if (result==null || result.second.isEmpty())
+                Toast.makeText(getBaseContext(), "No se han encontrado horarios ", Toast.LENGTH_SHORT).show();
+                //this method will be running on UI thread
+            else{
+                ArrayList<Map<String,Object>> schedules= result.second;
+                Intent i = new Intent(context, ScheduleSearch.class);
+                i.putExtra("schedules", schedules);
+                int codeResult=-1;
+                switch (result.first){
+                    case "go":
+                        codeResult=3;
+                        i.putExtra("departCity",Integer.valueOf(codeGo));
+                        i.putExtra("arrivCity",cityDestiny);
+                        i.putExtra("goOrReturn","Ida");
+                        break;
+                    case "return":
+                        codeResult=4;
+                        i.putExtra("departCity",cityDestiny);
+                        i.putExtra("arrivCity",cityOrigin);
+                        i.putExtra("goOrReturn","Vuelta");
+                        break;
+                }
+                startActivityForResult(i,codeResult);
+            }
+            pdLoading.dismiss();
+        }
+    }
+    */
 }

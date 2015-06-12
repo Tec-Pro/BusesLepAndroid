@@ -54,7 +54,7 @@ public class Login extends Activity {
                 // Toast.makeText(SearchScheludes.this, "Pulsado: " + opciones[arg2], Toast.LENGTH_SHORT).show();
                 switch (arg2){
                     case 0://presione recargar ciudades
-                        Intent i = new Intent(Login.this, MainActivity.class);
+                        Intent i = new Intent(Login.this, SearchScheludes.class);
                         startActivity(i);
                         break;
                 }
@@ -106,7 +106,7 @@ public class Login extends Activity {
             preferences.put("login", "true");
             Bundle bundle = getIntent().getExtras();
             if (bundle.getString("next").equals("main")) {
-                i = new Intent(this, MainActivity.class);
+                i = new Intent(this, SearchScheludes.class);
             } else {
                 if (bundle.getString("next").equals("purchase")) {
                     i = new Intent(this, PurchaseDetails.class);

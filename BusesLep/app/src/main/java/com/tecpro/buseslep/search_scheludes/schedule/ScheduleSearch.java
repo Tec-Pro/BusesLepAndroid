@@ -35,7 +35,9 @@ public class ScheduleSearch extends Activity implements AdapterView.OnItemClickL
         String arrivCity = bundle.getString("arrivCity");
         String goOrReturn = bundle.getString("goOrReturn");
         TextView txtDescription= (TextView) findViewById(R.id.txt_description_schedule);
-        txtDescription.setText(departCity+" - "+arrivCity+"    "+ goOrReturn);
+        TextView txtGoRet= (TextView) findViewById(R.id.txt_description_go_ret);
+        txtGoRet.setText(goOrReturn);
+        txtDescription.setText(departCity+" - "+arrivCity);
         adaptador = new AdaptatorSchedule(this,(ArrayList<Map<String,Object>>)bundle.get("schedules"));
         listView = (ListView) findViewById(R.id.list_view_shedule);
         listView.setAdapter(adaptador);

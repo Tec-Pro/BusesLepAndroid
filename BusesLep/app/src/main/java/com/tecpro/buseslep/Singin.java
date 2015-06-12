@@ -12,9 +12,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.tecpro.buseslep.search_scheludes.SearchScheludes;
 import com.tecpro.buseslep.utils.SecurePreferences;
 import com.tecpro.buseslep.webservices.WebServices;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
@@ -54,7 +56,7 @@ public class Singin extends Activity {
                 preferences.put("login", "true");
                 Bundle bundle = getIntent().getExtras();
                 if (bundle.getString("next").equals("main")) {
-                    i = new Intent(this, MainActivity.class);
+                    i = new Intent(this, SearchScheludes.class);
                 } else {
                     if (bundle.getString("next").equals("purchase")) {
                         i = new Intent(this, PurchaseDetails.class);
@@ -106,10 +108,10 @@ public class Singin extends Activity {
             //dependiendo de que le paso por parametro, me fijo que hago
             switch (params[0]) {
                 case "getCities":
-                    Pair<TreeMap<String, Integer>, LinkedList<String>> cities = WebServices.getCities(getApplicationContext());
-                    departureCities = cities.second;
-                    CitiesAndId = cities.first;
-                    return new Pair("getCities", departureCities);
+                   // ArrayList cities = WebServices.getCities(getApplicationContext());
+                   // departureCities = cities.second;
+                   // CitiesAndId = cities.first;
+                   // return new Pair("getCities", departureCities);
             }
             //this method will be running on background thread so don't update UI frome here
             //do your long running http tasks here,you dont want to pass argument and u can access the parent class' variable url over here

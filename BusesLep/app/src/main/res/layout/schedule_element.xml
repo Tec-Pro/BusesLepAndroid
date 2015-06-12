@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight">
+    android:layout_height="wrap_content">
 
 
 
@@ -12,24 +12,27 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="4"
-        android:background="@drawable/border">
+        android:weightSum="3"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:layout_weight="1">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="salida"
+                android:text="Salida"
                 android:id="@+id/departureLoc"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="0.5"
                 android:gravity="center"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#373435" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -39,7 +42,8 @@
                 android:id="@+id/departure_date"
                 android:layout_weight="0.5"
                 android:gravity="center"
-                android:textSize="13dp" />
+                android:textSize="13dp"
+                android:textColor="#373435" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -48,37 +52,54 @@
                 android:text="17:30"
                 android:id="@+id/departure_time"
                 android:layout_gravity="center_horizontal"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textColor="#F90008"
+                android:textStyle="bold" />
         </LinearLayout>
-
-        <TextView
-            android:layout_width="35dp"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text=">"
-            android:gravity="center"
-            android:id="@+id/next"
-            android:textColor="#ff0000"
-            android:textSize="30sp"
-
-            android:textStyle="bold" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:weightSum="2">
+            android:weightSum="3">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="llegada"
+                android:text=">"
+                android:gravity="center"
+                android:id="@+id/next"
+                android:textColor="#F90008"
+                android:textSize="30sp"
+
+                android:textStyle="bold"
+                android:layout_weight="1.5" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="2"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Llegada"
                 android:id="@+id/textView31"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="#373435" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -88,7 +109,8 @@
                 android:id="@+id/arrival_date"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="13dp" />
+                android:textSize="13dp"
+                android:textColor="#373435" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -98,7 +120,8 @@
                 android:id="@+id/arrival_time"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:textColor="#373435" />
         </LinearLayout>
 
         <LinearLayout
@@ -106,26 +129,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:weightSum="2"
-            android:layout_weight="4">
+            android:layout_weight="1">
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Estado"
                 android:id="@+id/textView39"
                 android:gravity="center_horizontal"
                 android:layout_weight="1"
-                android:textStyle="normal|bold" />
+                android:textStyle="normal|bold"
+                android:textColor="#373435" />
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="En destino"
                 android:id="@+id/status"
-                android:gravity="center"
-                android:textColor="#ffff2817" />
+                android:gravity="bottom|center_horizontal"
+                android:textColor="#F90008"
+                android:layout_weight="1" />
         </LinearLayout>
 
     </LinearLayout>

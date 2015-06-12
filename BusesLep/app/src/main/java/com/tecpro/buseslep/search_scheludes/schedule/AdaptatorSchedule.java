@@ -38,7 +38,14 @@ public class AdaptatorSchedule extends BaseAdapter {
     static List Schedules( ArrayList<Map<String,Object>> schedules){
         ArrayList result = new ArrayList();
         for (int i=0; i<schedules.size();i++){
-            Schedule s = new Schedule( (String)schedules.get(i).get("fecha_sale"),  (String)schedules.get(i).get("hora_sale"), (String)schedules.get(i).get("fecha_llega"),(String)schedules.get(i).get("estado"), (String)schedules.get(i).get("hora_llega"), (String)schedules.get(i).get("codigo"));
+            String dateGo= (String)schedules.get(i).get("fecha_sale");
+            String[] aux= dateGo.split("/");
+            dateGo= aux[2]+"/"+aux[1]+"/"+aux[0];
+            String dateRet= (String)schedules.get(i).get("fecha_llega");
+            String[] auxRet= dateRet.split("/");
+            if (auxRet.length==3)
+                dateRet= auxRet[2]+"/"+auxRet[1]+"/"+auxRet[0];
+            Schedule s = new Schedule( dateGo,  (String)schedules.get(i).get("hora_sale"), dateRet,(String)schedules.get(i).get("estado"), (String)schedules.get(i).get("hora_llega"), (String)schedules.get(i).get("codigo"));
             result.add(s);
         }
         return result;
@@ -60,9 +67,7 @@ public class AdaptatorSchedule extends BaseAdapter {
         departTIme.setText(s.getDepartTIme());
         arrivDate.setText(s.getArrivDate());
         arrivTime.setText(s.getArrivTime());
-        if(s.getStatus().contains("viaje")||s.getStatus().contains("destino") ||s.getStatus().contains("completo") )//si esta en viaje o destino lo pongo en rojo
-            status.setTextColor(Color.RED);
-        else
+        if(!(s.getStatus().contains("viaje")||s.getStatus().contains("destino") ||s.getStatus().contains("completo")) )//si esta en viaje o destino lo pongo en rojo
             status.setTextColor(Color.BLUE);
         status.setText(s.getStatus());
 

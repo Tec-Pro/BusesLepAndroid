@@ -44,11 +44,10 @@ public class WebServices  {
      * es una lista de ciudad-id y la otra de los nombres solos,
      * @return
      */
-    public static Pair<TreeMap<String, Integer>, LinkedList<String>> getCities(Context context){
+    public static ArrayList<Map<String,Object>> getCities(Context context){
         String result;
-        TreeMap<String, Integer> citiesAndId = new TreeMap<String, Integer>();
-        LinkedList<String> cities = new LinkedList<>();
-        cities.add("Ciudad de origen");
+        System.out.println("la concha de tu madre");
+        ArrayList<Map<String,Object>> cities = new ArrayList<>();
         request = new SoapObject(NAMESPACE, LocalidadesDesde); //le digo que metodo voy a llamar
         request.addProperty("user","UsuarioLep"); //paso los parametros que pide el metodo
         request.addProperty("pass","Lep1234");
@@ -56,6 +55,7 @@ public class WebServices  {
         envelope.enc = SoapSerializationEnvelope.ENC2003;
         envelope.setOutputSoapObject(request);
         httpTransportSE = new HttpTransportSE(VALIDATION_URI); //paso la uri donde transportaré
+        System.out.println("la concha de tu madre 2");
         try {
             try{
             httpTransportSE.call(NAMESPACE + "#" + LocalidadesDesde, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
@@ -75,24 +75,25 @@ public class WebServices  {
             int i=0;
             while(i<json.length()){
                 JSONObject jsonObject= json.getJSONObject(i);
-                citiesAndId.put(jsonObject.getString("Localidad"),jsonObject.getInt("ID_Localidad"));
-                cities.add(jsonObject.getString("Localidad"));
+                HashMap<String,Object> map= new HashMap<>();
+                map.put("id",jsonObject.getInt("ID_Localidad"));
+                map.put("name",jsonObject.getString("Localidad"));
+                cities.add(map);
                 i++;
             }
         }
         catch(Exception e){
             e.printStackTrace();
         }
-        return new Pair(citiesAndId,cities);
+        return cities;
     }
 
     /**
      * obtengo todas las ciudaddes de destino desde el ws y retorno una lista de ciudades, el atributo que toma es el id de origen
      * @return
      */
-    public static LinkedList<String> getDestinationCities(Integer idOrigin, Context context){
-        LinkedList<String> cities = new LinkedList<>();
-        cities.add("Ciudad de destino");
+    public static ArrayList<Map<String,Object>> getDestinationCities(Integer idOrigin, Context context){
+        ArrayList<Map<String,Object>> cities = new ArrayList<>();
         if(idOrigin!=-1) {
             String result;
             request = new SoapObject(NAMESPACE, LocalidadesHasta); //le digo que metodo voy a llamar
@@ -122,7 +123,10 @@ public class WebServices  {
                 int i=0;
                 while(i<json.length()){
                     JSONObject jsonObject= json.getJSONObject(i);
-                    cities.add(jsonObject.getString("hasta"));
+                    HashMap<String,Object> map= new HashMap<>();
+                    map.put("id",jsonObject.getInt("id_localidad_destino"));
+                    map.put("name",jsonObject.getString("hasta"));
+                    cities.add(map);
                     i++;
                 }
             } catch (Exception e) {

@@ -4,17 +4,39 @@
     android:layout_height="match_parent">
 
 
-    <TextView
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Rio Cuarto - Cordoba ida"
-        android:id="@+id/txt_description_schedule"
-        android:layout_gravity="center_horizontal"
-        android:background="#c64f3b35"
-        android:textColor="#ffffffff"
-        android:textStyle="normal|bold"
-        android:gravity="center" />
+        android:weightSum="2">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Rio Cuarto - Cordoba"
+            android:id="@+id/txt_description_schedule"
+            android:layout_gravity="center_horizontal"
+            android:background="#c64f3b35"
+            android:textColor="#FFFFFF"
+            android:textStyle="normal|bold"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:gravity="left" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Ida"
+            android:id="@+id/txt_description_go_ret"
+            android:background="#c64f3b35"
+            android:textColor="#FFFFFF"
+            android:textStyle="normal|bold"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:paddingRight="10dp" />
+    </LinearLayout>
 
 
     <LinearLayout
@@ -27,11 +49,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="ida $150.00"
+            android:text="Ida $150.00"
             android:id="@+id/txt_description_price"
             android:layout_gravity="center_horizontal"
             android:background="#86533e38"
-            android:textColor="#ffffffff"
+            android:textColor="#FFFFFF"
             android:textStyle="normal|bold"
             android:gravity="center"
             android:paddingLeft="10dp" />
@@ -40,10 +62,10 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="ida y vuelta $285.00"
+            android:text="Ida y vuelta $285.00"
             android:id="@+id/textView29"
             android:background="#86533e38"
-            android:textColor="#ffffffff"
+            android:textColor="#FFFFFF"
             android:textStyle="normal|bold"
             android:gravity="center|right"
             android:paddingRight="10dp" />

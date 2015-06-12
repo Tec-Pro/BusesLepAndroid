@@ -31,7 +31,9 @@
             android:textStyle="normal|bold"
             android:gravity="center"
             android:layout_weight="0.5"
-            android:textSize="11dp" />
+            android:textSize="13sp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,7 +47,9 @@
             android:textStyle="normal|bold"
             android:gravity="center"
             android:layout_weight="0.5"
-            android:textSize="11dp" />
+            android:textSize="13sp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -57,16 +61,17 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:weightSum="4"
+            android:weightSum="2"
             android:background="@drawable/border"
             android:layout_marginRight="1dp"
             android:layout_weight="0.5">
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:weightSum="1" >
+                android:weightSum="1"
+                android:layout_weight="1">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -85,33 +90,35 @@
                     android:id="@+id/txt_depart_time_go"
                     android:layout_gravity="center_horizontal"
                     android:textSize="15dp"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:textColor="#F90008"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:weightSum="2" >
+                android:weightSum="2">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text=">"
-                    android:gravity="center"
                     android:id="@+id/textView34"
                     android:textColor="#ff0000"
-                    android:textSize="20dp"
+                    android:textSize="18dp"
                     android:textStyle="bold"
-                    android:layout_marginLeft="2dp" />
+                    android:gravity="bottom" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -138,16 +145,17 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:weightSum="4"
+            android:weightSum="2"
             android:background="@drawable/border"
             android:layout_marginLeft="1dp"
             android:layout_weight="0.5">
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:weightSum="1" >
+                android:weightSum="1"
+                android:layout_weight="1">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -166,7 +174,9 @@
                     android:id="@+id/txt_depart_time_return"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
-                    android:textSize="15dp" />
+                    android:textSize="15dp"
+                    android:textColor="#F90008"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -180,18 +190,18 @@
                     android:layout_height="match_parent"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text=">"
-                    android:gravity="center"
                     android:id="@+id/txt_flecha"
                     android:textColor="#ff0000"
-                    android:textSize="20dp"
+                    android:textSize="18dp"
                     android:textStyle="bold"
-                    android:layout_marginLeft="2dp" />
+                    android:gravity="bottom" />
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -219,7 +229,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp">
 
         <TextView
             android:layout_width="match_parent"
@@ -229,7 +240,8 @@
             android:id="@+id/textView44"
             android:textSize="13dp"
             android:background="@drawable/border"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.5"
+            android:gravity="center" />
 
         <TextView
             android:layout_width="match_parent"
@@ -240,7 +252,9 @@
             android:background="@drawable/border"
             android:layout_weight="0.5"
             android:gravity="center"
-            android:onClick="clickNumberTicktes" />
+            android:onClick="clickNumberTicktes"
+            android:enabled="true"
+            android:clickable="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -254,15 +268,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Importe total"
+            android:text="Importe Total"
             android:id="@+id/textView47"
             android:layout_gravity="center_horizontal"
             android:background="#c64f3b35"
             android:textColor="#ffffffff"
             android:textStyle="normal|bold"
-            android:gravity="center"
             android:layout_weight="0.5"
-            android:textSize="18dp" />
+            android:textSize="13sp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:paddingLeft="18dp"
+            android:gravity="left" />
 
         <TextView
             android:layout_width="match_parent"
@@ -274,33 +291,36 @@
             android:background="#c64f3b35"
             android:textColor="#ffffffff"
             android:textStyle="normal|bold"
-            android:gravity="center"
+            android:gravity="center|right"
             android:layout_weight="0.5"
-            android:textSize="18dp" />
+            android:textSize="13sp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:paddingRight="10dp" />
     </LinearLayout>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="comprar"
+        android:text="Comprar"
         android:id="@+id/btn_buy"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/border"
         android:layout_marginTop="10dp"
-        android:textColor="#ffff2a1b"
-        android:textStyle="normal|bold"
+        android:textColor="#000000"
+        android:textStyle="normal"
         android:onClick="onClickBuy" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="reservar"
+        android:text="Reservar"
         android:id="@+id/btn_reserve"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/border"
         android:layout_marginTop="10dp"
-        android:textColor="#ffff2a1b"
-        android:textStyle="normal|bold"
+        android:textColor="#000000"
+        android:textStyle="normal"
         android:onClick="onClickReserve" />
 
 </LinearLayout>
