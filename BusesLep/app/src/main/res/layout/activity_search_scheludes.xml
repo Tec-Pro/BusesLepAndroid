@@ -11,7 +11,7 @@
 <LinearLayout
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    android:weightSum="9.7">
 
     <ImageView
         android:layout_width="match_parent"
@@ -19,11 +19,12 @@
         android:id="@+id/imageView4"
         android:src="@drawable/buseslep"
         android:layout_gravity="center"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        android:layout_weight="0" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Búsqueda de horarios"
         android:id="@+id/textView6"
@@ -32,26 +33,30 @@
         android:layout_gravity="center_horizontal"
         android:elegantTextHeight="false"
         android:gravity="center_horizontal"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="10dp"
+        android:layout_weight="1.1" />
 
     <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
         android:text="Ida y vuelta"
         android:id="@+id/chk_round_trip"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="16dp"
         android:onClick="clickGoes"
         android:enabled="true"
-        android:checked="true" />
+        android:checked="true"
+        android:layout_weight="1.1" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="match_parent"
         android:background="@drawable/border"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        android:layout_weight="1.1"
+        android:layout_marginTop="2dp">
 
         <Spinner
             android:layout_width="match_parent"
@@ -59,16 +64,19 @@
             android:id="@+id/spinner_go"
             android:layout_gravity="center"
             android:spinnerMode="dialog"
-            android:paddingLeft="10dp" />
+            android:paddingLeft="10dp"
+            android:layout_marginTop="0dp" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
         android:background="@drawable/border"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        android:layout_weight="1.1"
+        android:layout_marginTop="2dp">
 
         <Spinner
             android:layout_width="match_parent"
@@ -76,20 +84,23 @@
             android:id="@+id/spinner_destiny"
             android:spinnerMode="dialog"
             android:paddingLeft="10dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:layout_marginTop="0dp" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/border"
         android:visibility="visible"
         android:id="@+id/linear_layout_from"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:onClick="clickDateGo">
+        android:onClick="clickDateGo"
+        android:layout_weight="1.1"
+        android:layout_marginTop="2dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -117,14 +128,16 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
         android:id="@+id/linear_layout_to"
         android:background="@drawable/border"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:visibility="visible"
-        android:onClick="clickDateReturn">
+        android:onClick="clickDateReturn"
+        android:layout_weight="1.1"
+        android:layout_marginTop="2dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -152,10 +165,13 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="match_parent"
         android:background="@drawable/border"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_marginRight="10dp"
+        android:layout_weight="1.1"
+        android:layout_marginTop="3dp"
+        android:weightSum="1">
 
         <Spinner
             android:layout_width="match_parent"
@@ -165,12 +181,14 @@
             android:layout_weight="1"
             android:entries="@array/numbersTickets"
             android:prompt="@string/numbersTicketsName"
-            android:paddingLeft="10dp" />
+            android:paddingLeft="10dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp" />
     </LinearLayout>
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
         android:text="BUSCAR"
         android:id="@+id/btn_search"
         android:layout_gravity="center_horizontal"
@@ -179,9 +197,30 @@
         android:background="@drawable/border"
         android:longClickable="true"
         android:textStyle="bold"
-        android:layout_marginTop="20dp"
-        android:onClick="clickSearch" />
+        android:layout_marginTop="15dp"
+        android:onClick="clickSearch"
+        android:layout_weight="1"
+        android:layout_marginBottom="15dp" />
 
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:text="   Ingresar / Registrarme   "
+        android:id="@+id/btnLogin"
+        android:layout_gravity="center_horizontal|bottom"
+        android:windowSoftInputMode="stateHidden"
+        android:layout_weight="1"
+        android:onClick="launchLogin"
+        android:background="@drawable/border"
+        android:textStyle="bold"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:drawableLeft="@drawable/user_icon"
+        android:paddingLeft="20dp"
+        android:drawablePadding="-50sp"
+        android:singleLine="true"
+        android:layout_marginTop="25dp" />
 
 </LinearLayout>
 

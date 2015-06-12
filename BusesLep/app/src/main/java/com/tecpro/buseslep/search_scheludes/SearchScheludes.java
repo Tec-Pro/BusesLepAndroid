@@ -30,6 +30,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tecpro.buseslep.Login;
 import com.tecpro.buseslep.R;
 import com.tecpro.buseslep.batabase.DataBaseHelper;
 import com.tecpro.buseslep.search_scheludes.schedule.ScheduleSearch;
@@ -236,7 +237,11 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     }
 
 
-
+    public void launchLogin(View v){
+        Intent i =  new Intent(this, Login.class);
+        i.putExtra("next", "main");
+        startActivity(i);
+    }
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
