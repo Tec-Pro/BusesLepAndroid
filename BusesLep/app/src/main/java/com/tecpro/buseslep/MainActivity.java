@@ -356,9 +356,9 @@ public class MainActivity extends Activity implements OnItemClickListener{
         @Override
         protected Pair<String,ArrayList<Map<String,Object>>> doInBackground(String... params) {
             if(params[0]=="go")
-                return new Pair(params[0], WebServices.getSchedules(idOrigin, idDestiny, dateGo));
+                return new Pair(params[0], WebServices.getSchedules(idOrigin, idDestiny, dateGo, getApplicationContext()));
             else
-                return new Pair(params[0],WebServices.getSchedules(idDestiny,idOrigin, dateReturn));
+                return new Pair(params[0],WebServices.getSchedules(idDestiny,idOrigin, dateReturn, getApplicationContext()));
         }
 
         @Override

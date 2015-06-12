@@ -10,6 +10,7 @@
     <string name="title_activity_summary_schedules">"Resumen "</string>
     <string name="options">Menú de opciones</string>
     <string name="title_activity_choose_number_tickets">Cantidad de pasajes</string>
+    <string name="title_activity_dialog">Aviso</string>
 
 
 </resources>

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tecpro.buseslep.AdaptatorLastSearch;
+import com.tecpro.buseslep.Dialog;
 import com.tecpro.buseslep.R;
 
 import java.util.ArrayList;
@@ -48,10 +49,13 @@ public class ScheduleSearch extends Activity implements AdapterView.OnItemClickL
         resultIntent(scheduleSelected);
     }
 
-    private void resultIntent(Schedule scheduleSelected){
-        if(scheduleSelected.getStatus().contains("viaje")||scheduleSelected.getStatus().contains("destino")||scheduleSelected.getStatus().contains("completo"))
-            Toast.makeText(this,"El bus se encuentra "+scheduleSelected.getStatus()+", seleccione uno disponible",Toast.LENGTH_SHORT ).show();
-        else {
+    private void resultIntent(Schedule scheduleSelected) {
+        if (scheduleSelected.getStatus().contains("viaje") || scheduleSelected.getStatus().contains("destino") || scheduleSelected.getStatus().contains("completo")){
+            String message= "El servicio se encuentra " + scheduleSelected.getStatus() + ". \n Seleccione otro disponible por favor.";
+            Intent intentDialog = new Intent(this, Dialog.class);
+            intentDialog.putExtra("message",message);
+            startActivity(intentDialog);
+    }else {
             Intent intent = new Intent();
             intent.putExtra("arrivDate", scheduleSelected.getArrivDate());
             intent.putExtra("arrivTime", scheduleSelected.getArrivTime());

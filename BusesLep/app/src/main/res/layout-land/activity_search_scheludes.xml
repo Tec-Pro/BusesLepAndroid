@@ -40,8 +40,8 @@
         android:layout_height="35dp"
         android:background="@drawable/border"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
 
         <Spinner
             android:layout_width="match_parent"
@@ -49,7 +49,7 @@
             android:id="@+id/spinner_go"
             android:layout_gravity="center"
             android:spinnerMode="dialog"
-            android:paddingLeft="20dp"
+            android:paddingLeft="7dp"
             android:layout_weight="0.5" />
 
         <Spinner
@@ -68,10 +68,9 @@
         android:layout_gravity="center_horizontal"
         android:background="@drawable/border"
         android:visibility="visible"
-        android:layout_marginTop="5dp"
         android:id="@+id/linear_layout_from"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:baselineAligned="false"
         android:weightSum="1">
 
@@ -148,9 +147,8 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:background="@drawable/border"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp">
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
 
         <Spinner
             android:layout_width="match_parent"
@@ -160,7 +158,7 @@
             android:layout_weight="0.5"
             android:entries="@array/numbersTickets"
             android:prompt="@string/numbersTicketsName"
-            android:paddingLeft="20dp" />
+            android:paddingLeft="7dp" />
 
     </LinearLayout>
 

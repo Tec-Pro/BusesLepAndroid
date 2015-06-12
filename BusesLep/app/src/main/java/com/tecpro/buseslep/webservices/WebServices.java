@@ -1,9 +1,12 @@
 package com.tecpro.buseslep.webservices;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.StrictMode;
 import android.util.Pair;
 import android.widget.Toast;
 
+import com.tecpro.buseslep.Dialog;
 import com.tecpro.buseslep.search_scheludes.SearchScheludes;
 
 import org.json.JSONArray;
@@ -41,7 +44,7 @@ public class WebServices  {
      * es una lista de ciudad-id y la otra de los nombres solos,
      * @return
      */
-    public static Pair<TreeMap<String, Integer>, LinkedList<String>> getCities(){
+    public static Pair<TreeMap<String, Integer>, LinkedList<String>> getCities(Context context){
         String result;
         TreeMap<String, Integer> citiesAndId = new TreeMap<String, Integer>();
         LinkedList<String> cities = new LinkedList<>();
@@ -57,7 +60,15 @@ public class WebServices  {
             try{
             httpTransportSE.call(NAMESPACE + "#" + LocalidadesDesde, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
             }catch (Exception e){
-                httpTransportSE.call(NAMESPACE + "#" + LocalidadesDesde, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                try {
+                    httpTransportSE.call(NAMESPACE + "#" + LocalidadesDesde, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                }catch (java.net.UnknownHostException unknown){
+                    String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
+                    Intent intentDialog = new Intent(context, Dialog.class);
+                    intentDialog.putExtra("message",message);
+                    intentDialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intentDialog);
+                }
             }
             result= (String)envelope.getResponse();
             JSONArray json= new JSONObject(result).getJSONArray("Data");
@@ -79,7 +90,7 @@ public class WebServices  {
      * obtengo todas las ciudaddes de destino desde el ws y retorno una lista de ciudades, el atributo que toma es el id de origen
      * @return
      */
-    public static LinkedList<String> getDestinationCities(Integer idOrigin){
+    public static LinkedList<String> getDestinationCities(Integer idOrigin, Context context){
         LinkedList<String> cities = new LinkedList<>();
         cities.add("Ciudad de destino");
         if(idOrigin!=-1) {
@@ -96,7 +107,15 @@ public class WebServices  {
                 try {
                 httpTransportSE.call(NAMESPACE + "#" + LocalidadesHasta, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
                  }catch (Exception e){
+                    try{
                     httpTransportSE.call(NAMESPACE + "#" + LocalidadesHasta, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                    }catch (java.net.UnknownHostException unknown){
+                        String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
+                        Intent intentDialog = new Intent(context, Dialog.class);
+                        intentDialog.putExtra("message",message);
+                        intentDialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intentDialog);
+                    }
                 }
                 result = (String) envelope.getResponse();
                 JSONArray json= new JSONObject(result).getJSONArray("Data");
@@ -113,7 +132,7 @@ public class WebServices  {
         return cities;
     }
 
-    public static ArrayList<Map<String,Object>> getSchedules(Integer idOrigin, Integer idDestiny, String date){
+    public static ArrayList<Map<String,Object>> getSchedules(Integer idOrigin, Integer idDestiny, String date,Context context){
             ArrayList<Map<String,Object>> ret= new ArrayList<>();
             request = new SoapObject(NAMESPACE, ListarHorarios); //le digo que metodo voy a llamar
             request.addProperty("user", "UsuarioLep"); //paso los parametros que pide el metodo
@@ -129,7 +148,15 @@ public class WebServices  {
                 try{
                 httpTransportSE.call(NAMESPACE + "#" + ListarHorarios, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
                 }catch (Exception e){
+                    try{
                     httpTransportSE.call(NAMESPACE + "#" + ListarHorarios, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                    }catch (java.net.UnknownHostException unknown){
+                        String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
+                        Intent intentDialog = new Intent(context, Dialog.class);
+                        intentDialog.putExtra("message",message);
+                        intentDialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intentDialog);
+                    }
                 }
                 String result = (String) envelope.getResponse();
                 JSONArray json= new JSONObject(result).getJSONArray("Data");

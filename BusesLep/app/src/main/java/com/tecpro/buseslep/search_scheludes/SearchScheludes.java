@@ -312,7 +312,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
                 String auxDayRet=String.valueOf(dayReturn);
                 if(monthReturn<10)
                     auxMonthRet= "0"+monthReturn;//le agrego un cero adelate
-                if(dayGo<10)
+                if(dayReturn<10)
                     auxDayRet= "0"+dayReturn;//le agrego un cero adelate
                 dateReturn=yearReturn+""+auxMonthRet+""+auxDayRet;// es un entero casteado
                 break;
@@ -528,15 +528,15 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
             //dependiendo de que le paso por parametro, me fijo que hago
             switch (params[0]){
                 case "getCities" :
-                    Pair<TreeMap<String, Integer>, LinkedList<String>> cities=WebServices.getCities();
+                    Pair<TreeMap<String, Integer>, LinkedList<String>> cities=WebServices.getCities(getApplicationContext());
                     departureCities=cities.second;
                     CitiesAndId=cities.first;
                     return new Pair("getCities",departureCities);
                 case "getDestinationCities" :
-                    destinationCities= WebServices.getDestinationCities(idOrigin);
+                    destinationCities= WebServices.getDestinationCities(idOrigin, getApplicationContext());
                     return new Pair("getDestinationCities",destinationCities);
                 case "getSchedules" :
-                    schedules= WebServices.getSchedules(idOrigin, idDestiny, dateGo);
+                    schedules= WebServices.getSchedules(idOrigin, idDestiny, dateGo, getApplicationContext());
                     return new Pair("getDestinationCities",destinationCities);
             }
             //this method will be running on background thread so don't update UI frome here
@@ -588,9 +588,9 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
         @Override
         protected Pair<String,ArrayList<Map<String,Object>>> doInBackground(String... params) {
             if(params[0]=="go")
-                return new Pair(params[0],WebServices.getSchedules(idOrigin, idDestiny, dateGo));
+                return new Pair(params[0],WebServices.getSchedules(idOrigin, idDestiny, dateGo, getApplicationContext()));
             else
-                return new Pair(params[0],WebServices.getSchedules(idDestiny,idOrigin, dateReturn));
+                return new Pair(params[0],WebServices.getSchedules(idDestiny,idOrigin, dateReturn, getApplicationContext()));
         }
 
         @Override

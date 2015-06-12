@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+    	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical" >
+
+    	<TextView
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+			android:text="Soy un aviso"
+			android:id="@+id/dialog_text"
+			android:textSize="15dp"
+			android:gravity="center"
+			android:textColor="@color/white" />
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:text="____________________________"
+		android:id="@+id/textView"
+		android:layout_gravity="center"
+		android:gravity="center"
+		android:textStyle="normal|bold"
+		android:textSize="20dp"
+		android:textColor="@color/white" />
+
+	<Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Aceptar"
+        android:id="@+id/button3"
+        android:onClick="acceptDialog"
+		android:background="#FF000000"
+		android:textColor="@color/white"
+		android:textStyle="bold"
+		android:layout_marginBottom="15dp" />
+
+</LinearLayout>

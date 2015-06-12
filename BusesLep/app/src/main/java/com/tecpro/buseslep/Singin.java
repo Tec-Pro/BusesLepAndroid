@@ -106,7 +106,7 @@ public class Singin extends Activity {
             //dependiendo de que le paso por parametro, me fijo que hago
             switch (params[0]) {
                 case "getCities":
-                    Pair<TreeMap<String, Integer>, LinkedList<String>> cities = WebServices.getCities();
+                    Pair<TreeMap<String, Integer>, LinkedList<String>> cities = WebServices.getCities(getApplicationContext());
                     departureCities = cities.second;
                     CitiesAndId = cities.first;
                     return new Pair("getCities", departureCities);
