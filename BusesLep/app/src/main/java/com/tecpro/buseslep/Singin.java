@@ -1,14 +1,23 @@
 package com.tecpro.buseslep;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Pair;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -25,17 +34,97 @@ import java.util.TreeMap;
  * Created by jacinto on 6/4/15.
  */
 public class Singin extends Activity {
-    private List<String> departureCities; //los nombres de ciudades
-    private Spinner spinner;
-    private TreeMap<String, Integer>CitiesAndId; //nombre e id de las ciudades de origen, la clave es el nombre para facilitar las cosas
+    private DrawerLayout drawerLayout;
+    private ListView drawer;
+    private ActionBarDrawerToggle toggle;
+    private static final String[] opciones = {"Inicio"};
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.singin);
-        spinner = (Spinner) findViewById(R.id.spinnerCities);
-        AsyncCallerCities asyncCallerCities= new AsyncCallerCities();
-        asyncCallerCities.execute("getCities");
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(getLayoutInflater().inflate(R.layout.action_bar, null),
+                new ActionBar.LayoutParams(
+                        ActionBar.LayoutParams.WRAP_CONTENT,
+                        ActionBar.LayoutParams.MATCH_PARENT,
+                        Gravity.CENTER
+                )
+        );
+        loadMenuOptions();
+
+    }
+    private void loadMenuOptions(){
+        // Rescatamos el Action Bar y activamos el boton Home
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+        // Declarar e inicializar componentes para el Navigation Drawer
+        drawer = (ListView) findViewById(R.id.options_signin);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_signin);
+
+        // Declarar adapter y eventos al hacer click
+        drawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, opciones));
+
+        drawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                // Toast.makeText(SearchScheludes.this, "Pulsado: " + opciones[arg2], Toast.LENGTH_SHORT).show();
+                switch (arg2){
+                    case 0://presione recargar ciudades
+                        Intent i = new Intent(Singin.this, SearchScheludes.class);
+                        startActivity(i);
+                        break;
+                }
+
+                drawerLayout.closeDrawers();
+
+            }
+        });
+
+        // Sombra del panel Navigation Drawer
+        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+        // Integracion boton oficial
+        toggle = new ActionBarDrawerToggle(
+                this, // Activity
+                drawerLayout, // Panel del Navigation Drawer
+                R.drawable.ic_navigation_drawer, // Icono que va a utilizar
+                R.string.options, // Descripcion al abrir el drawer
+                R.string.app_name // Descripcion al cerrar el drawer
+        ){
+            public void onDrawerClosed(View view) {
+                // Drawer cerrado
+                getActionBar().setTitle(getResources().getString(R.string.app_name));
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                // Drawer abierto
+                getActionBar().setTitle(R.string.options);
+                invalidateOptionsMenu();
+            }
+        };
+
+        drawerLayout.setDrawerListener(toggle);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // Activamos el toggle con el icono
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toggle.syncState();
     }
 
     public void singin(View v){
@@ -81,60 +170,4 @@ public class Singin extends Activity {
         }
     }
 
-    /**
-     * el primer atributo que es String, son los nombres de los metodos que quiero llamar, lo hardcodeo con 1 solo atributo que es el nombre
-     * del metodo así lo corro
-     */
-    public class AsyncCallerCities extends AsyncTask<String, Void, Pair<String,List<String>> > {
-        ProgressDialog pdLoading = new ProgressDialog(Singin.this);
-
-        private AsyncCallerCities() {
-            pdLoading.setCancelable(false);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            //this method will be running on UI thread
-            pdLoading.setTitle("Por favor, espere.");
-            pdLoading.setMessage("Obteniendo datos del servidor");
-            pdLoading.show();
-        }
-
-        @Override
-        //devuelvo la lista de ciudades que se obtuvo y el nombre para saber si es de origen o destino
-        protected Pair<String, List<String>> doInBackground(String... params) {
-            //dependiendo de que le paso por parametro, me fijo que hago
-            switch (params[0]) {
-                case "getCities":
-                   // ArrayList cities = WebServices.getCities(getApplicationContext());
-                   // departureCities = cities.second;
-                   // CitiesAndId = cities.first;
-                   // return new Pair("getCities", departureCities);
-            }
-            //this method will be running on background thread so don't update UI frome here
-            //do your long running http tasks here,you dont want to pass argument and u can access the parent class' variable url over here
-
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Pair<String, List<String>> result) {
-            if (result == null)
-                Toast.makeText(getBaseContext(), "No se han encontrado ciudades", Toast.LENGTH_SHORT).show();
-                //this method will be running on UI thread
-            else {
-                switch (result.first) {
-                    case "getCities":
-                        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(Singin.this, android.R.layout.simple_spinner_item, departureCities);
-                        adaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        spinner.setAdapter(adaptador);
-                        break;
-                }
-            }
-            pdLoading.dismiss();
-        }
-    }
 }

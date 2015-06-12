@@ -1,5 +1,6 @@
 package com.tecpro.buseslep;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,7 +37,18 @@ public class Login extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(getLayoutInflater().inflate(R.layout.action_bar, null),
+                new ActionBar.LayoutParams(
+                        ActionBar.LayoutParams.WRAP_CONTENT,
+                        ActionBar.LayoutParams.MATCH_PARENT,
+                        Gravity.CENTER
+                )
+        );
         loadMenuOptions();
+
     }
     private void loadMenuOptions(){
         // Rescatamos el Action Bar y activamos el boton Home
@@ -91,6 +105,20 @@ public class Login extends Activity {
         drawerLayout.setDrawerListener(toggle);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // Activamos el toggle con el icono
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toggle.syncState();
+    }
 
     public void login(View v){
         String dni =  ((EditText) findViewById(R.id.textDNI)).getText().toString();
@@ -99,7 +127,7 @@ public class Login extends Activity {
         //si se logeo correctamente en lep.
         Intent i;
         if (true) {
-            Toast.makeText(getApplicationContext(), "Iniciando sesion", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Iniciando sesion", Toast.LENGTH_SHORT).show();
             SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
             preferences.put("dni", dni);
             preferences.put("pass", pass);
