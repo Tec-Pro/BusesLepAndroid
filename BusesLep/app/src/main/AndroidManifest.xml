@@ -44,7 +44,7 @@
         <activity
             android:name=".search_scheludes.schedule.ChooseNumberTickets"
             android:label="@string/title_activity_choose_number_tickets"
-            android:theme="@style/Theme.AppCompat.Light.DialogWhenLarge" >
+            android:theme="@style/Theme.AppCompat.Light.Dialog" >
         </activity>
         <activity
             android:name=".search_scheludes.select_city.ChooseCity"

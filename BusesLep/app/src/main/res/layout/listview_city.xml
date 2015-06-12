@@ -3,6 +3,24 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Seleccione la localidad"
+        android:id="@+id/textView19"
+        android:textColor="#FF0008"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:textSize="17dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:id="@+id/textView19"
+        android:background="#FF0008" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
