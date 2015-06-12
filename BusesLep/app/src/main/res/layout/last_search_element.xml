@@ -31,7 +31,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_weight="1"
                     android:gravity="center|left"
-                    android:paddingLeft="15dp" />
+                    android:paddingLeft="10dp" />
 
             </LinearLayout>
 
@@ -39,7 +39,7 @@
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="4.4"
+                android:weightSum="4.5"
                 android:layout_weight="1">
 
                 <TextView
@@ -51,7 +51,7 @@
                     android:gravity="center|left"
 
                     android:layout_weight="1"
-                    android:paddingLeft="15dp" />
+                    android:paddingLeft="10dp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -79,7 +79,7 @@
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1.1" />
             </LinearLayout>
 
         </LinearLayout>
