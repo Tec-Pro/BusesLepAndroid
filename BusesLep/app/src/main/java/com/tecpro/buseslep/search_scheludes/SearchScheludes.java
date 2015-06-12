@@ -30,6 +30,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tecpro.buseslep.LastSearches;
 import com.tecpro.buseslep.Login;
 import com.tecpro.buseslep.R;
 import com.tecpro.buseslep.batabase.DataBaseHelper;
@@ -100,7 +101,7 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     private DrawerLayout drawerLayout;
     private ListView drawer;
     private ActionBarDrawerToggle toggle;
-    private static final String[] opciones = {"Recargar ciudades"};
+    private static final String[] opciones = {"Recargar ciudades", "Ultimas Busquedas"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +142,9 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
                         loadOrigin();
                         idOrigin=-1;
                         loadDestiny();
+                        break;
+                    case 1:
+                        loadLastSearches();
                         break;
                 }
 
@@ -189,6 +193,11 @@ public class SearchScheludes extends Activity implements AdapterView.OnItemSelec
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         toggle.syncState();
+    }
+
+    private void loadLastSearches(){
+        Intent i =  new Intent(this, LastSearches.class);
+        startActivity(i);
     }
 
     private void loadOrigin(){

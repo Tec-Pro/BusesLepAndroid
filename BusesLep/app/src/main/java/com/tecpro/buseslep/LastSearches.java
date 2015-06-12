@@ -4,21 +4,15 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 
 import android.util.Pair;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 
 import android.widget.ListView;
@@ -26,7 +20,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
 import com.tecpro.buseslep.batabase.DataBaseHelper;
-import com.tecpro.buseslep.search_scheludes.SearchScheludes;
 import com.tecpro.buseslep.search_scheludes.schedule.ScheduleSearch;
 import com.tecpro.buseslep.search_scheludes.schedule.SummarySchedules;
 import com.tecpro.buseslep.utils.SecurePreferences;
@@ -37,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MainActivity extends Activity implements OnItemClickListener{
+public class LastSearches extends Activity implements OnItemClickListener{
     //datos para la busqueda cuando clickeas en un horario
     private static Integer idOrigin=-1; //id de origen
     private static Integer idDestiny=-1; //id de destino
@@ -80,7 +73,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.last_searches);
         preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
 
         dbh = new DataBaseHelper(this);
@@ -91,7 +84,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
         listView.setAdapter(adaptador);
         listView.setOnItemClickListener(this);
 
-        if (preferences.getString("login") != null ) {
+       /* if (preferences.getString("login") != null ) {
             if (preferences.getString("login").equals("true")) {
                 findViewById(R.id.btnLogin).setVisibility(View.INVISIBLE);
                 findViewById(R.id.btnRegister).setVisibility(View.INVISIBLE);
@@ -101,9 +94,9 @@ public class MainActivity extends Activity implements OnItemClickListener{
                 userSesion = false;
 
         }
-        loadMenuOptions();
+        loadMenuOptions();*/
     }
-    private void loadMenuOptions(){
+  /*  private void loadMenuOptions(){
         // Rescatamos el Action Bar y activamos el boton Home
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
@@ -143,7 +136,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
                 else{
                     switch (arg2){
                         case 0:
-                            Intent i =  new Intent(MainActivity.this, Login.class);
+                            Intent i =  new Intent(LastSearches.this, Login.class);
                             i.putExtra("next","main");
                             startActivity(i);
                             break;
@@ -180,9 +173,9 @@ public class MainActivity extends Activity implements OnItemClickListener{
         };
 
         drawerLayout.setDrawerListener(toggle);
-    }
+    }*/
 
-    @Override
+   /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (toggle.onOptionsItemSelected(item)) {
             return true;
@@ -195,7 +188,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         toggle.syncState();
-    }
+    }*/
 
    /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -247,7 +240,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
         listView.setAdapter(adaptador);
     }
 
-    public void launchSearchSchedules(View v){
+    /*public void launchSearchSchedules(View v){
         Intent i =  new Intent(this, SearchScheludes.class);
         startActivity(i);
     }
@@ -262,7 +255,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
         Intent i =  new Intent(this, Singin.class);
         i.putExtra("next","main");
         startActivity(i);
-    }
+    }/*
 
     /**
      * Dado un map pasado por parametro que es el que retorna la base de datos, cargo los horarios
@@ -344,7 +337,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
      * del metodo así lo corro
      */
     private class AsyncCallerSchedules extends AsyncTask<String, Void, Pair<String,ArrayList<Map<String,Object>>> > {
-        ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
+        ProgressDialog pdLoading = new ProgressDialog(LastSearches.this);
         Context context; //contexto para largar la activity aca adentro
 
         private AsyncCallerSchedules(Context context) {
