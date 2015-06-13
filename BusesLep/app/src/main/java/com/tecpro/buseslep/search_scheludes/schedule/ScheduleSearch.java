@@ -1,8 +1,11 @@
 package com.tecpro.buseslep.search_scheludes.schedule;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -30,6 +33,17 @@ public class ScheduleSearch extends Activity implements AdapterView.OnItemClickL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_search);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowCustomEnabled(false);
+        getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(getLayoutInflater().inflate(R.layout.action_bar, null),
+                new ActionBar.LayoutParams(
+                        ActionBar.LayoutParams.WRAP_CONTENT,
+                        ActionBar.LayoutParams.MATCH_PARENT,
+                        Gravity.CENTER
+                )
+        );
         Bundle bundle = getIntent().getExtras();
         String departCity= bundle.getString("departCity");
         String arrivCity = bundle.getString("arrivCity");

@@ -30,6 +30,12 @@
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_lep</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Lep</item>
         <item name="android:editTextBackground">@drawable/lep_edit_text_holo_light</item>
+        <item name="android:editTextStyle">@style/EditTextLep</item>
+        <item name="android:textColorHighlight">#99f90008</item>
+        <item name="android:checkboxStyle">@style/CheckBoxLep</item>
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBarLep</item>
+        <item name="android:colorBackground">@color/gris</item>
+        <item name="android:windowBackground">@color/gris</item>
     </style>
 
     <style name="ActionBar.Solid.Lep" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
@@ -83,6 +89,22 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="EditTextLep" parent="android:Widget.EditText">
+        <item name="android:background">@drawable/lep_edit_text_holo_light</item>
+        <item name="android:textColor">#000000</item>
+    </style>
 
+    <style name="CheckBoxLep" parent="android:Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/lep_btn_check_holo_light</item>
+    </style>
+
+    <style name="ProgressBarLep" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/lep_progress_horizontal_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/lep_progress_indeterminate_horizontal_holo_light</item>
+        <item name="android:minHeight">16dip</item>
+        <item name="android:maxHeight">16dip</item>
+    </style>
+
+    <color name="gris">#F7F7F7</color>
 
 </resources>

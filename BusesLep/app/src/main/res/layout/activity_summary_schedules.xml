@@ -3,6 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent">
 <LinearLayout
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,8 +23,8 @@
         android:weightSum="1">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Rio Cuarto - Cordoba"
             android:id="@+id/txt_description_go"
@@ -36,8 +39,8 @@
             android:paddingBottom="4dp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Rio Cuarto - Cordoba"
             android:id="@+id/txt_description_return"
@@ -80,7 +83,9 @@
                     android:text="25/05/2015"
                     android:id="@+id/txt_depart_date_go"
                     android:textSize="12dp"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:onClick="clickChangeDateGo"
+                    android:clickable="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -92,7 +97,9 @@
                     android:textSize="15dp"
                     android:gravity="center"
                     android:textColor="#F90008"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:onClick="clickChangeDateGo"
+                    android:clickable="true" />
             </LinearLayout>
 
             <LinearLayout
@@ -110,7 +117,9 @@
                     android:textColor="#ff0000"
                     android:textSize="18dp"
                     android:textStyle="bold"
-                    android:gravity="bottom" />
+                    android:gravity="bottom"
+                    android:clickable="true"
+                    android:onClick="clickChangeDateGo" />
 
             </LinearLayout>
 
@@ -127,7 +136,9 @@
                     android:text="25/05/2015"
                     android:id="@+id/txt_arriv_date_go"
                     android:textSize="12dp"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:onClick="clickChangeDateGo"
+                    android:clickable="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -136,7 +147,9 @@
                     android:text="17:30"
                     android:id="@+id/txt_arriv_time_go"
                     android:textSize="15dp"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:onClick="clickChangeDateGo"
+                    android:clickable="true" />
             </LinearLayout>
 
         </LinearLayout>
@@ -164,7 +177,9 @@
                     android:text="25/05/2015"
                     android:id="@+id/txt_depart_date_return"
                     android:gravity="center"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    android:onClick="clickChangeDateRet"
+                    android:clickable="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -176,7 +191,9 @@
                     android:gravity="center"
                     android:textSize="15dp"
                     android:textColor="#F90008"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:onClick="clickChangeDateRet"
+                    android:clickable="true" />
             </LinearLayout>
 
             <LinearLayout
@@ -194,7 +211,9 @@
                     android:textColor="#ff0000"
                     android:textSize="18dp"
                     android:textStyle="bold"
-                    android:gravity="bottom" />
+                    android:gravity="bottom"
+                    android:clickable="true"
+                    android:onClick="clickChangeDateRet" />
             </LinearLayout>
 
             <LinearLayout
@@ -210,7 +229,9 @@
                     android:text="25/05/2015"
                     android:id="@+id/txt_arriv_date_return"
                     android:gravity="center"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    android:onClick="clickChangeDateRet"
+                    android:clickable="true" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -219,7 +240,9 @@
                     android:text="17:30"
                     android:id="@+id/txt_arriv_time_return"
                     android:gravity="center"
-                    android:textSize="15dp" />
+                    android:textSize="15dp"
+                    android:onClick="clickChangeDateRet"
+                    android:clickable="true" />
             </LinearLayout>
         </LinearLayout>
 
@@ -324,13 +347,13 @@
         android:onClick="onClickReserve" />
 
 </LinearLayout>
-
+    </ScrollView>
 <ListView
 android:id="@+id/options_summary_schedules"
 android:layout_width="wrap_content"
 android:layout_height="match_parent"
 android:layout_gravity="start"
-android:background="#EEE"
+    android:background="#f03e3d40"
     />
 
     </android.support.v4.widget.DrawerLayout>

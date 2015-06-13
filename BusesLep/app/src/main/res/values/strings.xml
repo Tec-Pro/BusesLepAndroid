@@ -1,14 +1,14 @@
 <resources>
-    <string name="app_name">   Buses Lep</string>
+    <string name="app_name">   buses Lep</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_search_scheludes">Buses Lep</string>
+    <string name="title_activity_search_scheludes">buses Lep</string>
 
 
     <string name="numbersTicketsName">Seleccione la cantidad de pasajes</string>
     <string name="title_activity_summary_schedules">"Resumen "</string>
-    <string name="options">Menú de opciones</string>
+    <string name="options"></string>
     <string name="title_activity_choose_number_tickets">Cantidad de pasajes</string>
     <string name="title_activity_dialog">Aviso</string>
 

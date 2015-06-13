@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout_search_schedules"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent">
+<LinearLayout
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="9.7">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Búsqueda de horarios"
+        android:id="@+id/textView6"
+        android:textColor="#ff000000"
+        android:textStyle="bold|normal|italic"
+        android:layout_gravity="center_horizontal"
+        android:elegantTextHeight="false"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="10dp" />
+
+    <CheckBox
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Ida y vuelta"
+        android:id="@+id/chk_round_trip"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="16dp"
+        android:onClick="clickGoes"
+        android:enabled="true"
+        android:checked="true"
+        android:layout_marginRight="10dp" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0"
+        android:weightSum="5"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/linearLayout"
+                android:background="@drawable/border"
+                android:visibility="visible"
+                android:onClick="clickCityOrigin"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/txt_city_origin"
+                    android:editable="false"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="13dp"
+                    android:gravity="left|center"
+                    android:onClick="clickCityOrigin"
+                    android:clickable="true"
+                    android:hint="Ciudad de origen"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp" />
+
+                <ImageView
+                    android:src="@drawable/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imageView5"
+                    android:scaleType="fitEnd"
+                    android:layout_marginRight="3dp"
+                    android:layout_gravity="center"
+                    android:onClick="clickCityOrigin"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/border"
+                android:visibility="visible"
+                android:id="@+id/linear_layout_from"
+                android:onClick="clickCityDestiny"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_city_destiny"
+                    android:editable="false"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="13dp"
+                    android:gravity="left|center"
+                    android:onClick="clickCityDestiny"
+                    android:clickable="true"
+                    android:hint="Ciudad de destino"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp" />
+
+                <ImageView
+                    android:src="@drawable/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imageView8"
+                    android:scaleType="fitEnd"
+                    android:layout_marginRight="3dp"
+                    android:onClick="clickCityDestiny"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/linear_layout_to"
+                android:background="@drawable/border"
+                android:visibility="visible"
+                android:onClick="clickDateReturn"
+                android:layout_weight="0.5"
+                android:nestedScrollingEnabled="false">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/txt_date_to"
+                    android:editable="false"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="13dp"
+                    android:gravity="left|center"
+                    android:onClick="clickDateReturn"
+                    android:clickable="true"
+                    android:hint="Fecha vuelta"
+                    android:nestedScrollingEnabled="false"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp" />
+
+                <ImageView
+                    android:src="@drawable/icon_calendar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imageView3"
+                    android:scaleType="fitEnd"
+                    android:layout_marginRight="3dp"
+                    android:layout_gravity="center"
+                    android:onClick="clickDateReturn"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:nestedScrollingEnabled="false"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/border"
+                android:onClick="clickDateGo"
+                android:layout_weight="0.5">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/txt_date_from"
+                    android:editable="false"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="13dp"
+                    android:gravity="left|center"
+                    android:onClick="clickDateGo"
+                    android:clickable="true"
+                    android:hint="Fecha ida"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp" />
+
+                <ImageView
+                    android:src="@drawable/icon_calendar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imageView7"
+                    android:scaleType="fitEnd"
+                    android:layout_marginRight="3dp"
+                    android:onClick="clickDateGo"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0"
+        android:onClick="clickNumberTickets">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/txt_number_tickets"
+            android:editable="false"
+            android:textSize="20dp"
+            android:layout_marginLeft="13dp"
+            android:gravity="left"
+            android:onClick="clickNumberTickets"
+            android:clickable="true"
+            android:hint="Cantidad de pasajes"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp" />
+
+        <ImageView
+            android:src="@drawable/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView6"
+            android:scaleType="fitEnd"
+            android:layout_marginRight="3dp"
+            android:onClick="clickNumberTickets"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"
+        android:layout_weight="1"
+        android:baselineAligned="true"
+        android:measureWithLargestChild="false"
+        android:nestedScrollingEnabled="false"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:gravity="bottom">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Buscar"
+            android:id="@+id/btn_search"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/border"
+            android:longClickable="true"
+            android:textStyle="bold"
+            android:onClick="clickSearch"
+            android:layout_weight="0.5" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="   Ingresar / Registrarme   "
+            android:id="@+id/btnLogin"
+            android:windowSoftInputMode="stateHidden"
+            android:onClick="launchLogin"
+            android:background="@drawable/border"
+            android:textStyle="bold"
+            android:drawableLeft="@drawable/user_icon"
+            android:singleLine="true"
+            android:layout_weight="0.5"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+    </LinearLayout>
+
+</LinearLayout>
+    </ScrollView>
+
+    <ListView
+        android:id="@+id/options_search_schedules"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#f03e3d40"
+        />
+
+</android.support.v4.widget.DrawerLayout>

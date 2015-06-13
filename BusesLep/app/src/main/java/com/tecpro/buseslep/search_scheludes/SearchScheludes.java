@@ -1,5 +1,6 @@
 package com.tecpro.buseslep.search_scheludes;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.internal.widget.AdapterViewCompat;
 import android.text.InputType;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -105,12 +107,23 @@ public class SearchScheludes extends Activity  {
     private DrawerLayout drawerLayout;
     private ListView drawer;
     private ActionBarDrawerToggle toggle;
-    private static final String[] opciones = {"Recargar ciudades", "Ultimas Busquedas"};
+    private static final String[] opciones = {"Recargar ciudades", "Últimas Búsquedas"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_scheludes);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        //actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(getLayoutInflater().inflate(R.layout.action_bar, null),
+                new ActionBar.LayoutParams(
+                        ActionBar.LayoutParams.WRAP_CONTENT,
+                        ActionBar.LayoutParams.MATCH_PARENT,
+                        Gravity.CENTER
+                )
+        );
+        actionBar.setDisplayShowTitleEnabled(false);
         loadMenuOptions();
         findViewsById();
         loadOrigin();
@@ -134,7 +147,7 @@ public class SearchScheludes extends Activity  {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_search_schedules);
 
         // Declarar adapter y eventos al hacer click
-        drawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, opciones));
+        drawer.setAdapter(new ArrayAdapter<String>(this,R.layout.element_menu, R.id.list_content, opciones));
 
         drawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -169,13 +182,13 @@ public class SearchScheludes extends Activity  {
         ){
             public void onDrawerClosed(View view) {
                 // Drawer cerrado
-                getActionBar().setTitle(getResources().getString(R.string.app_name));
+                //getActionBar().setTitle(getResources().getString(R.string.app_name));
                 invalidateOptionsMenu();
             }
 
             public void onDrawerOpened(View drawerView) {
                 // Drawer abierto
-                getActionBar().setTitle(R.string.options);
+                //getActionBar().setTitle(R.string.options);
                 invalidateOptionsMenu();
             }
         };
@@ -346,6 +359,8 @@ public class SearchScheludes extends Activity  {
         i.putExtra("Origin",cityOrigin );
         i.putExtra("Destiny",cityDestiny );
         i.putExtra("codeGo",codeGoSchedule );
+        i.putExtra("codeCityOrigin", idOrigin);
+        i.putExtra("codeCityDestiny",idDestiny);
         if(goReturn){
             i.putExtra("departTimeReturn",departTimeReturn );
             i.putExtra("departDateReturn",departDateReturn );

@@ -7,10 +7,12 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent">
 <LinearLayout
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:weightSum="9.7">
 
     <ImageView
@@ -83,7 +85,7 @@
                 android:paddingBottom="4dp" />
 
             <ImageView
-                android:src="@drawable/icon_calendar"
+                android:src="@drawable/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/imageView5"
@@ -125,7 +127,7 @@
                 android:paddingBottom="4dp" />
 
             <ImageView
-                android:src="@drawable/icon_calendar"
+                android:src="@drawable/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/imageView8"
@@ -248,7 +250,7 @@
             android:paddingBottom="4dp" />
 
         <ImageView
-            android:src="@drawable/icon_calendar"
+            android:src="@drawable/spinner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/imageView6"
@@ -279,9 +281,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="0"
         android:weightSum="3">
 
         <RelativeLayout
@@ -315,14 +316,14 @@
     </LinearLayout>
 
 </LinearLayout>
-
+    </ScrollView>
 
     <ListView
         android:id="@+id/options_search_schedules"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#EEE"
+        android:background="#f03e3d40"
         />
 
 </android.support.v4.widget.DrawerLayout>

@@ -1,5 +1,6 @@
 package com.tecpro.buseslep.search_scheludes.schedule;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,11 +23,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tecpro.buseslep.LastSearches;
 import com.tecpro.buseslep.Login;
 import com.tecpro.buseslep.PurchaseDetails;
 import com.tecpro.buseslep.R;
 import com.tecpro.buseslep.ReserveDetails;
 import com.tecpro.buseslep.search_scheludes.ChooseDate;
+import com.tecpro.buseslep.search_scheludes.SearchScheludes;
 import com.tecpro.buseslep.utils.SecurePreferences;
 import com.tecpro.buseslep.webservices.WebServices;
 
@@ -35,6 +39,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class SummarySchedules extends Activity {
+
+    private AsyncCallerSchedules asyncCallerSchedules;
 
     //textview para mostrar lo de la ida
     private TextView departTimeGo;
@@ -61,19 +67,34 @@ public class SummarySchedules extends Activity {
     private String bundleDepartDateGo;
     private String bundleDepartTimeRet;
     private String bundleDepartDateRet ;
+
+
     private String bundleCityOrigin;
     private String bundleCityDestiny;
+    private int idCityOrigin;
+    private int idCityDestiny;
 
     //menu
     private DrawerLayout drawerLayout;
     private ListView drawer;
     private ActionBarDrawerToggle toggle;
-    private static final String[] opciones = {"OPCION UNO","OPCION DOS", "OPCION 3"};
+    private static final String[] opciones = {"Inicio","Últimas búsquedas"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary_schedules);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        //actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(getLayoutInflater().inflate(R.layout.action_bar, null),
+                new ActionBar.LayoutParams(
+                        ActionBar.LayoutParams.WRAP_CONTENT,
+                        ActionBar.LayoutParams.MATCH_PARENT,
+                        Gravity.CENTER
+                )
+        );
+        actionBar.setDisplayShowTitleEnabled(false);
         loadMenuOptions();
         departTimeGo = (TextView) findViewById(R.id.txt_depart_time_go);
         departDateGo = (TextView) findViewById(R.id.txt_depart_date_go);
@@ -89,6 +110,9 @@ public class SummarySchedules extends Activity {
         descriptionReturn = (TextView) findViewById(R.id.txt_description_return);
         price= (TextView) findViewById(R.id.txt_price);
         Bundle bundle = getIntent().getExtras();
+
+        idCityOrigin= bundle.getInt("codeCityOrigin");
+        idCityDestiny= bundle.getInt("codeCityDestiny");
 
         codeGo= bundle.getString("codeGo", "-1");
         codeReturn= bundle.getString("codeReturn", "-1");
@@ -134,14 +158,20 @@ public class SummarySchedules extends Activity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_summary_schedules);
 
         // Declarar adapter y eventos al hacer click
-        drawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, opciones));
+        drawer.setAdapter(new ArrayAdapter<String>(this,R.layout.element_menu, R.id.list_content, opciones));
 
         drawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                // Toast.makeText(SearchScheludes.this, "Pulsado: " + opciones[arg2], Toast.LENGTH_SHORT).show();
-
-
+                switch (arg2){
+                    case 0://presione recargar ciudades
+                        Intent i = new Intent(SummarySchedules.this, SearchScheludes.class);
+                        startActivity(i);
+                        break;
+                    case 1:
+                        loadLastSearches();
+                        break;
+                }
                 drawerLayout.closeDrawers();
 
             }
@@ -172,6 +202,11 @@ public class SummarySchedules extends Activity {
         };
 
         drawerLayout.setDrawerListener(toggle);
+    }
+
+    private void loadLastSearches(){
+        Intent i =  new Intent(this, LastSearches.class);
+        startActivity(i);
     }
 
     @Override
@@ -258,6 +293,25 @@ public class SummarySchedules extends Activity {
             case 1:
                 numberTickets.setText((data.getStringExtra("number")));
                 break;
+            case 2://retorno de seleccion de horario ida
+                codeGo= data.getStringExtra("codigo");
+                departTimeGo.setText(data.getStringExtra("departTime"));
+                departDateGo.setText(data.getStringExtra("departDate"));
+                arrivTimeGo.setText(data.getStringExtra("arrivTime"));
+                arrivtDateGo.setText(data.getStringExtra("arrivDate"));
+                bundleDepartTimeGo =data.getStringExtra("departTime");
+                bundleDepartDateGo =data.getStringExtra("departDate");
+
+                break;
+            case 3: //retorno de la seleccion de horario vuelta
+                codeReturn= data.getStringExtra("codigo");
+                departDateReturn.setText(data.getStringExtra("departDate"));
+                departTimeReturn.setText(data.getStringExtra("departTime"));
+                arrivtDateReturn.setText(data.getStringExtra("arrivDate"));
+                arrivTimeReturn.setText(data.getStringExtra("arrivTime"));
+                bundleDepartTimeRet =data.getStringExtra("departTime");
+                bundleDepartDateRet =data.getStringExtra("departDate");
+                break;
         }
     }
 
@@ -273,8 +327,8 @@ public class SummarySchedules extends Activity {
      * el primer atributo que es String, son los nombres de los metodos que quiero llamar, lo hardcodeo con 1 solo atributo que es el nombre
      * del metodo así lo corro
      */
- /*   private class AsyncCallerSchedules extends AsyncTask<String, Void, Pair<String,ArrayList<Map<String,Object>>> > {
-        ProgressDialog pdLoading = new ProgressDialog(SearchScheludes.this);
+    private class AsyncCallerSchedules extends AsyncTask<String, Void, Pair<String,ArrayList<Map<String,Object>>> > {
+        ProgressDialog pdLoading = new ProgressDialog(SummarySchedules.this);
         Context context; //contexto para largar la activity aca adentro
 
         private AsyncCallerSchedules(Context context) {
@@ -288,12 +342,12 @@ public class SummarySchedules extends Activity {
             if(params[0]=="go") {
                 String[] aux = bundleDepartDateGo.split("/");
                 String dateGo= aux[2]+aux[1]+aux[0];
-                return new Pair(params[0], WebServices.getSchedules(Integer.valueOf(codeGo), Integer.valueOf(codeReturn), dateGo, getApplicationContext()));
+                return new Pair(params[0], WebServices.getSchedules(idCityOrigin, idCityDestiny, dateGo, getApplicationContext()));
             }
             else {
                 String[] aux = bundleDepartDateRet.split("/");
                 String dateReturn= aux[2]+aux[1]+aux[0];
-                return new Pair(params[0], WebServices.getSchedules(Integer.valueOf(codeReturn), Integer.valueOf(codeGo), dateReturn, getApplicationContext()));
+                return new Pair(params[0], WebServices.getSchedules(idCityDestiny, idCityOrigin, dateReturn, getApplicationContext()));
             }
         }
 
@@ -320,15 +374,15 @@ public class SummarySchedules extends Activity {
                 int codeResult=-1;
                 switch (result.first){
                     case "go":
-                        codeResult=3;
-                        i.putExtra("departCity",Integer.valueOf(codeGo));
-                        i.putExtra("arrivCity",cityDestiny);
+                        codeResult=2;
+                        i.putExtra("departCity",bundleCityOrigin);
+                        i.putExtra("arrivCity",bundleCityDestiny);
                         i.putExtra("goOrReturn","Ida");
                         break;
                     case "return":
-                        codeResult=4;
-                        i.putExtra("departCity",cityDestiny);
-                        i.putExtra("arrivCity",cityOrigin);
+                        codeResult=3;
+                        i.putExtra("departCity",bundleCityDestiny);
+                        i.putExtra("arrivCity",bundleCityOrigin);
                         i.putExtra("goOrReturn","Vuelta");
                         break;
                 }
@@ -337,5 +391,17 @@ public class SummarySchedules extends Activity {
             pdLoading.dismiss();
         }
     }
-    */
+
+    public void clickChangeDateGo(View v){
+        asyncCallerSchedules= new AsyncCallerSchedules(this);
+        asyncCallerSchedules.execute("go");
+    }
+
+    public void clickChangeDateRet(View v){
+        if(codeReturn!="-1") {
+            asyncCallerSchedules = new AsyncCallerSchedules(this);
+            asyncCallerSchedules.execute("return");
+        }
+    }
+
 }

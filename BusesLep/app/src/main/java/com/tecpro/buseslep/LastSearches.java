@@ -289,6 +289,8 @@ public class LastSearches extends Activity implements OnItemClickListener{
         i.putExtra("numberTickets",numberOfTickets.toString() );
         i.putExtra("Origin",cityOrigin );
         i.putExtra("Destiny",cityDestiny );
+        i.putExtra("codeCityOrigin", idOrigin);
+        i.putExtra("codeCityDestiny",idDestiny);
         i.putExtra("codeGo",codeGoSchedule );
         if(goReturn){
             i.putExtra("departTimeReturn",departTimeReturn );

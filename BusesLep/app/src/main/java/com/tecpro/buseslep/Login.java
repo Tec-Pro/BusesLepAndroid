@@ -39,7 +39,7 @@ public class Login extends Activity {
         setContentView(R.layout.login);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        //actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(getLayoutInflater().inflate(R.layout.action_bar, null),
                 new ActionBar.LayoutParams(
                         ActionBar.LayoutParams.WRAP_CONTENT,
@@ -47,6 +47,7 @@ public class Login extends Activity {
                         Gravity.CENTER
                 )
         );
+        actionBar.setDisplayShowTitleEnabled(false);
         loadMenuOptions();
 
     }
@@ -60,7 +61,7 @@ public class Login extends Activity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_login);
 
         // Declarar adapter y eventos al hacer click
-        drawer.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, opciones));
+        drawer.setAdapter(new ArrayAdapter<String>(this, R.layout.element_menu, R.id.list_content, opciones));
 
         drawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
