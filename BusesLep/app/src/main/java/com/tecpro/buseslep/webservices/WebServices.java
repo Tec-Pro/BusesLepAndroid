@@ -32,6 +32,7 @@ public class WebServices  {
     private static String LocalidadesDesde = "LocalidadesDesde"; //nombre del metodo del ws, fijarse en el binding
     private static String LocalidadesHasta = "LocalidadesHasta"; //nombre del metodo del ws, fijarse en el binding
     private static String ListarHorarios = "ListarHorarios"; //nombre del metodo del ws, fijarse en el binding
+    private static String ObtenerTarifaTramo = "ObtenerTarifaTramo"; //obtengo precio
 
     private static String VALIDATION_URI = "http://webservices.buseslep.com.ar:8080/WebServices/WebServiceLep.dll/soap/ILepWebService";//tiene que ser la uri que muestra el xml, por donde bindea
     private static SoapSerializationEnvelope envelope = null;
@@ -46,16 +47,14 @@ public class WebServices  {
      */
     public static ArrayList<Map<String,Object>> getCities(Context context){
         String result;
-        System.out.println("la concha de tu madre");
         ArrayList<Map<String,Object>> cities = new ArrayList<>();
         request = new SoapObject(NAMESPACE, LocalidadesDesde); //le digo que metodo voy a llamar
-        request.addProperty("user","UsuarioLep"); //paso los parametros que pide el metodo
-        request.addProperty("pass","Lep1234");
+        request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
+        request.addProperty("passWS","Lep1234");
         envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
         envelope.enc = SoapSerializationEnvelope.ENC2003;
         envelope.setOutputSoapObject(request);
         httpTransportSE = new HttpTransportSE(VALIDATION_URI); //paso la uri donde transportaré
-        System.out.println("la concha de tu madre 2");
         try {
             try{
             httpTransportSE.call(NAMESPACE + "#" + LocalidadesDesde, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
@@ -97,8 +96,8 @@ public class WebServices  {
         if(idOrigin!=-1) {
             String result;
             request = new SoapObject(NAMESPACE, LocalidadesHasta); //le digo que metodo voy a llamar
-            request.addProperty("user", "UsuarioLep"); //paso los parametros que pide el metodo
-            request.addProperty("pass", "Lep1234");
+            request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
+            request.addProperty("passWS","Lep1234");
             request.addProperty("IdLocalidadOrigen", idOrigin);
             envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
             envelope.enc = SoapSerializationEnvelope.ENC2003;
@@ -139,8 +138,8 @@ public class WebServices  {
     public static ArrayList<Map<String,Object>> getSchedules(Integer idOrigin, Integer idDestiny, String date,Context context){
             ArrayList<Map<String,Object>> ret= new ArrayList<>();
             request = new SoapObject(NAMESPACE, ListarHorarios); //le digo que metodo voy a llamar
-            request.addProperty("user", "UsuarioLep"); //paso los parametros que pide el metodo
-            request.addProperty("pass", "Lep1234");
+            request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
+            request.addProperty("passWS","Lep1234");
             request.addProperty("IdLocalidadOrigen", idOrigin);
             request.addProperty("IdLocalidadDestino", idDestiny);
             request.addProperty("Fecha", date);
@@ -183,4 +182,52 @@ public class WebServices  {
         return ret;
     }
 
+    /**
+     * obtengo el precio
+     * @return
+     */
+    public static ArrayList<Map<String,Object>> getPrice(Integer idOrigin, Integer idDestiny,Context context){
+        String result;
+        ArrayList<Map<String,Object>> cities = new ArrayList<>();
+        request = new SoapObject(NAMESPACE, ObtenerTarifaTramo); //le digo que metodo voy a llamar
+        request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
+        request.addProperty("passWS","Lep1234");
+        request.addProperty("ID_LocalidadOrigen", idOrigin);
+        request.addProperty("ID_LocalidadDestino", idDestiny);
+        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
+        envelope.enc = SoapSerializationEnvelope.ENC2003;
+        envelope.setOutputSoapObject(request);
+        httpTransportSE = new HttpTransportSE(VALIDATION_URI); //paso la uri donde transportaré
+        try {
+            try{
+                httpTransportSE.call(NAMESPACE + "#" + ObtenerTarifaTramo, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+            }catch (Exception e){
+                try {
+                    httpTransportSE.call(NAMESPACE + "#" + ObtenerTarifaTramo, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                }catch (java.net.UnknownHostException unknown){
+                    String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
+                    Intent intentDialog = new Intent(context, Dialog.class);
+                    intentDialog.putExtra("message",message);
+                    intentDialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intentDialog);
+                }
+            }
+            result= (String)envelope.getResponse();
+            System.out.println("ssssss"+result);
+            JSONArray json= new JSONObject(result).getJSONArray("Data");
+            int i=0;
+            while(i<json.length()){
+                JSONObject jsonObject= json.getJSONObject(i);
+                HashMap<String,Object> map= new HashMap<>();
+                map.put("id",jsonObject.getInt("ID_Localidad"));
+                map.put("name",jsonObject.getString("Localidad"));
+                cities.add(map);
+                i++;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return cities;
+    }
 }
