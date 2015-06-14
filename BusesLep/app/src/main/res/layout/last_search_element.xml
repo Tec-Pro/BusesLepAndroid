@@ -5,83 +5,79 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/listPreferredItemHeight">
-        >
+        android:layout_height="wrap_content">
 
-
-        <LinearLayout
-            android:orientation="vertical"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/border"
-            android:weightSum="2">
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:id="@+id/relative"
+            android:background="@drawable/border">
+
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Medium Text"
+                android:id="@+id/departureLoc"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
-                android:weightSum="2">
+                android:gravity="center|left"
+                android:paddingLeft="10dp"
+                android:layout_marginBottom="2dp"
+                android:textColor="#ff373435" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Medium Text"
-                    android:id="@+id/departureLoc"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:gravity="center|left"
-                    android:paddingLeft="10dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:weightSum="4.5"
-                android:layout_weight="1">
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Small Text"
+                android:id="@+id/depDate"
+                android:gravity="center|left"
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Small Text"
-                    android:id="@+id/depDate"
-                    android:gravity="center|left"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentRight="false"
+                android:layout_below="@id/departureLoc"
+                android:textColor="#ff373535" />
 
-                    android:layout_weight="1"
-                    android:paddingLeft="10dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="|"
+                android:id="@+id/next"
+                android:textColor="#ff0000"
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="|"
-                    android:gravity="center"
-                    android:id="@+id/next"
-                    android:textColor="#ff0000"
-                    android:textSize="20sp"
+                android:layout_weight="1.4"
+                android:textStyle="bold"
+                android:layout_alignParentLeft="false"
+                android:layout_toRightOf="@+id/depDate"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentEnd="false"
+                android:layout_alignParentBottom="false"
+                android:layout_below="@+id/departureLoc" />
 
-                    android:layout_weight="1.4"
-                    android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Small Text"
+                android:id="@+id/arrDate"
+                android:layout_weight="1"
+                android:layout_alignParentRight="false"
+                android:layout_alignParentLeft="false"
+                android:layout_toRightOf="@+id/next"
+                android:layout_below="@id/departureLoc"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:textColor="#ff373435" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Small Text"
-                    android:id="@+id/arrDate"
-                    android:gravity="center|left"
-                    android:layout_weight="1"
-                    android:paddingLeft="5dp" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.1" />
-            </LinearLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>

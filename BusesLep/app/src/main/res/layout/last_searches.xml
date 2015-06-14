@@ -11,21 +11,22 @@
     android:id="@+id/mainScreen">
 
     <Button
+        android:textAllCaps="false"
         android:layout_width="fill_parent"
         android:layout_height="40dp"
         android:background="@drawable/border"
         android:drawableRight="@drawable/icon_trash"
-        android:text="Ultimas Busquedas"
+        android:text="Últimas Búsquedas"
         android:onClick="deleteSearches"
-        android:drawablePadding="-10dp"
+        android:drawablePadding="-15dp"
         android:id="@+id/btnTrash"
         android:layout_weight="0"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:paddingRight="15dp"
-        android:textStyle="bold"
         android:layout_marginTop="10dp"
-        android:nestedScrollingEnabled="false" />
+        android:nestedScrollingEnabled="false"
+        android:textSize="15dp" />
 
     <ListView
         android:layout_width="fill_parent"

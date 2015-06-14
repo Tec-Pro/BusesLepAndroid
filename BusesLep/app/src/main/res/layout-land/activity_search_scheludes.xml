@@ -287,7 +287,6 @@
             android:layout_gravity="center_horizontal"
             android:background="@drawable/border"
             android:longClickable="true"
-            android:textStyle="bold"
             android:onClick="clickSearch"
             android:layout_weight="0.5" />
 
@@ -299,7 +298,6 @@
             android:windowSoftInputMode="stateHidden"
             android:onClick="launchLogin"
             android:background="@drawable/border"
-            android:textStyle="bold"
             android:drawableLeft="@drawable/user_icon"
             android:singleLine="true"
             android:layout_weight="0.5"

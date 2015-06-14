@@ -30,7 +30,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Búsqueda de horarios"
         android:id="@+id/textView6"
-        android:textColor="#ff000000"
+        android:textColor="#ff373435"
         android:textStyle="bold|normal|italic"
         android:layout_gravity="center_horizontal"
         android:elegantTextHeight="false"
@@ -47,7 +47,8 @@
         android:onClick="clickGoes"
         android:enabled="true"
         android:checked="true"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+        android:textColor="#ff373435" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -273,10 +274,10 @@
         android:layout_marginLeft="10dp"
         android:background="@drawable/border"
         android:longClickable="true"
-        android:textStyle="bold"
         android:layout_marginTop="15dp"
         android:onClick="clickSearch"
-        android:layout_marginBottom="15dp" />
+        android:layout_marginBottom="15dp"
+        android:textColor="#ff373435" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -300,7 +301,6 @@
                 android:windowSoftInputMode="stateHidden"
                 android:onClick="launchLogin"
                 android:background="@drawable/border"
-                android:textStyle="bold"
                 android:drawableLeft="@drawable/user_icon"
                 android:paddingLeft="20dp"
                 android:drawablePadding="-50sp"
@@ -310,7 +310,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="15dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp" />
+                android:layout_marginLeft="10dp"
+                android:textColor="#ff373435" />
         </RelativeLayout>
 
     </LinearLayout>
