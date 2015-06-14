@@ -42,7 +42,7 @@ public class AdaptatorLastSearch extends BaseAdapter {
             vistaReciclada= inflador.inflate(R.layout.last_search_element, null);
         }
         departureLoc = (TextView) vistaReciclada.findViewById(R.id.departureLoc);
-       // arrivalLoc = (TextView) vistaReciclada.findViewById(R.id.arrivalLoc);
+
 
         arrDate = (TextView) vistaReciclada.findViewById(R.id.arrDate);
         depDate = (TextView) vistaReciclada.findViewById(R.id.depDate);
@@ -53,9 +53,10 @@ public class AdaptatorLastSearch extends BaseAdapter {
         if(destiny.length()>StringMaxSize)
             destiny = destiny.substring(0,StringMaxSize);
         departureLoc.setText(origin +"  -  " + destiny);
-       // arrivalLoc.setText(destiny);
-        depDate.setText((String) s.get("date_go"));
-        arrDate.setText((String)s.get("date_return"));
+        String dateGo = (String) s.get("date_go");
+        depDate.setText(changeDateFormat(dateGo));
+        String dateRet = (String) s.get("date_return");
+        arrDate.setText(changeDateFormat(dateRet));
 
 
         return vistaReciclada;
@@ -70,4 +71,13 @@ public class AdaptatorLastSearch extends BaseAdapter {
         return posicion;
     }
 
+    private String changeDateFormat(String oldDate){
+        String[] dateSplit;
+        if(oldDate != null) {
+            dateSplit = oldDate.split("-");
+            if(dateSplit.length == 3)
+                return  dateSplit[2] + "/" + dateSplit[1] + "/" + dateSplit[0];
+        }
+        return "";
+    }
 }
