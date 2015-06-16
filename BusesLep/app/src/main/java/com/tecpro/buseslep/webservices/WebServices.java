@@ -37,6 +37,8 @@ public class WebServices  {
     private static String ModificarContrasena = "ModificarContraseña";
     private static String RegistrarUsuario = "RegistrarUsuario";
     private static String RecuperarContrasena = "RecuperarContrasena";
+    private static String EditarPerfil = "EditarPerfilCliente";
+
 
     private static String VALIDATION_URI = "http://webservices.buseslep.com.ar:8080/WebServices/WebServiceLep.dll/soap/ILepWebService";//tiene que ser la uri que muestra el xml, por donde bindea
     private static SoapSerializationEnvelope envelope = null;
@@ -284,7 +286,7 @@ public class WebServices  {
         return cities;
     }
 
-    public static ArrayList<Map<String,Object>> CallModificarContraseña(String dni, String email, String pas, String nuevapass,Context context){
+    public static ArrayList<Map<String,Object>> CallModificarContraseña(int dni, String email, String pas, String nuevapass,Context context){
         String result;
         ArrayList<Map<String,Object>> cities = new ArrayList<>();
         request = new SoapObject(NAMESPACE, ModificarContrasena); //le digo que metodo voy a llamar
@@ -400,6 +402,60 @@ public class WebServices  {
             }catch (Exception e){
                 try {
                     httpTransportSE.call(NAMESPACE + "#" + RecuperarContrasena, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                }catch (java.net.UnknownHostException unknown){
+                    String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
+                    Intent intentDialog = new Intent(context, Dialog.class);
+                    intentDialog.putExtra("message",message);
+                    intentDialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intentDialog);
+                }
+            }
+            result= String.valueOf(envelope.getResponse());
+            System.out.println("ssssss "+result+" daaaaaaaaaaaaaaaaa");
+            JSONArray json= new JSONObject(result).getJSONArray("Data");
+            int i=0;
+            while(i<json.length()){
+                JSONObject jsonObject= json.getJSONObject(i);
+                HashMap<String,Object> map= new HashMap<>();
+                //NO SE SABE QUE DEVUELVE
+                cities.add(map);
+                i++;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return cities;
+    }
+
+    public static ArrayList<Map<String,Object>> CallEditarPerfil(int dni, String nombre, String ape, String email, Context context){
+        String result;
+        ArrayList<Map<String,Object>> cities = new ArrayList<>();
+        request = new SoapObject(NAMESPACE, EditarPerfil); //le digo que metodo voy a llamar
+        request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
+        request.addProperty("passWS","Lep1234");
+        request.addProperty("DNI", dni);
+        request.addProperty("Nombre", nombre);
+        request.addProperty("Apellido", ape);
+        request.addProperty("Email", email);
+        request.addProperty("id_Plataforma", 1);
+        request.addProperty("FechaNac", null);
+        request.addProperty("Direccion", null);
+        request.addProperty("Barrio", null);
+        request.addProperty("Ciudad", null);
+        request.addProperty("Tel", null);
+        request.addProperty("Cel", null);
+        request.addProperty("Cuit", null);
+        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
+        envelope.enc = SoapSerializationEnvelope.ENC2003;
+        envelope.setOutputSoapObject(request);
+        httpTransportSE = new HttpTransportSE(VALIDATION_URI); //paso la uri donde transportaré
+        try {
+            try{
+                httpTransportSE.call(NAMESPACE + "#" + EditarPerfil, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+            }catch (Exception e){
+                try {
+                    httpTransportSE.call(NAMESPACE + "#" + EditarPerfil, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
                 }catch (java.net.UnknownHostException unknown){
                     String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
                     Intent intentDialog = new Intent(context, Dialog.class);

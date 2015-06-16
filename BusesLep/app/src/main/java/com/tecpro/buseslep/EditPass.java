@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.tecpro.buseslep.search_scheludes.SearchScheludes;
@@ -27,33 +26,25 @@ import com.tecpro.buseslep.utils.SecurePreferences;
 import com.tecpro.buseslep.webservices.WebServices;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
- * Created by jacinto on 6/4/15.
+ * Created by jacinto on 6/16/15.
  */
-public class Singin extends Activity {
+public class EditPass extends Activity {
     private DrawerLayout drawerLayout;
     private ListView drawer;
     private ActionBarDrawerToggle toggle;
     private static final String[] opciones = {"Inicio"};
-    private static int user;
-    private static String userS;
+    private static AsyncCallerModificarContrasena asyncCallerModificarContrasena;
     private static String pass;
-    private static String nombre;
-    private static String ape;
+    private static String nuevapass;
+    private static int dni;
     private static String email;
-    private static AsyncCallerLogin asyncCallerLogin;
-    private static AsyncCallerSignin asyncCallerSignin;
 
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.singin);
+        setContentView(R.layout.edit_profile);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         //actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -66,7 +57,6 @@ public class Singin extends Activity {
         );
         actionBar.setDisplayShowTitleEnabled(false);
         loadMenuOptions();
-
     }
     private void loadMenuOptions(){
         // Rescatamos el Action Bar y activamos el boton Home
@@ -74,8 +64,8 @@ public class Singin extends Activity {
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         // Declarar e inicializar componentes para el Navigation Drawer
-        drawer = (ListView) findViewById(R.id.options_signin);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_signin);
+        drawer = (ListView) findViewById(R.id.options_edit_pass);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_edit_pass);
 
         // Declarar adapter y eventos al hacer click
         drawer.setAdapter(new ArrayAdapter<String>(this, R.layout.element_menu, R.id.list_content, opciones));
@@ -85,8 +75,8 @@ public class Singin extends Activity {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 // Toast.makeText(SearchScheludes.this, "Pulsado: " + opciones[arg2], Toast.LENGTH_SHORT).show();
                 switch (arg2) {
-                    case 0://presione recargar ciudades
-                        Intent i = new Intent(Singin.this, SearchScheludes.class);
+                    case 0:
+                        Intent i = new Intent(EditPass.this, SearchScheludes.class);
                         startActivity(i);
                         break;
                 }
@@ -138,42 +128,30 @@ public class Singin extends Activity {
         toggle.syncState();
     }
 
-    public void singin(View v){
-        String name =  ((EditText) findViewById(R.id.txtName)).getText().toString();
-        String surname =  ((EditText) findViewById(R.id.txtSurname)).getText().toString();
-        String email =  ((EditText) findViewById(R.id.txtEmail)).getText().toString();
-        String dni =  ((EditText) findViewById(R.id.textDNI)).getText().toString();
-        String pass = ((EditText) findViewById(R.id.txtPass)).getText().toString();
+    public void editPass(View v){
+        nuevapass = ((EditText) findViewById(R.id.txtPass)).getText().toString();
         String passConfirm =  ((EditText) findViewById(R.id.txtPassConfirm)).getText().toString();
-        if (pass.equals(passConfirm)) {
-            SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
-            preferences.put("dni", dni);
-            preferences.put("pass", pass);
-            preferences.put("apellido", surname);
-            preferences.put("nombre", name);
-            preferences.put("email", email);
-            preferences.put("login", "false");
-            loadLogin(Integer.valueOf(dni),pass,name,surname,email);
+        if (nuevapass.equals(passConfirm)) {
+            loadEditProfile();
         } else {
             Toast.makeText(getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void loadLogin(int u, String p, String n, String a, String e){
-        user = u;
-        pass = p;
-        nombre = n;
-        ape = a;
-        email = e;
-        asyncCallerSignin= new AsyncCallerSignin(this);
-        asyncCallerSignin.execute();
+    private void loadEditProfile(){
+        SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+        dni = Integer.valueOf(preferences.getString("dni"));
+        email = preferences.getString("email");        pass = preferences.getString("pass");
+
+        asyncCallerModificarContrasena= new AsyncCallerModificarContrasena(this);
+        asyncCallerModificarContrasena.execute();
     }
 
-    private class AsyncCallerSignin extends AsyncTask<String, Void, Pair<String,ArrayList<Map<String,Object>>> > {
-        ProgressDialog pdLoading = new ProgressDialog(Singin.this);
+    private class AsyncCallerModificarContrasena extends AsyncTask<String, Void, Pair<String,ArrayList<Map<String,Object>>> > {
+        ProgressDialog pdLoading = new ProgressDialog(EditPass.this);
         Context context; //contexto para largar la activity aca adentro
 
-        private AsyncCallerSignin(Context context) {
+        private AsyncCallerModificarContrasena(Context context) {
             this.context = context.getApplicationContext();
             pdLoading.setCancelable(false);
 
@@ -181,7 +159,7 @@ public class Singin extends Activity {
 
         @Override
         protected Pair<String,ArrayList<Map<String,Object>>> doInBackground(String... params) {
-            return new Pair("resultado", WebServices. CallRegistrarUsuario(user, pass, nombre, ape, email, getApplicationContext()));
+            return new Pair("resultado", WebServices.CallModificarContraseña(dni, email, pass, nuevapass, getApplicationContext()));
         }
 
         @Override
@@ -190,7 +168,7 @@ public class Singin extends Activity {
 
             //this method will be running on UI thread
             pdLoading.setTitle("Por favor, espere.");
-            pdLoading.setMessage("Creando Cuenta");
+            pdLoading.setMessage("Cambiando contraseña");
             pdLoading.show();
         }
 
@@ -198,81 +176,16 @@ public class Singin extends Activity {
         @Override
         protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
             if (result==null || result.second.isEmpty())
-                Toast.makeText(getBaseContext(), "No se ha podido crear la cuenta ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "No se ha podido cambiar la contraseña ", Toast.LENGTH_SHORT).show();
                 //this method will be running on UI <></>hread
             else{
-                Toast.makeText(getApplicationContext(), "Cuenta creada", Toast.LENGTH_LONG).show();
-                loadLogin(String.valueOf(user),pass);
-            pdLoading.dismiss();
-        }
-    }
-    }
-
-    private void loadLogin(String u, String p){
-        userS = u;
-        pass = p;
-        asyncCallerLogin= new AsyncCallerLogin(this);
-        asyncCallerLogin.execute();
-    }
-
-    private class AsyncCallerLogin extends AsyncTask<String, Void, Pair<String,ArrayList<Map<String,Object>>> > {
-        ProgressDialog pdLoading = new ProgressDialog(Singin.this);
-        Context context; //contexto para largar la activity aca adentro
-
-        private AsyncCallerLogin(Context context) {
-            this.context = context.getApplicationContext();
-            pdLoading.setCancelable(false);
-
-        }
-
-        @Override
-        protected Pair<String,ArrayList<Map<String,Object>>> doInBackground(String... params) {
-            return new Pair("resultado", WebServices.callLogin(userS, pass, getApplicationContext()));
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            //this method will be running on UI thread
-            pdLoading.setTitle("Por favor, espere.");
-            pdLoading.setMessage("Iniciando sesion");
-            pdLoading.show();
-        }
-
-
-        @Override
-        protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
-            if (result==null || result.second.isEmpty())
-                Toast.makeText(getBaseContext(), "No se ha podido iniciar sesion ", Toast.LENGTH_SHORT).show();
-                //this method will be running on UI <></>hread
-            else{
-                Toast.makeText(getApplicationContext(), "Sesion iniciada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Contrasña editada", Toast.LENGTH_SHORT).show();
                 SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
-                preferences.put("login", "true");
-                Intent i;
-                Bundle bundle = getIntent().getExtras();
-                if (bundle.getString("next").equals("main")) {
-                    i = new Intent(Singin.this, SearchScheludes.class);
-                } else {
-                    if (bundle.getString("next").equals("purchase")) {
-                        i = new Intent(Singin.this, PurchaseDetails.class);
-                    } else {
-                        i = new Intent(Singin.this, ReserveDetails.class);
-                    }
-                    i.putExtra("city_from",bundle.getString("city_from"));
-                    i.putExtra("city_to",bundle.getString("city_to"));
-                    i.putExtra("arrival_date1",bundle.getString("arrival_date1"));
-                    i.putExtra("arrival_hour1",bundle.getString("arrival_hour1"));
-                    i.putExtra("arrival_date2",bundle.getString("arrival_date2"));
-                    i.putExtra("arrival_hour2",bundle.getString("arrival_hour2"));
-                    i.putExtra("cant_tickets", bundle.getString("cant_tickets"));
-                    i.putExtra("roundtrip",bundle.getInt("roundtrip"));
-                }
+                preferences.put("pass", pass);
+                Intent i = new Intent(EditPass.this, SearchScheludes.class);
                 startActivity(i);
             }
             pdLoading.dismiss();
         }
     }
-
 }

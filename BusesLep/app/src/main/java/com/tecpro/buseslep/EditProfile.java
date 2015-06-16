@@ -2,11 +2,9 @@ package com.tecpro.buseslep;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,11 +19,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tecpro.buseslep.search_scheludes.SearchScheludes;
-import com.tecpro.buseslep.search_scheludes.schedule.ScheduleSearch;
 import com.tecpro.buseslep.utils.SecurePreferences;
 import com.tecpro.buseslep.webservices.WebServices;
 
@@ -33,23 +29,22 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * Created by jacinto on 6/1/15.
+ * Created by jacinto on 6/16/15.
  */
-public class Login extends Activity {
-
+public class EditProfile extends Activity {
     private DrawerLayout drawerLayout;
     private ListView drawer;
     private ActionBarDrawerToggle toggle;
     private static final String[] opciones = {"Inicio"};
-    private static String user;
-    private static String pass;
-    private static AsyncCallerLogin asyncCallerLogin;
+    private static AsyncCallerEditProfile asyncCallerEditProfile;
+    private static String dni;
+    private static String nombre;
+    private static String ape;
+    private static String email;
 
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+        setContentView(R.layout.edit_profile);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         //actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -62,6 +57,11 @@ public class Login extends Activity {
         );
         actionBar.setDisplayShowTitleEnabled(false);
         loadMenuOptions();
+        SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+        ((EditText) findViewById(R.id.txtName)).setText(preferences.getString("nombre"));
+        ((EditText) findViewById(R.id.txtSurname)).setText(preferences.getString("apellido"));
+        ((EditText) findViewById(R.id.txtEmail)).setText(preferences.getString("email"));
+        ((EditText) findViewById(R.id.textDNI)).setText(preferences.getString("dni"));
 
     }
     private void loadMenuOptions(){
@@ -70,8 +70,8 @@ public class Login extends Activity {
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         // Declarar e inicializar componentes para el Navigation Drawer
-        drawer = (ListView) findViewById(R.id.options_login);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_login);
+        drawer = (ListView) findViewById(R.id.options_edit_profile);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_edit_profile);
 
         // Declarar adapter y eventos al hacer click
         drawer.setAdapter(new ArrayAdapter<String>(this, R.layout.element_menu, R.id.list_content, opciones));
@@ -81,8 +81,8 @@ public class Login extends Activity {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 // Toast.makeText(SearchScheludes.this, "Pulsado: " + opciones[arg2], Toast.LENGTH_SHORT).show();
                 switch (arg2) {
-                    case 0://presione recargar ciudades
-                        Intent i = new Intent(Login.this, SearchScheludes.class);
+                    case 0:
+                        Intent i = new Intent(EditProfile.this, SearchScheludes.class);
                         startActivity(i);
                         break;
                 }
@@ -134,51 +134,24 @@ public class Login extends Activity {
         toggle.syncState();
     }
 
-    public void login(View v){
-        String dni =  ((EditText) findViewById(R.id.textDNI)).getText().toString();
-        String pass = ((EditText) findViewById(R.id.txtPass)).getText().toString();
-        SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
-        preferences.put("dni", dni);
-        preferences.put("pass", pass);
-        preferences.put("login", "false");
-        loadLogin(dni,pass);
+    public void editProfile(View v){
+        nombre =  ((EditText) findViewById(R.id.txtName)).getText().toString();
+        ape =  ((EditText) findViewById(R.id.txtSurname)).getText().toString();
+        email =  ((EditText) findViewById(R.id.txtEmail)).getText().toString();
+        dni =  ((EditText) findViewById(R.id.textDNI)).getText().toString();
+        loadEditProfile();
     }
 
-    public void launchSignin(View v){
-        Intent i = new Intent(this, Singin.class);
-        Bundle bundle = getIntent().getExtras();
-        if (bundle.getString("next").equals("main")) {
-            i.putExtra("next", "main");
-        } else {
-            if (bundle.getString("next").equals("purchase")) {
-                i.putExtra("next","purchase");
-            } else {
-                i.putExtra("next","reserve");
-            }
-            i.putExtra("city_from", bundle.getString("city_from"));
-            i.putExtra("city_to", bundle.getString("city_to"));
-            i.putExtra("arrival_date1", bundle.getString("arrival_date1"));
-            i.putExtra("arrival_hour1", bundle.getString("arrival_hour1"));
-            i.putExtra("arrival_date2", bundle.getString("arrival_date2"));
-            i.putExtra("arrival_hour2", bundle.getString("arrival_hour2"));
-            i.putExtra("cant_tickets", bundle.getString("cant_tickets"));
-            i.putExtra("roundtrip", bundle.getInt("roundtrip"));
-        }
-        startActivity(i);
+    private void loadEditProfile(){
+        asyncCallerEditProfile= new AsyncCallerEditProfile(this);
+        asyncCallerEditProfile.execute();
     }
 
-    private void loadLogin(String u, String p){
-        user = u;
-        pass = p;
-        asyncCallerLogin= new AsyncCallerLogin(this);
-        asyncCallerLogin.execute();
-    }
-
-    private class AsyncCallerLogin extends AsyncTask<String, Void, Pair<String,ArrayList<Map<String,Object>>> > {
-        ProgressDialog pdLoading = new ProgressDialog(Login.this);
+    private class AsyncCallerEditProfile extends AsyncTask<String, Void, Pair<String,ArrayList<Map<String,Object>>> > {
+        ProgressDialog pdLoading = new ProgressDialog(EditProfile.this);
         Context context; //contexto para largar la activity aca adentro
 
-        private AsyncCallerLogin(Context context) {
+        private AsyncCallerEditProfile(Context context) {
             this.context = context.getApplicationContext();
             pdLoading.setCancelable(false);
 
@@ -186,7 +159,7 @@ public class Login extends Activity {
 
         @Override
         protected Pair<String,ArrayList<Map<String,Object>>> doInBackground(String... params) {
-            return new Pair("resultado", WebServices.callLogin(user, pass, getApplicationContext()));
+            return new Pair("resultado", WebServices.CallEditarPerfil(Integer.valueOf(dni), nombre, ape, email, getApplicationContext()));
         }
 
         @Override
@@ -195,7 +168,7 @@ public class Login extends Activity {
 
             //this method will be running on UI thread
             pdLoading.setTitle("Por favor, espere.");
-            pdLoading.setMessage("Iniciando sesion");
+            pdLoading.setMessage("Editando perfil");
             pdLoading.show();
         }
 
@@ -203,43 +176,16 @@ public class Login extends Activity {
         @Override
         protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
             if (result==null || result.second.isEmpty())
-                Toast.makeText(getBaseContext(), "No se ha podido iniciar sesion ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "No se ha podido editar el perfil ", Toast.LENGTH_SHORT).show();
                 //this method will be running on UI <></>hread
             else{
-                Toast.makeText(getApplicationContext(), "Sesion iniciada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Perfil editado", Toast.LENGTH_SHORT).show();
                 SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
-
-                for (Map<String,Object> m: result.second){
-                    if (m.containsKey("Apellido")){
-                        preferences.put("apellido", (String) m.get("Apellido"));
-                    }
-                    if (m.containsKey("Nombre")){
-                        preferences.put("apellido", (String) m.get("Nombre"));
-                    }
-                    if (m.containsKey("Email")){
-                        preferences.put("email", (String) m.get("Email"));
-                    }
-                }
-                preferences.put("login", "true");
-                Intent i;
-                Bundle bundle = getIntent().getExtras();
-                if (bundle.getString("next").equals("main")) {
-                    i = new Intent(Login.this, SearchScheludes.class);
-                } else {
-                    if (bundle.getString("next").equals("purchase")) {
-                        i = new Intent(Login.this, PurchaseDetails.class);
-                    } else {
-                        i = new Intent(Login.this, ReserveDetails.class);
-                    }
-                    i.putExtra("city_from",bundle.getString("city_from"));
-                    i.putExtra("city_to",bundle.getString("city_to"));
-                    i.putExtra("arrival_date1",bundle.getString("arrival_date1"));
-                    i.putExtra("arrival_hour1",bundle.getString("arrival_hour1"));
-                    i.putExtra("arrival_date2",bundle.getString("arrival_date2"));
-                    i.putExtra("arrival_hour2",bundle.getString("arrival_hour2"));
-                    i.putExtra("cant_tickets", bundle.getString("cant_tickets"));
-                    i.putExtra("roundtrip",bundle.getInt("roundtrip"));
-                }
+                preferences.put("apellido", ape);
+                preferences.put("nombre", nombre);
+                preferences.put("email", email);
+                preferences.put("dni", dni);
+                Intent i = new Intent(EditProfile.this, SearchScheludes.class);
                 startActivity(i);
             }
             pdLoading.dismiss();
