@@ -55,6 +55,7 @@ public class WebServices  {
         request = new SoapObject(NAMESPACE, LocalidadesDesde); //le digo que metodo voy a llamar
         request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
         request.addProperty("passWS","Lep1234");
+        request.addProperty("id_plataforma",1);
         envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
         envelope.enc = SoapSerializationEnvelope.ENC2003;
         envelope.setOutputSoapObject(request);
@@ -103,6 +104,7 @@ public class WebServices  {
             request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
             request.addProperty("passWS","Lep1234");
             request.addProperty("IdLocalidadOrigen", idOrigin);
+            request.addProperty("id_plataforma",1);
             envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
             envelope.enc = SoapSerializationEnvelope.ENC2003;
             envelope.setOutputSoapObject(request);
@@ -147,7 +149,10 @@ public class WebServices  {
             request.addProperty("IdLocalidadOrigen", idOrigin);
             request.addProperty("IdLocalidadDestino", idDestiny);
             request.addProperty("Fecha", date);
-            envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
+            request.addProperty("id_plataforma",1);
+            //request.addProperty("DNI",);
+
+        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
             envelope.enc = SoapSerializationEnvelope.ENC2003;
             envelope.setOutputSoapObject(request);
             httpTransportSE = new HttpTransportSE(VALIDATION_URI); //paso la uri donde transportaré
@@ -190,9 +195,9 @@ public class WebServices  {
      * obtengo el precio
      * @return
      */
-    public static ArrayList<Map<String,Object>> getPrice(Integer idOrigin, Integer idDestiny,Context context){
+    public static Map<String,String> getPrice(Integer idOrigin, Integer idDestiny,Context context){
         String result;
-        ArrayList<Map<String,Object>> cities = new ArrayList<>();
+        Map<String,String> price = new HashMap<String,String>();
         request = new SoapObject(NAMESPACE, ObtenerTarifaTramo); //le digo que metodo voy a llamar
         request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
         request.addProperty("passWS","Lep1234");
@@ -217,22 +222,18 @@ public class WebServices  {
                 }
             }
             result= (String)envelope.getResponse();
-            System.out.println("ssssss"+result);
-            JSONArray json= new JSONObject(result).getJSONArray("Data");
-            int i=0;
-            while(i<json.length()){
-                JSONObject jsonObject= json.getJSONObject(i);
-                HashMap<String,Object> map= new HashMap<>();
-                map.put("id",jsonObject.getInt("ID_Localidad"));
-                map.put("name",jsonObject.getString("Localidad"));
-                cities.add(map);
-                i++;
-            }
+            String[] auxPrice = result.split(" - ");
+            String priceGo= auxPrice[0].split(":")[1];
+            String priceGoRet= auxPrice[1].split(":")[1];
+            price.put("priceGo",priceGo);
+            price.put("priceGoRet",priceGoRet);
+
+
         }
         catch(Exception e){
             e.printStackTrace();
         }
-        return cities;
+        return price;
     }
 
     public static ArrayList<Map<String,Object>> callLogin(String user, String pass,Context context){

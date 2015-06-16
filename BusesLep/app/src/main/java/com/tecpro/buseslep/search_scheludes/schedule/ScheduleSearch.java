@@ -48,7 +48,12 @@ public class ScheduleSearch extends Activity implements AdapterView.OnItemClickL
         String departCity= bundle.getString("departCity");
         String arrivCity = bundle.getString("arrivCity");
         String goOrReturn = bundle.getString("goOrReturn");
-        String price = bundle.getString("price");
+        String priceGo = bundle.getString("priceGo");
+        String priceGoRet = bundle.getString("priceGoRet");
+        TextView txtPriceGo = (TextView) findViewById(R.id.txt_description_price_go);
+        txtPriceGo.setText("Ida $"+priceGo);
+        TextView txtPriceGoRet = (TextView) findViewById(R.id.txt_description_price_go_ret);
+        txtPriceGoRet.setText("Ida y vuelta $"+priceGoRet);
         TextView txtDescription= (TextView) findViewById(R.id.txt_description_schedule);
         TextView txtGoRet= (TextView) findViewById(R.id.txt_description_go_ret);
         txtGoRet.setText(goOrReturn);

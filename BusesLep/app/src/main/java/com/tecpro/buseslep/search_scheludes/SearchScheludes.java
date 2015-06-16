@@ -85,6 +85,8 @@ public class SearchScheludes extends Activity  {
     private static String dateReturn; //string para la fecha de vuelta en formato 20150605
     private AsyncCallerCities asyncCallerCities;
     private AsyncCallerSchedules asyncCallerSchedules;
+    private static String priceGo;
+    private static String priceGoRet;
 
     private ArrayList<Map<String,Object>> schedules; //lista con todos los horarios, la misma la uso para ida y  para vuelta
     private String codeGoSchedule; //tengo el codigo del horario para la reserva
@@ -99,7 +101,6 @@ public class SearchScheludes extends Activity  {
     private String departDateReturn;
     private String arrivTimeReturn;
     private String arrivDateReturn;
-    private String price;
     private DataBaseHelper dbh; //databasehelper para la db
 
 
@@ -544,7 +545,10 @@ public class SearchScheludes extends Activity  {
         @Override
         protected Pair<String,ArrayList<Map<String,Object>>> doInBackground(String... params) {
             if(params[0]=="go") {
-                //System.out.println(WebServices.getPrice(idOrigin, idDestiny,getApplicationContext()));
+                Map<String,String> priceMap= WebServices.getPrice(idOrigin, idDestiny, getApplicationContext());
+                priceGo=  priceMap.get("priceGo");
+                priceGoRet=  priceMap.get("priceGoRet");
+
                 return new Pair(params[0], WebServices.getSchedules(idOrigin, idDestiny, dateGo, getApplicationContext()));
             }else
                 return new Pair(params[0],WebServices.getSchedules(idDestiny,idOrigin, dateReturn, getApplicationContext()));
@@ -570,6 +574,8 @@ public class SearchScheludes extends Activity  {
                 schedules= result.second;
                 Intent i = new Intent(context, ScheduleSearch.class);
                 i.putExtra("schedules", schedules);
+                i.putExtra("priceGo",priceGo);
+                i.putExtra("priceGoRet",priceGoRet);
                 int codeResult=-1;
                 switch (result.first){
                     case "go":
