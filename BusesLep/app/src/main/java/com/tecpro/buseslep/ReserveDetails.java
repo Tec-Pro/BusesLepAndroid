@@ -2,16 +2,38 @@ package com.tecpro.buseslep;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.tecpro.buseslep.webservices.WebServices;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by agustin on 06/06/15.
  */
 public class ReserveDetails extends Activity {
+
+    private static AsyncCallerReserve asyncCallerReserve;
+
+    int roundtrip;
+    String cityfrom;
+    String cityto;
+    String arrdate1;
+    String arrhour1;
+    String arrdate2;
+    String arrhour2;
+    String cantTick;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,14 +52,14 @@ public class ReserveDetails extends Activity {
                 )
         );
         Bundle extras = getIntent().getExtras();
-        int roundtrip = extras.getInt("roundtrip");
-        String cityfrom = extras.getString("city_from");
-        String cityto = extras.getString("city_to");
-        String arrdate1 = extras.getString("arrival_date1");
-        String arrhour1 = extras.getString("arrival_hour1");
-        String arrdate2 = extras.getString("arrival_date2");
-        String arrhour2 = extras.getString("arrival_hour2");
-        String cantTick = extras.getString("cant_tickets");
+        roundtrip = extras.getInt("roundtrip");
+        cityfrom = extras.getString("city_from");
+        cityto = extras.getString("city_to");
+        arrdate1 = extras.getString("arrival_date1");
+        arrhour1 = extras.getString("arrival_hour1");
+        arrdate2 = extras.getString("arrival_date2");
+        arrhour2 = extras.getString("arrival_hour2");
+        cantTick = extras.getString("cant_tickets");
 
         TextView destiny1 = (TextView)findViewById(R.id.destiny1);
         TextView departure1 = (TextView)findViewById(R.id.departure1);
@@ -59,4 +81,46 @@ public class ReserveDetails extends Activity {
             findViewById(R.id.backtrip).setVisibility(View.GONE);
     }
 
+    public void reserve(View view) {
+        asyncCallerReserve= new AsyncCallerReserve(this);
+        asyncCallerReserve.execute();
+    }
+
+    private class AsyncCallerReserve extends AsyncTask<String, Void, Pair<String,List<String>> > {
+        ProgressDialog pdLoading = new ProgressDialog(ReserveDetails.this);
+        Context context;
+
+        private AsyncCallerReserve(Context context){
+            this.context = context.getApplicationContext();
+            pdLoading.setCancelable(true);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setTitle("Por favor, espere.");
+            pdLoading.setMessage("Obteniendo datos del servidor");
+            pdLoading.show();
+        }
+        @Override
+        protected Pair<String, List<String>> doInBackground(String... params) {
+            String resultCode = WebServices.CallAgregarReserva(null,null,null,1,1,1,1,1,1,1,1,1,1,1,1,1,getApplicationContext());//harcode or die
+            if(resultCode.equals("Error de Autenticacion"))
+                return null;
+            return new Pair("resultado",  new ArrayList<String>().add(resultCode) );
+        }
+
+        @Override
+        protected void onPostExecute(Pair<String,List<String>> result) {
+            if (result== null )
+                Toast.makeText(getBaseContext(), "Error de Autenticacion", Toast.LENGTH_SHORT).show();
+                //this method will be running on UI thread
+            else{
+                Toast.makeText(getBaseContext(), "Reserva realizada con exito \n Le enviamos un mail con los detalles", Toast.LENGTH_SHORT).show();
+            }
+            pdLoading.dismiss();
+        }
+    }
 }

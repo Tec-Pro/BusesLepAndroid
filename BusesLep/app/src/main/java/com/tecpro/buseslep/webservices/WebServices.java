@@ -3,6 +3,7 @@ package com.tecpro.buseslep.webservices;
 import android.content.Context;
 import android.content.Intent;
 import android.os.StrictMode;
+import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class WebServices  {
     private static String ModificarContrasena = "ModificarContraseña";
     private static String RegistrarUsuario = "RegistrarUsuario";
     private static String RecuperarContrasena = "RecuperarContrasena";
+    private static String AgregarReserva = "AgregarReserva";
 
     private static String VALIDATION_URI = "http://webservices.buseslep.com.ar:8080/WebServices/WebServiceLep.dll/soap/ILepWebService";//tiene que ser la uri que muestra el xml, por donde bindea
     private static SoapSerializationEnvelope envelope = null;
@@ -424,5 +426,54 @@ public class WebServices  {
             e.printStackTrace();
         }
         return cities;
+    }
+
+    public static String CallAgregarReserva(String userWS, String passWS, String dni, int IDEmpresaIda, int IDDestinoIda, int CodHorarioIda,int IdLocalidadDesdeIda, int IdlocalidadHastaIda, int CantidadIda,int IDEmpresaVuelta, int IDDestinoVuelta,int CodHorarioVuelta, int IdLocalidadDesdeVuelta, int IdlocalidadHastaVuelta, int CantidadVuelta, int Id_Plataforma, Context context){
+        String result = null;
+
+       // ArrayList<Map<String,Object>> resultCode = new ArrayList<>();
+        request = new SoapObject(NAMESPACE, AgregarReserva); //le digo que metodo voy a llamar
+        request.addProperty("userWS",userWS); //paso los parametros que pide el metodo
+        request.addProperty("passWS",passWS);
+        request.addProperty("Dni", dni);
+        request.addProperty("IDEmpresaIda", IDEmpresaIda);
+        request.addProperty("IDDestinoIda", IDDestinoIda);
+        request.addProperty("CodHorarioIda", CodHorarioIda);
+        request.addProperty("IdLocalidadDesdeIda", IdLocalidadDesdeIda);
+        request.addProperty("IdlocalidadHastaIda", IdlocalidadHastaIda);
+        request.addProperty("id_plataforma", 1);
+        request.addProperty("CantidadIda", CantidadIda);
+        request.addProperty("IDEmpresaVuelta", IDEmpresaVuelta);
+        request.addProperty("IDDestinoVuelta", IDDestinoVuelta);
+        request.addProperty("CodHorarioVuelta", CodHorarioVuelta);
+        request.addProperty("IdLocalidadDesdeVuelta", IdLocalidadDesdeVuelta);
+        request.addProperty("IdlocalidadHastaVuelta", IdlocalidadHastaVuelta);
+        request.addProperty("CantidadVuelta", CantidadVuelta);
+        request.addProperty("Id_Plataforma", Id_Plataforma);
+
+        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
+        envelope.enc = SoapSerializationEnvelope.ENC2003;
+        envelope.setOutputSoapObject(request);
+        httpTransportSE = new HttpTransportSE(VALIDATION_URI); //paso la uri donde transportaré
+        try {
+            try{
+                httpTransportSE.call(NAMESPACE + "#" + AgregarReserva, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+            }catch (Exception e){
+                try {
+                    httpTransportSE.call(NAMESPACE + "#" + AgregarReserva, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                }catch (java.net.UnknownHostException unknown){
+                    String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
+                    Intent intentDialog = new Intent(context, Dialog.class);
+                    intentDialog.putExtra("message",message);
+                    intentDialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intentDialog);
+                }
+            }
+            result= (String)envelope.getResponse();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return result;
     }
 }
