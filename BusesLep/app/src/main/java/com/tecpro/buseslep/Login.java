@@ -3,13 +3,17 @@ package com.tecpro.buseslep;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Application;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +25,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tecpro.buseslep.search_scheludes.SearchScheludes;
+import com.tecpro.buseslep.search_scheludes.schedule.ScheduleSearch;
 import com.tecpro.buseslep.utils.SecurePreferences;
+import com.tecpro.buseslep.webservices.WebServices;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by jacinto on 6/1/15.
@@ -32,6 +41,11 @@ public class Login extends Activity {
     private ListView drawer;
     private ActionBarDrawerToggle toggle;
     private static final String[] opciones = {"Inicio"};
+    private static String user;
+    private static String pass;
+    private static ArrayList<Map<String,Object>> datas;
+    private static AsyncCallerLogin asyncCallerLogin;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,7 +81,7 @@ public class Login extends Activity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 // Toast.makeText(SearchScheludes.this, "Pulsado: " + opciones[arg2], Toast.LENGTH_SHORT).show();
-                switch (arg2){
+                switch (arg2) {
                     case 0://presione recargar ciudades
                         Intent i = new Intent(Login.this, SearchScheludes.class);
                         startActivity(i);
@@ -124,44 +138,18 @@ public class Login extends Activity {
     public void login(View v){
         String dni =  ((EditText) findViewById(R.id.textDNI)).getText().toString();
         String pass = ((EditText) findViewById(R.id.txtPass)).getText().toString();
-        //mandar por json login
-        //si se logeo correctamente en lep.
-        Intent i;
-        if (true) {
-            Toast.makeText(getApplicationContext(), "Iniciando sesion", Toast.LENGTH_SHORT).show();
-            SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
-            preferences.put("dni", dni);
-            preferences.put("pass", pass);
-            preferences.put("login", "true");
-            Bundle bundle = getIntent().getExtras();
-            if (bundle.getString("next").equals("main")) {
-                i = new Intent(this, SearchScheludes.class);
-            } else {
-                if (bundle.getString("next").equals("purchase")) {
-                    i = new Intent(this, PurchaseDetails.class);
-                } else {
-                    i = new Intent(this, ReserveDetails.class);
-                }
-                i.putExtra("city_from",bundle.getString("city_from"));
-                i.putExtra("city_to",bundle.getString("city_to"));
-                i.putExtra("arrival_date1",bundle.getString("arrival_date1"));
-                i.putExtra("arrival_hour1",bundle.getString("arrival_hour1"));
-                i.putExtra("arrival_date2",bundle.getString("arrival_date2"));
-                i.putExtra("arrival_hour2",bundle.getString("arrival_hour2"));
-                i.putExtra("cant_tickets", bundle.getString("cant_tickets"));
-                i.putExtra("roundtrip",bundle.getInt("roundtrip"));
-            }
-            startActivity(i);
-        } else {         //si no se logea
-            Toast.makeText(getApplicationContext(), "Ocurrio un error", Toast.LENGTH_LONG).show();
-        }
+        SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+        preferences.put("dni", dni);
+        preferences.put("pass", pass);
+        preferences.put("login", "false");
+        loadLogin(dni,pass);
     }
 
     public void launchSignin(View v){
         Intent i = new Intent(this, Singin.class);
         Bundle bundle = getIntent().getExtras();
         if (bundle.getString("next").equals("main")) {
-            i.putExtra("next","main");
+            i.putExtra("next", "main");
         } else {
             if (bundle.getString("next").equals("purchase")) {
                 i.putExtra("next","purchase");
@@ -178,6 +166,85 @@ public class Login extends Activity {
             i.putExtra("roundtrip", bundle.getInt("roundtrip"));
         }
         startActivity(i);
+    }
+
+    private void loadLogin(String u, String p){
+        user = u;
+        pass = p;
+        asyncCallerLogin= new AsyncCallerLogin(this);
+        asyncCallerLogin.execute();
+    }
+
+    private class AsyncCallerLogin extends AsyncTask<String, Void, Pair<String,ArrayList<Map<String,Object>>> > {
+        ProgressDialog pdLoading = new ProgressDialog(Login.this);
+        Context context; //contexto para largar la activity aca adentro
+
+        private AsyncCallerLogin(Context context) {
+            this.context = context.getApplicationContext();
+            pdLoading.setCancelable(false);
+
+        }
+
+        @Override
+        protected Pair<String,ArrayList<Map<String,Object>>> doInBackground(String... params) {
+            return new Pair("resultado", WebServices.callLogin(user, pass, getApplicationContext()));
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setTitle("Por favor, espere.");
+            pdLoading.setMessage("Iniciando sesion");
+            pdLoading.show();
+        }
+
+
+        @Override
+        protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
+            if (result==null || result.second.isEmpty())
+                Toast.makeText(getBaseContext(), "No se ha podido iniciar sesion ", Toast.LENGTH_SHORT).show();
+                //this method will be running on UI <></>hread
+            else{
+                Toast.makeText(getApplicationContext(), "Sesion iniciada", Toast.LENGTH_SHORT).show();
+                SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+
+                for (Map<String,Object> m: result.second){
+                    if (m.containsKey("Apellido")){
+                        preferences.put("apellido", (String) m.get("Apellido"));
+                    }
+                    if (m.containsKey("Nombre")){
+                        preferences.put("apellido", (String) m.get("Nombre"));
+                    }
+                    if (m.containsKey("Email")){
+                        preferences.put("email", (String) m.get("Email"));
+                    }
+                }
+                preferences.put("login", "true");
+                Intent i;
+                Bundle bundle = getIntent().getExtras();
+                if (bundle.getString("next").equals("main")) {
+                    i = new Intent(Login.this, SearchScheludes.class);
+                } else {
+                    if (bundle.getString("next").equals("purchase")) {
+                        i = new Intent(Login.this, PurchaseDetails.class);
+                    } else {
+                        i = new Intent(Login.this, ReserveDetails.class);
+                    }
+                    i.putExtra("city_from",bundle.getString("city_from"));
+                    i.putExtra("city_to",bundle.getString("city_to"));
+                    i.putExtra("arrival_date1",bundle.getString("arrival_date1"));
+                    i.putExtra("arrival_hour1",bundle.getString("arrival_hour1"));
+                    i.putExtra("arrival_date2",bundle.getString("arrival_date2"));
+                    i.putExtra("arrival_hour2",bundle.getString("arrival_hour2"));
+                    i.putExtra("cant_tickets", bundle.getString("cant_tickets"));
+                    i.putExtra("roundtrip",bundle.getInt("roundtrip"));
+                }
+                startActivity(i);
+            }
+            pdLoading.dismiss();
+        }
     }
 
 }
