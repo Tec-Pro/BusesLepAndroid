@@ -30,6 +30,7 @@ import com.tecpro.buseslep.R;
 import com.tecpro.buseslep.ReserveDetails;
 import com.tecpro.buseslep.search_scheludes.ChooseDate;
 import com.tecpro.buseslep.search_scheludes.SearchScheludes;
+import com.tecpro.buseslep.utils.PreferencesUsing;
 import com.tecpro.buseslep.utils.SecurePreferences;
 import com.tecpro.buseslep.webservices.WebServices;
 
@@ -80,6 +81,8 @@ public class SummarySchedules extends Activity {
     private int idCityOrigin;
     private int idCityDestiny;
 
+    private static String dniLogged=null;
+    private PreferencesUsing preferences;
     //menu
     private DrawerLayout drawerLayout;
     private ListView drawer;
@@ -101,6 +104,12 @@ public class SummarySchedules extends Activity {
                 )
         );
         actionBar.setDisplayShowTitleEnabled(false);
+        preferences = new PreferencesUsing(this);
+        preferences.init();
+        if(preferences.isOnline())
+            dniLogged= preferences.getDni();
+        else
+            dniLogged= null;
         loadMenuOptions();
         departTimeGo = (TextView) findViewById(R.id.txt_depart_time_go);
         departDateGo = (TextView) findViewById(R.id.txt_depart_date_go);
@@ -150,17 +159,15 @@ public class SummarySchedules extends Activity {
         if(codeReturn=="-1") {
             descriptionReturn.setText("");
             ((TextView) findViewById(R.id.txt_flecha)).setVisibility(View.INVISIBLE);
-            price.setText("$ " + Integer.valueOf(bundlePriceGo)*Integer.valueOf(bundleNumberTickets));
+            price.setText("$ " + Integer.valueOf(bundlePriceGo)*Integer.valueOf(bundleNumberTickets)+".00");
 
         }
         else{
-            price.setText("$ " + Integer.valueOf(bundlePriceGoRet)*Integer.valueOf(bundleNumberTickets));
+            price.setText("$ " + Integer.valueOf(bundlePriceGoRet)*Integer.valueOf(bundleNumberTickets)+".00");
         }
 
         numberTickets.setText(bundleNumberTickets);
         descriptionGo.setText(bundle.getString("Origin","")+" - "+ bundle.getString("Destiny",""));
-        price.setText("$ "+bundle.getString("priceGo",""));
-
 
     }
 
@@ -183,6 +190,7 @@ public class SummarySchedules extends Activity {
                 switch (arg2){
                     case 0://presione recargar ciudades
                         Intent i = new Intent(SummarySchedules.this, SearchScheludes.class);
+                        finish();
                         startActivity(i);
                         break;
                     case 1:
@@ -322,9 +330,9 @@ public class SummarySchedules extends Activity {
                 bundleNumberTickets =data.getStringExtra("number");
                 numberTickets.setText(bundleNumberTickets);
                 if(codeReturn=="-1")
-                    price.setText("$ " + Integer.valueOf(bundlePriceGo)*Integer.valueOf(bundleNumberTickets));
+                    price.setText("$ " + Integer.valueOf(bundlePriceGo)*Integer.valueOf(bundleNumberTickets)+".00");
                 else
-                    price.setText("$ " + Integer.valueOf(bundlePriceGoRet)*Integer.valueOf(bundleNumberTickets));
+                    price.setText("$ " + Integer.valueOf(bundlePriceGoRet)*Integer.valueOf(bundleNumberTickets)+".00");
                 break;
             case 2://retorno de seleccion de horario ida
                 codeGo= data.getStringExtra("codigo");
@@ -378,12 +386,12 @@ public class SummarySchedules extends Activity {
                 Map<String,String> priceMap= WebServices.getPrice(idCityOrigin, idCityDestiny, getApplicationContext());
                 priceGo=  priceMap.get("priceGo");
                 priceGoRet=  priceMap.get("priceGoRet");
-                return new Pair(params[0], WebServices.getSchedules(idCityOrigin, idCityDestiny, dateGo, getApplicationContext()));
+                return new Pair(params[0], WebServices.getSchedules(idCityOrigin, idCityDestiny, dateGo, dniLogged, getApplicationContext()));
             }
             else {
                 String[] aux = bundleDepartDateRet.split("/");
                 String dateReturn= aux[2]+aux[1]+aux[0];
-                return new Pair(params[0], WebServices.getSchedules(idCityDestiny, idCityOrigin, dateReturn, getApplicationContext()));
+                return new Pair(params[0], WebServices.getSchedules(idCityDestiny, idCityOrigin, dateReturn, dniLogged, getApplicationContext()));
             }
         }
 

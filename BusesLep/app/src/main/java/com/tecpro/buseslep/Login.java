@@ -219,6 +219,9 @@ public class Login extends Activity {
                     if (m.containsKey("Email")){
                         preferences.put("email", (String) m.get("Email"));
                     }
+                    if (m.containsKey("DNI")){
+                        preferences.put("dni", (String) m.get("DNI"));
+                    }
                 }
                 preferences.put("login", "true");
                 Intent i;
@@ -242,6 +245,7 @@ public class Login extends Activity {
                 }
                 startActivity(i);
             }
+                finish();
             pdLoading.dismiss();
         }
     }

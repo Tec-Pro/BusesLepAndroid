@@ -144,7 +144,7 @@ public class WebServices  {
         return cities;
     }
 
-    public static ArrayList<Map<String,Object>> getSchedules(Integer idOrigin, Integer idDestiny, String date,Context context){
+    public static ArrayList<Map<String,Object>> getSchedules(Integer idOrigin, Integer idDestiny, String date,String dni,Context context){
             ArrayList<Map<String,Object>> ret= new ArrayList<>();
             request = new SoapObject(NAMESPACE, ListarHorarios); //le digo que metodo voy a llamar
             request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
@@ -153,8 +153,9 @@ public class WebServices  {
             request.addProperty("IdLocalidadDestino", idDestiny);
             request.addProperty("Fecha", date);
             request.addProperty("id_plataforma",1);
-            //request.addProperty("DNI",);
-
+        if(!dni.isEmpty()){
+            request.addProperty("DNI",Integer.valueOf(dni));
+        }
         envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
             envelope.enc = SoapSerializationEnvelope.ENC2003;
             envelope.setOutputSoapObject(request);

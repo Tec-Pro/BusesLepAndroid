@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.tecpro.buseslep.batabase.DataBaseHelper;
 import com.tecpro.buseslep.search_scheludes.schedule.ScheduleSearch;
 import com.tecpro.buseslep.search_scheludes.schedule.SummarySchedules;
+import com.tecpro.buseslep.utils.PreferencesUsing;
 import com.tecpro.buseslep.utils.SecurePreferences;
 import com.tecpro.buseslep.webservices.WebServices;
 
@@ -67,7 +68,8 @@ public class LastSearches extends Activity implements OnItemClickListener{
     private ActionBarDrawerToggle toggle;
     private static final String[] opciones = {"Editar Perfil" , "Cerrar Sesion"};
     private static final String[] optionsNotSesion= {"Iniciar Sesion"};
-    SecurePreferences preferences;
+    PreferencesUsing preferences;
+    private static String dniLogged = null;
 
     public BaseAdapter adaptador;
 
@@ -75,8 +77,12 @@ public class LastSearches extends Activity implements OnItemClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.last_searches);
-        preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
-
+        preferences = new PreferencesUsing(this);
+        preferences.init();
+        if(preferences.isOnline())
+            dniLogged= preferences.getDni();
+        else
+            dniLogged= null;
         dbh = new DataBaseHelper(this);
         dbh.deleteOldsSearches();
         searches = dbh.getSearches();
@@ -355,9 +361,9 @@ public class LastSearches extends Activity implements OnItemClickListener{
                 Map<String,String> priceMap= WebServices.getPrice(idOrigin, idDestiny, getApplicationContext());
                 priceGo=  priceMap.get("priceGo");
                 priceGoRet=  priceMap.get("priceGoRet");
-                return new Pair(params[0], WebServices.getSchedules(idOrigin, idDestiny, dateGo, getApplicationContext()));
+                return new Pair(params[0], WebServices.getSchedules(idOrigin, idDestiny, dateGo,dniLogged, getApplicationContext()));
             }else
-                return new Pair(params[0],WebServices.getSchedules(idDestiny,idOrigin, dateReturn, getApplicationContext()));
+                return new Pair(params[0],WebServices.getSchedules(idDestiny,idOrigin, dateReturn,dniLogged,  getApplicationContext()));
         }
 
         @Override

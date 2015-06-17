@@ -42,6 +42,7 @@ import com.tecpro.buseslep.search_scheludes.schedule.ScheduleSearch;
 import com.tecpro.buseslep.search_scheludes.schedule.SummarySchedules;
 import com.tecpro.buseslep.search_scheludes.select_city.AdaptatorCity;
 import com.tecpro.buseslep.search_scheludes.select_city.ChooseCity;
+import com.tecpro.buseslep.utils.PreferencesUsing;
 import com.tecpro.buseslep.webservices.WebServices;
 
 import java.text.ParseException;
@@ -105,17 +106,28 @@ public class SearchScheludes extends Activity  {
     private String arrivDateReturn;
     private DataBaseHelper dbh; //databasehelper para la db
 
+    private PreferencesUsing preferences;
+    private static String dniLogged=null;
 
     //menu
     private DrawerLayout drawerLayout;
     private ListView drawer;
     private ActionBarDrawerToggle toggle;
-    private static final String[] opciones = {"Recargar ciudades", "Últimas Búsquedas"};
+    private static final String[] opciones = {"Recargar ciudades", "Últimas Búsquedas","Editar Perfil" , "Cerrar Sesion"};
+    private static final String[] optionsNotSesion= {"Recargar ciudades", "Últimas Búsquedas"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_scheludes);
+        preferences= new PreferencesUsing(this);
+        preferences.init();
+        if(preferences.isOnline()){
+            findViewById(R.id.btnLogin).setVisibility(View.GONE);
+            dniLogged= preferences.getDni();
+        }else{
+            dniLogged = null;
+        }
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         //actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -150,23 +162,43 @@ public class SearchScheludes extends Activity  {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_search_schedules);
 
         // Declarar adapter y eventos al hacer click
-        drawer.setAdapter(new ArrayAdapter<String>(this,R.layout.element_menu, R.id.list_content, opciones));
-
+        if(preferences.isOnline())
+            drawer.setAdapter(new ArrayAdapter<String>(this,R.layout.element_menu, R.id.list_content, opciones));
+        else
+            drawer.setAdapter(new ArrayAdapter<String>(this, R.layout.element_menu, R.id.list_content, optionsNotSesion));
         drawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-               // Toast.makeText(SearchScheludes.this, "Pulsado: " + opciones[arg2], Toast.LENGTH_SHORT).show();
-                switch (arg2){
-                    case 0://presione recargar ciudades
-                        loadOrigin();
-                        idOrigin=-1;
-                        loadDestiny();
-                        break;
-                    case 1:
-                        loadLastSearches();
-                        break;
+                if(preferences.isOnline()) { //si el usuario tiene una sesion
+                    switch (arg2) {
+                        case 0://presione recargar ciudades
+                            loadOrigin();
+                            idOrigin = -1;
+                            loadDestiny();
+                            break;
+                        case 1:
+                            loadLastSearches();
+                            break;
+                        case 2:
+                            //editar perfil
+                                break;
+                        case 3:
+                            //cerrar sesion
+                            break;
+                    }
                 }
-
+                else{
+                    switch (arg2) {
+                        case 0://presione recargar ciudades
+                            loadOrigin();
+                            idOrigin = -1;
+                            loadDestiny();
+                            break;
+                        case 1:
+                            loadLastSearches();
+                            break;
+                    }
+                }
                 drawerLayout.closeDrawers();
 
             }
@@ -513,9 +545,6 @@ public class SearchScheludes extends Activity  {
                 case "getDestinationCities" :
                     destinationCities= WebServices.getDestinationCities(idOrigin, getApplicationContext());
                     return new Pair("getDestinationCities",destinationCities);
-                case "getSchedules" :
-                    schedules= WebServices.getSchedules(idOrigin, idDestiny, dateGo, getApplicationContext());
-                    return new Pair("getDestinationCities",destinationCities);
             }
             //this method will be running on background thread so don't update UI frome here
             //do your long running http tasks here,you dont want to pass argument and u can access the parent class' variable url over here
@@ -526,12 +555,12 @@ public class SearchScheludes extends Activity  {
 
         @Override
         protected void onPostExecute(Pair<String,List<String>> result) {
-            if (result==null )
+            if(result.first == "getCities"){
                 txtViewCityDestiny.setText("");
-                //Toast.makeText(getBaseContext(), "No se han encontrado horarios ciudades", Toast.LENGTH_SHORT).show();
-            //this method will be running on UI thread
-            else{
-
+                txtViewCityGo.setText("");
+            }
+            if(result.first == "getDestinationCities"){
+                txtViewCityDestiny.setText("");
             }
             pdLoading.dismiss();
         }
@@ -559,9 +588,9 @@ public class SearchScheludes extends Activity  {
                 Map<String,String> priceMap= WebServices.getPrice(idOrigin, idDestiny, getApplicationContext());
                 priceGo=  priceMap.get("priceGo");
                 priceGoRet=  priceMap.get("priceGoRet");
-                return new Pair(params[0], WebServices.getSchedules(idOrigin, idDestiny, dateGo, getApplicationContext()));
+                return new Pair(params[0], WebServices.getSchedules(idOrigin, idDestiny, dateGo, dniLogged, getApplicationContext()));
             }else
-                return new Pair(params[0],WebServices.getSchedules(idDestiny,idOrigin, dateReturn, getApplicationContext()));
+                return new Pair(params[0],WebServices.getSchedules(idDestiny,idOrigin, dateReturn, dniLogged, getApplicationContext()));
         }
 
         @Override
