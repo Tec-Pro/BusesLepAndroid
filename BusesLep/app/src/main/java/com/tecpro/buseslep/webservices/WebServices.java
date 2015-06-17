@@ -69,7 +69,7 @@ public class WebServices  {
             }catch (Exception e){
                 try {
                     httpTransportSE.call(NAMESPACE + "#" + LocalidadesDesde, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
-                }catch (java.net.UnknownHostException unknown){
+                }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
                     String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
                     Intent intentDialog = new Intent(context, Dialog.class);
                     intentDialog.putExtra("message",message);
@@ -118,7 +118,7 @@ public class WebServices  {
                  }catch (Exception e){
                     try{
                     httpTransportSE.call(NAMESPACE + "#" + LocalidadesHasta, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
-                    }catch (java.net.UnknownHostException unknown){
+                    }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
                         String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
                         Intent intentDialog = new Intent(context, Dialog.class);
                         intentDialog.putExtra("message",message);
@@ -165,7 +165,7 @@ public class WebServices  {
                 }catch (Exception e){
                     try{
                     httpTransportSE.call(NAMESPACE + "#" + ListarHorarios, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
-                    }catch (java.net.UnknownHostException unknown){
+                    }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
                         String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
                         Intent intentDialog = new Intent(context, Dialog.class);
                         intentDialog.putExtra("message",message);
@@ -179,12 +179,14 @@ public class WebServices  {
                 while(i<json.length()){
                      Map<String, Object> map= new HashMap<>();
                     JSONObject jsonObject= json.getJSONObject(i);
-                    map.put("estado",jsonObject.get("ServicioPrestado"));
+                    //System.out.println(jsonObject);
+                    map.put("estado", jsonObject.get("ServicioPrestado"));
                     map.put("fecha_llega",jsonObject.getString("FechaHoraLlegada").split(" ")[0].replace('-', '/'));
                     map.put("hora_llega",jsonObject.getString("FechaHoraLlegada").split(" ")[1].substring(0, 5));
                     map.put("fecha_sale",jsonObject.getString("fechahora").split(" ")[0].replace('-', '/'));
                     map.put("hora_sale", jsonObject.getString("fechahora").split(" ")[1].substring(0, 5));
                     map.put("codigo",jsonObject.getString("cod_horario"));
+                    map.put("Id_Empresa",jsonObject.getString("Id_Empresa"));
                     ret.add(map);
                     i++;
                 }
@@ -216,7 +218,7 @@ public class WebServices  {
             }catch (Exception e){
                 try {
                     httpTransportSE.call(NAMESPACE + "#" + ObtenerTarifaTramo, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
-                }catch (java.net.UnknownHostException unknown){
+                }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
                     String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
                     Intent intentDialog = new Intent(context, Dialog.class);
                     intentDialog.putExtra("message",message);
@@ -258,7 +260,7 @@ public class WebServices  {
             }catch (Exception e){
                 try {
                     httpTransportSE.call(NAMESPACE + "#" + LoginWSFunction, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
-                }catch (java.net.UnknownHostException unknown){
+                }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
                     String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
                     Intent intentDialog = new Intent(context, Dialog.class);
                     intentDialog.putExtra("message",message);
@@ -308,7 +310,7 @@ public class WebServices  {
             }catch (Exception e){
                 try {
                     httpTransportSE.call(NAMESPACE + "#" + ModificarContrasena, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
-                }catch (java.net.UnknownHostException unknown){
+                }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
                     String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
                     Intent intentDialog = new Intent(context, Dialog.class);
                     intentDialog.putExtra("message",message);
@@ -357,7 +359,7 @@ public class WebServices  {
             }catch (Exception e){
                 try {
                     httpTransportSE.call(NAMESPACE + "#" + RegistrarUsuario, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
-                }catch (java.net.UnknownHostException unknown){
+                }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
                     String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
                     Intent intentDialog = new Intent(context, Dialog.class);
                     intentDialog.putExtra("message",message);
@@ -403,7 +405,7 @@ public class WebServices  {
             }catch (Exception e){
                 try {
                     httpTransportSE.call(NAMESPACE + "#" + RecuperarContrasena, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
-                }catch (java.net.UnknownHostException unknown){
+                }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
                     String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
                     Intent intentDialog = new Intent(context, Dialog.class);
                     intentDialog.putExtra("message",message);
@@ -457,7 +459,7 @@ public class WebServices  {
             } catch (Exception e) {
                 try {
                     httpTransportSE.call(NAMESPACE + "#" + EditarPerfil, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
-                } catch (java.net.UnknownHostException unknown) {
+                }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
                     String message = "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
                     Intent intentDialog = new Intent(context, Dialog.class);
                     intentDialog.putExtra("message", message);
@@ -518,7 +520,7 @@ public class WebServices  {
             }catch (Exception e){
                 try {
                     httpTransportSE.call(NAMESPACE + "#" + AgregarReserva, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
-                }catch (java.net.UnknownHostException unknown){
+                }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
                     String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
                     Intent intentDialog = new Intent(context, Dialog.class);
                     intentDialog.putExtra("message",message);

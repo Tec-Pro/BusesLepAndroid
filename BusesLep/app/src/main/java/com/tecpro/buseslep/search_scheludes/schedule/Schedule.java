@@ -4,15 +4,16 @@ package com.tecpro.buseslep.search_scheludes.schedule;
  * Created by agustin on 26/05/15.
  */
 public class Schedule {
-    private String departDate, departTIme, arrivDate, arrivTime, status,code;
+    private String departDate, departTIme, arrivDate, arrivTime, status,code,idEnterprise;
 
-    public Schedule(String departDate, String departTIme, String arrivDate, String status, String arrivTime,String code) {
+    public Schedule(String departDate, String departTIme, String arrivDate, String status, String arrivTime,String code, String idEnterprise) {
         this.departDate = departDate;
         this.departTIme = departTIme;
         this.arrivDate = arrivDate;
         this.status = status;
         this.arrivTime = arrivTime;
         this.code= code;
+        this.idEnterprise = idEnterprise;
     }
 
     public String getDepartDate() {
@@ -61,5 +62,13 @@ public class Schedule {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getIdEnterprise() {
+        return idEnterprise;
+    }
+
+    public void setIdEnterprise(String idEnterprise) {
+        this.idEnterprise = idEnterprise;
     }
 }

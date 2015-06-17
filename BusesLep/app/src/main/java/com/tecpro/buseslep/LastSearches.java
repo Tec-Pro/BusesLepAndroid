@@ -52,7 +52,8 @@ public class LastSearches extends Activity implements OnItemClickListener{
     private String departDateReturn;
     private String arrivTimeReturn;
     private String arrivDateReturn;
-    private String price;
+    private static String priceGo;
+    private static String priceGoRet;
     private String codeGoSchedule; //tengo el codigo del horario para la reserva
     private String codeReturnSchedule; //el codigo del horario apra la reserva pero de la vuelta
     private DataBaseHelper dbh;
@@ -350,9 +351,12 @@ public class LastSearches extends Activity implements OnItemClickListener{
 
         @Override
         protected Pair<String,ArrayList<Map<String,Object>>> doInBackground(String... params) {
-            if(params[0]=="go")
+            if(params[0]=="go") {
+                Map<String,String> priceMap= WebServices.getPrice(idOrigin, idDestiny, getApplicationContext());
+                priceGo=  priceMap.get("priceGo");
+                priceGoRet=  priceMap.get("priceGoRet");
                 return new Pair(params[0], WebServices.getSchedules(idOrigin, idDestiny, dateGo, getApplicationContext()));
-            else
+            }else
                 return new Pair(params[0],WebServices.getSchedules(idDestiny,idOrigin, dateReturn, getApplicationContext()));
         }
 
@@ -376,6 +380,8 @@ public class LastSearches extends Activity implements OnItemClickListener{
                 schedules= result.second;
                 Intent i = new Intent(context, ScheduleSearch.class);
                 i.putExtra("schedules", schedules);
+                i.putExtra("priceGo",priceGo);
+                i.putExtra("priceGoRet",priceGoRet);
                 int codeResult=-1;
                 switch (result.first){
                     case "go":

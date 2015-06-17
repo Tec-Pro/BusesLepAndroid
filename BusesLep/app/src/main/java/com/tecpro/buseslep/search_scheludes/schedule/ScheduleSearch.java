@@ -51,9 +51,9 @@ public class ScheduleSearch extends Activity implements AdapterView.OnItemClickL
         String priceGo = bundle.getString("priceGo");
         String priceGoRet = bundle.getString("priceGoRet");
         TextView txtPriceGo = (TextView) findViewById(R.id.txt_description_price_go);
-        txtPriceGo.setText("Ida $"+priceGo);
+        txtPriceGo.setText("Ida $ "+priceGo+".00");
         TextView txtPriceGoRet = (TextView) findViewById(R.id.txt_description_price_go_ret);
-        txtPriceGoRet.setText("Ida y vuelta $"+priceGoRet);
+        txtPriceGoRet.setText("Ida y vuelta $ "+priceGoRet+".00");
         TextView txtDescription= (TextView) findViewById(R.id.txt_description_schedule);
         TextView txtGoRet= (TextView) findViewById(R.id.txt_description_go_ret);
         txtGoRet.setText(goOrReturn);
@@ -85,6 +85,7 @@ public class ScheduleSearch extends Activity implements AdapterView.OnItemClickL
             intent.putExtra("departDate", scheduleSelected.getDepartDate());
             //intent.putExtra("estado",scheduleSelected.getStatus());
             intent.putExtra("codigo", scheduleSelected.getCode());
+            intent.putExtra("idEmpresa", scheduleSelected.getIdEnterprise());
             setResult(RESULT_OK, intent);
             finish();
         }

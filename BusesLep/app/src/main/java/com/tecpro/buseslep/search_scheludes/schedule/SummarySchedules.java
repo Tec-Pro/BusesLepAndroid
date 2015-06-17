@@ -47,6 +47,8 @@ public class SummarySchedules extends Activity {
     private TextView departDateGo;
     private TextView arrivTimeGo;
     private TextView arrivtDateGo;
+    private static String priceGo;
+    private static String priceGoRet;
 
     //textViews para mostrar la vuelta
     private TextView departTimeReturn;
@@ -67,7 +69,11 @@ public class SummarySchedules extends Activity {
     private String bundleDepartDateGo;
     private String bundleDepartTimeRet;
     private String bundleDepartDateRet ;
-
+    private String bundleIdEnterpriseGo;
+    private String bundleIdEnterpriseRet;
+    private String bundlePriceGo;
+    private String bundlePriceGoRet;
+    private String bundleNumberTickets;
 
     private String bundleCityOrigin;
     private String bundleCityDestiny;
@@ -111,6 +117,9 @@ public class SummarySchedules extends Activity {
         price= (TextView) findViewById(R.id.txt_price);
         Bundle bundle = getIntent().getExtras();
 
+        bundleIdEnterpriseGo= bundle.getString("idEnterpriseGo");
+        bundleIdEnterpriseRet= bundle.getString("idEnterpriseRet", "-1");
+
         idCityOrigin= bundle.getInt("codeCityOrigin");
         idCityDestiny= bundle.getInt("codeCityDestiny");
 
@@ -123,6 +132,7 @@ public class SummarySchedules extends Activity {
         bundleDepartDateRet = bundle.getString("departDateReturn","");
         bundleCityOrigin=bundle.getString("Origin","");
         bundleCityDestiny=bundle.getString("Destiny","");
+        bundleNumberTickets = bundle.getString("numberTickets","");
 
         departTimeGo.setText(bundle.getString("departTimeGo",""));
         departDateGo.setText(bundle.getString("departDateGo",""));
@@ -135,14 +145,21 @@ public class SummarySchedules extends Activity {
         arrivtDateReturn.setText(bundle.getString("arrivDateReturn", ""));
         descriptionReturn.setText(bundle.getString("Destiny","")+" - "+ bundle.getString("Origin",""));
 
+        bundlePriceGo= bundle.getString("priceGo");
+        bundlePriceGoRet= bundle.getString("priceGoRet");
         if(codeReturn=="-1") {
             descriptionReturn.setText("");
             ((TextView) findViewById(R.id.txt_flecha)).setVisibility(View.INVISIBLE);
+            price.setText("$ " + Integer.valueOf(bundlePriceGo)*Integer.valueOf(bundleNumberTickets));
+
+        }
+        else{
+            price.setText("$ " + Integer.valueOf(bundlePriceGoRet)*Integer.valueOf(bundleNumberTickets));
         }
 
-        numberTickets.setText(bundle.getString("numberTickets",""));
+        numberTickets.setText(bundleNumberTickets);
         descriptionGo.setText(bundle.getString("Origin","")+" - "+ bundle.getString("Destiny",""));
-        price.setText("$ "+bundle.getString("price",""));
+        price.setText("$ "+bundle.getString("priceGo",""));
 
 
     }
@@ -248,8 +265,14 @@ public class SummarySchedules extends Activity {
         i.putExtra("arrival_hour1",bundleDepartTimeGo);
         i.putExtra("arrival_date2",bundleDepartDateRet);
         i.putExtra("arrival_hour2",bundleDepartTimeRet);
-        i.putExtra("cant_tickets",numberTickets.getText());
+        i.putExtra("cant_tickets",bundleNumberTickets);
         i.putExtra("roundtrip",Integer.valueOf(codeReturn));
+        i.putExtra("IDEmpresaIda",Integer.valueOf(bundleIdEnterpriseGo));
+        i.putExtra("IDEmpresaVuelta",Integer.valueOf(bundleIdEnterpriseRet));
+        i.putExtra("CodHorarioIda", codeGo);
+        i.putExtra("CodHorarioVuelta", codeReturn);
+        i.putExtra("IDDestinoIda", idCityOrigin);
+        i.putExtra("IDDestinoVuelta", idCityDestiny);
         startActivity(i);
 
     }
@@ -278,9 +301,14 @@ public class SummarySchedules extends Activity {
         i.putExtra("arrival_hour1",bundleDepartTimeGo);
         i.putExtra("arrival_date2",bundleDepartDateRet);
         i.putExtra("arrival_hour2",bundleDepartTimeRet);
-        i.putExtra("cant_tickets",numberTickets.getText());
+        i.putExtra("cant_tickets",bundleNumberTickets);
         i.putExtra("roundtrip",Integer.valueOf(codeReturn));
-
+        i.putExtra("IDEmpresaIda",Integer.valueOf(bundleIdEnterpriseGo));
+        i.putExtra("IDEmpresaVuelta",Integer.valueOf(bundleIdEnterpriseRet));
+        i.putExtra("CodHorarioIda", codeGo);
+        i.putExtra("CodHorarioVuelta", codeReturn);
+        i.putExtra("IDDestinoIda", idCityOrigin);
+        i.putExtra("IDDestinoVuelta", idCityDestiny);
         startActivity(i);
     }
 
@@ -291,7 +319,12 @@ public class SummarySchedules extends Activity {
         }
         switch (requestCode) {
             case 1:
-                numberTickets.setText((data.getStringExtra("number")));
+                bundleNumberTickets =data.getStringExtra("number");
+                numberTickets.setText(bundleNumberTickets);
+                if(codeReturn=="-1")
+                    price.setText("$ " + Integer.valueOf(bundlePriceGo)*Integer.valueOf(bundleNumberTickets));
+                else
+                    price.setText("$ " + Integer.valueOf(bundlePriceGoRet)*Integer.valueOf(bundleNumberTickets));
                 break;
             case 2://retorno de seleccion de horario ida
                 codeGo= data.getStringExtra("codigo");
@@ -342,6 +375,9 @@ public class SummarySchedules extends Activity {
             if(params[0]=="go") {
                 String[] aux = bundleDepartDateGo.split("/");
                 String dateGo= aux[2]+aux[1]+aux[0];
+                Map<String,String> priceMap= WebServices.getPrice(idCityOrigin, idCityDestiny, getApplicationContext());
+                priceGo=  priceMap.get("priceGo");
+                priceGoRet=  priceMap.get("priceGoRet");
                 return new Pair(params[0], WebServices.getSchedules(idCityOrigin, idCityDestiny, dateGo, getApplicationContext()));
             }
             else {
@@ -371,6 +407,8 @@ public class SummarySchedules extends Activity {
                 ArrayList<Map<String,Object>> schedules= result.second;
                 Intent i = new Intent(context, ScheduleSearch.class);
                 i.putExtra("schedules", schedules);
+                i.putExtra("priceGo",priceGo);
+                i.putExtra("priceGoRet",priceGoRet);
                 int codeResult=-1;
                 switch (result.first){
                     case "go":

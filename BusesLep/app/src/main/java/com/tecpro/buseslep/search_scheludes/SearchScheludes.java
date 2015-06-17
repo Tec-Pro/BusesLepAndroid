@@ -80,7 +80,7 @@ public class SearchScheludes extends Activity  {
     private static Integer idDestiny=-1; //id de destino
     private static String cityOrigin;
     private static String cityDestiny;
-    private static Integer numberOfTickets=1;
+    private static Integer numberOfTickets=-1;
     private static String dateGo; //string para la fecha de ida en formato 20150605
     private static String dateReturn; //string para la fecha de vuelta en formato 20150605
     private AsyncCallerCities asyncCallerCities;
@@ -91,6 +91,8 @@ public class SearchScheludes extends Activity  {
     private ArrayList<Map<String,Object>> schedules; //lista con todos los horarios, la misma la uso para ida y  para vuelta
     private String codeGoSchedule; //tengo el codigo del horario para la reserva
     private String codeReturnSchedule; //el codigo del horario apra la reserva pero de la vuelta
+    private String codeEnterpriseGo;
+    private String codeEnterpriseRet;
     //datos para la ida
     private String departTimeGo;
     private String departDateGo;
@@ -311,6 +313,7 @@ public class SearchScheludes extends Activity  {
                 departTimeGo = data.getStringExtra("departTime");
                 arrivDateGo = data.getStringExtra("arrivDate");
                 arrivTimeGo = data.getStringExtra("arrivTime");
+                codeEnterpriseGo = data.getStringExtra("idEmpresa");
                 //debo corroborar si es ida y vuelta, en caso de ser ida y vuelta debo largar la gui para elegir retorno
                 if (chkRoundTrip.isChecked()) {
                     asyncCallerSchedules = new AsyncCallerSchedules(this);
@@ -325,6 +328,7 @@ public class SearchScheludes extends Activity  {
                 departTimeReturn = data.getStringExtra("departTime");
                 arrivDateReturn = data.getStringExtra("arrivDate");
                 arrivTimeReturn = data.getStringExtra("arrivTime");
+                codeEnterpriseRet = data.getStringExtra("idEmpresa");
                 launchBuyReserve(true);
                 break;
             case 5: //retorno de elegir el numero de pasajeros
@@ -362,12 +366,18 @@ public class SearchScheludes extends Activity  {
         i.putExtra("codeGo",codeGoSchedule );
         i.putExtra("codeCityOrigin", idOrigin);
         i.putExtra("codeCityDestiny",idDestiny);
+        i.putExtra("idEnterpriseGo", codeEnterpriseGo);
+        i.putExtra("priceGo",priceGo);
+        i.putExtra("priceGoRet",priceGoRet);
+
         if(goReturn){
             i.putExtra("departTimeReturn",departTimeReturn );
             i.putExtra("departDateReturn",departDateReturn );
             i.putExtra("arrivDateReturn",arrivDateReturn );
             i.putExtra("arrivTimeReturn",arrivTimeReturn);
             i.putExtra("codeReturn",codeReturnSchedule );
+            i.putExtra("idEnterpriseRet", codeEnterpriseRet);
+
         }
         startActivity(i);
 
@@ -517,7 +527,8 @@ public class SearchScheludes extends Activity  {
         @Override
         protected void onPostExecute(Pair<String,List<String>> result) {
             if (result==null )
-                Toast.makeText(getBaseContext(), "No se han encontrado horarios ciudades", Toast.LENGTH_SHORT).show();
+                txtViewCityDestiny.setText("");
+                //Toast.makeText(getBaseContext(), "No se han encontrado horarios ciudades", Toast.LENGTH_SHORT).show();
             //this method will be running on UI thread
             else{
 
@@ -548,7 +559,6 @@ public class SearchScheludes extends Activity  {
                 Map<String,String> priceMap= WebServices.getPrice(idOrigin, idDestiny, getApplicationContext());
                 priceGo=  priceMap.get("priceGo");
                 priceGoRet=  priceMap.get("priceGoRet");
-
                 return new Pair(params[0], WebServices.getSchedules(idOrigin, idDestiny, dateGo, getApplicationContext()));
             }else
                 return new Pair(params[0],WebServices.getSchedules(idDestiny,idOrigin, dateReturn, getApplicationContext()));
