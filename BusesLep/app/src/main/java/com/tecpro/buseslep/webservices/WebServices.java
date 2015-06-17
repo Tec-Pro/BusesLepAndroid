@@ -369,14 +369,16 @@ public class WebServices  {
             }
             result= String.valueOf(envelope.getResponse());
             System.out.println("ssssss "+result+" daaaaaaaaaaaaaaaaa");
-            JSONArray json= new JSONObject(result).getJSONArray("Data");
-            int i=0;
-            while(i<json.length()){
-                JSONObject jsonObject= json.getJSONObject(i);
+            if (result.equals("-1")){
                 HashMap<String,Object> map= new HashMap<>();
-                //NO SE SABE QUE DEVUELVE
+                map.put("ret","-1");
                 cities.add(map);
-                i++;
+            } else {
+
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("ret","1");
+                    cities.add(map);
+
             }
         }
         catch(Exception e){

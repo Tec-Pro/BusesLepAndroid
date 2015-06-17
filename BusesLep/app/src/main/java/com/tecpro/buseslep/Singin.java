@@ -153,13 +153,13 @@ public class Singin extends Activity {
             preferences.put("nombre", name);
             preferences.put("email", email);
             preferences.put("login", "false");
-            loadLogin(Integer.valueOf(dni),pass,name,surname,email);
+            loadSingin(Integer.valueOf(dni), pass, name, surname, email);
         } else {
             Toast.makeText(getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void loadLogin(int u, String p, String n, String a, String e){
+    private void loadSingin(int u, String p, String n, String a, String e){
         user = u;
         pass = p;
         nombre = n;
@@ -201,8 +201,21 @@ public class Singin extends Activity {
                 Toast.makeText(getBaseContext(), "No se ha podido crear la cuenta ", Toast.LENGTH_SHORT).show();
                 //this method will be running on UI <></>hread
             else{
-                Toast.makeText(getApplicationContext(), "Cuenta creada", Toast.LENGTH_LONG).show();
-                loadLogin(String.valueOf(user),pass);
+                for (Map<String,Object> m: result.second){
+                    if (m.containsKey("ret")){
+                        if (((String) m.get("ret")).equals("-1")){
+                            Toast.makeText(getBaseContext(), "No se ha podido crear la cuenta ", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Cuenta creada", Toast.LENGTH_LONG).show();
+                            try {
+                                wait(2000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            loadLogin(String.valueOf(user), pass);
+                        }
+                    }
+                }
             pdLoading.dismiss();
         }
     }
@@ -250,27 +263,27 @@ public class Singin extends Activity {
                 Toast.makeText(getApplicationContext(), "Sesion iniciada", Toast.LENGTH_SHORT).show();
                 SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
                 preferences.put("login", "true");
-                Intent i;
-                Bundle bundle = getIntent().getExtras();
-                if (bundle.getString("next").equals("main")) {
-                    i = new Intent(Singin.this, SearchScheludes.class);
-                } else {
-                    if (bundle.getString("next").equals("purchase")) {
-                        i = new Intent(Singin.this, PurchaseDetails.class);
-                    } else {
-                        i = new Intent(Singin.this, ReserveDetails.class);
-                    }
-                    i.putExtra("city_from",bundle.getString("city_from"));
-                    i.putExtra("city_to",bundle.getString("city_to"));
-                    i.putExtra("arrival_date1",bundle.getString("arrival_date1"));
-                    i.putExtra("arrival_hour1",bundle.getString("arrival_hour1"));
-                    i.putExtra("arrival_date2",bundle.getString("arrival_date2"));
-                    i.putExtra("arrival_hour2",bundle.getString("arrival_hour2"));
-                    i.putExtra("cant_tickets", bundle.getString("cant_tickets"));
-                    i.putExtra("roundtrip",bundle.getInt("roundtrip"));
-                }
-                startActivity(i);
             }
+            Intent i;
+            Bundle bundle = getIntent().getExtras();
+            if (bundle.getString("next").equals("main")) {
+                i = new Intent(Singin.this, SearchScheludes.class);
+            } else {
+                if (bundle.getString("next").equals("purchase")) {
+                    i = new Intent(Singin.this, PurchaseDetails.class);
+                } else {
+                    i = new Intent(Singin.this, ReserveDetails.class);
+                }
+                i.putExtra("city_from",bundle.getString("city_from"));
+                i.putExtra("city_to",bundle.getString("city_to"));
+                i.putExtra("arrival_date1",bundle.getString("arrival_date1"));
+                i.putExtra("arrival_hour1",bundle.getString("arrival_hour1"));
+                i.putExtra("arrival_date2",bundle.getString("arrival_date2"));
+                i.putExtra("arrival_hour2",bundle.getString("arrival_hour2"));
+                i.putExtra("cant_tickets", bundle.getString("cant_tickets"));
+                i.putExtra("roundtrip", bundle.getInt("roundtrip"));
+            }
+            startActivity(i);
             pdLoading.dismiss();
         }
     }
