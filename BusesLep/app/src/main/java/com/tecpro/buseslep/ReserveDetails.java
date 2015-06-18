@@ -34,6 +34,7 @@ public class ReserveDetails extends Activity {
     String arrdate2;
     String arrhour2;
     String cantTick;
+    int idEmpresaIda, idEmpresaVuelta, codHorarioIda, codHorarioVuelta, idCityOrigin,idCityDestiny;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,26 +62,33 @@ public class ReserveDetails extends Activity {
         arrhour2 = extras.getString("arrival_hour2");
         cantTick = extras.getString("cant_tickets");
 
-        TextView destiny1 = (TextView)findViewById(R.id.destiny1);
-        TextView departure1 = (TextView)findViewById(R.id.departure1);
-        TextView cantTickets1 = (TextView)findViewById(R.id.cantTickets1);
+        TextView destiny1 = (TextView) findViewById(R.id.destiny1);
+        TextView departure1 = (TextView) findViewById(R.id.departure1);
+        TextView cantTickets1 = (TextView) findViewById(R.id.cantTickets1);
 
         destiny1.setText(cityfrom + " - " + cityto);
         departure1.setText(arrdate1 + "  " + arrhour1);
         cantTickets1.setText(cantTick);
 
-        TextView departure2 = (TextView)findViewById(R.id.departure2);
-        TextView destiny2 = (TextView)findViewById(R.id.destiny2);
-        TextView cantTickets2 = (TextView)findViewById(R.id.cantTickets2);
+        TextView departure2 = (TextView) findViewById(R.id.departure2);
+        TextView destiny2 = (TextView) findViewById(R.id.destiny2);
+        TextView cantTickets2 = (TextView) findViewById(R.id.cantTickets2);
 
         destiny2.setText(cityto + " - " + cityfrom);
         departure2.setText(arrdate2 + "  " + arrhour2);
         cantTickets2.setText(cantTick);
 
-        if(roundtrip == -1)  //si es ida y vuelta leo y seteo los otros datos
+        if (roundtrip == -1)  //si es ida y vuelta leo y seteo los otros datos
             findViewById(R.id.backtrip).setVisibility(View.GONE);
-    }
 
+      /*  idCityOrigin = extras.getInt("IDDestinoIda");
+        idCityDestiny = extras.getInt("IdDestinoVuelta");
+        idEmpresaIda = extras.getInt("IDEmpresaIda");
+        idEmpresaVuelta = extras.getInt("IDEmpresaVuelta");
+        codHorarioVuelta = extras.getInt("CodHorarioVuelta");
+        codHorarioIda = extras.getInt("CodHorarioIda");*/
+
+    }
     public void reserve(View view) {
         asyncCallerReserve= new AsyncCallerReserve(this);
         asyncCallerReserve.execute();
@@ -106,10 +114,12 @@ public class ReserveDetails extends Activity {
         }
         @Override
         protected Pair<String, List<String>> doInBackground(String... params) {
-            String resultCode = WebServices.CallAgregarReserva(null,null,null,1,1,1,1,1,1,1,1,1,1,1,1,1,getApplicationContext());//harcode or die
-            if(resultCode.equals("Error de Autenticacion"))
+
+            /*String resultCode = WebServices.CallAgregarReserva(null,idEmpresaIda,idCityDestiny,codHorarioIda,idCityOrigin,idCityDestiny,Integer.valueOf(cantTick),idEmpresaVuelta,idCityOrigin,codHorarioVuelta,idCityDestiny,idCityOrigin,Integer.valueOf(cantTick),1,getApplicationContext());//harcode or die
+            Log.i("CABEZA",resultCode);
+            if(resultCode.equals("-1"))*/
                 return null;
-            return new Pair("resultado",  new ArrayList<String>().add(resultCode) );
+           // return new Pair("resultado",  new ArrayList<String>().add(resultCode) );
         }
 
         @Override
