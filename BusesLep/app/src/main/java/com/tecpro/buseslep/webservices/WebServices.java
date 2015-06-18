@@ -489,20 +489,19 @@ public class WebServices  {
     }
 
 
-    public static String CallAgregarReserva(String userWS, String passWS, String dni, int IDEmpresaIda, int IDDestinoIda, int CodHorarioIda,int IdLocalidadDesdeIda, int IdlocalidadHastaIda, int CantidadIda,int IDEmpresaVuelta, int IDDestinoVuelta,int CodHorarioVuelta, int IdLocalidadDesdeVuelta, int IdlocalidadHastaVuelta, int CantidadVuelta, int Id_Plataforma, Context context){
+    public static String CallAgregarReserva(String dni, int IDEmpresaIda, int IDDestinoIda, int CodHorarioIda,int IdLocalidadDesdeIda, int IdlocalidadHastaIda, int CantidadIda,int IDEmpresaVuelta, int IDDestinoVuelta,int CodHorarioVuelta, int IdLocalidadDesdeVuelta, int IdlocalidadHastaVuelta, int CantidadVuelta, int Id_Plataforma, Context context){
         String result = null;
 
        // ArrayList<Map<String,Object>> resultCode = new ArrayList<>();
         request = new SoapObject(NAMESPACE, AgregarReserva); //le digo que metodo voy a llamar
-        request.addProperty("userWS",userWS); //paso los parametros que pide el metodo
-        request.addProperty("passWS",passWS);
+        request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
+        request.addProperty("passWS","Lep1234");
         request.addProperty("Dni", dni);
         request.addProperty("IDEmpresaIda", IDEmpresaIda);
         request.addProperty("IDDestinoIda", IDDestinoIda);
         request.addProperty("CodHorarioIda", CodHorarioIda);
         request.addProperty("IdLocalidadDesdeIda", IdLocalidadDesdeIda);
         request.addProperty("IdlocalidadHastaIda", IdlocalidadHastaIda);
-        request.addProperty("id_plataforma", 1);
         request.addProperty("CantidadIda", CantidadIda);
         request.addProperty("IDEmpresaVuelta", IDEmpresaVuelta);
         request.addProperty("IDDestinoVuelta", IDDestinoVuelta);
