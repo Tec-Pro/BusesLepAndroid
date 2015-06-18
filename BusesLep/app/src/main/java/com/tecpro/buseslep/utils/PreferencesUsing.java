@@ -57,6 +57,9 @@ public class PreferencesUsing {
        return false;
     }
 
+    public void logout(){
+        preferences.put("login", "false");
+    }
 
 
 }

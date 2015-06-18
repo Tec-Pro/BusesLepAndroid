@@ -137,11 +137,17 @@ public class Login extends Activity {
     public void login(View v){
         String dni =  ((EditText) findViewById(R.id.textDNI)).getText().toString();
         String pass = ((EditText) findViewById(R.id.txtPass)).getText().toString();
-        SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
-        preferences.put("dni", dni);
-        preferences.put("pass", pass);
-        preferences.put("login", "false");
-        loadLogin(dni,pass);
+        if (dni.isEmpty() || pass.isEmpty()){
+            Intent i= new Intent(this, Dialog.class);
+            i.putExtra("message", "Por favor complete todos los campos");
+            startActivity(i);
+        } else {
+            SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+            preferences.put("dni", dni);
+            preferences.put("pass", pass);
+            preferences.put("login", "false");
+            loadLogin(dni, pass);
+        }
     }
 
     public void launchSignin(View v){
@@ -202,10 +208,11 @@ public class Login extends Activity {
 
         @Override
         protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
-            if (result==null || result.second.isEmpty())
-                Toast.makeText(getBaseContext(), "No se ha podido iniciar sesion ", Toast.LENGTH_SHORT).show();
-                //this method will be running on UI <></>hread
-            else{
+            if (result==null || result.second.isEmpty()) {
+                Intent i= new Intent(Login.this, Dialog.class);
+                i.putExtra("message", "No se ha podido iniciar sesion");
+                startActivity(i);
+            }else{
                 Toast.makeText(getApplicationContext(), "Sesion iniciada", Toast.LENGTH_SHORT).show();
                 SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
 
