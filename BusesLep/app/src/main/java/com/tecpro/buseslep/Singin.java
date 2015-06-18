@@ -145,17 +145,25 @@ public class Singin extends Activity {
         String dni =  ((EditText) findViewById(R.id.textDNI)).getText().toString();
         String pass = ((EditText) findViewById(R.id.txtPass)).getText().toString();
         String passConfirm =  ((EditText) findViewById(R.id.txtPassConfirm)).getText().toString();
-        if (pass.equals(passConfirm)) {
-            SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
-            preferences.put("dni", dni);
-            preferences.put("pass", pass);
-            preferences.put("apellido", surname);
-            preferences.put("nombre", name);
-            preferences.put("email", email);
-            preferences.put("login", "false");
-            loadSingin(Integer.valueOf(dni), pass, name, surname, email);
+        if (name.isEmpty() || surname.isEmpty() || email.isEmpty() || dni.isEmpty() || pass.isEmpty() || passConfirm.isEmpty()){
+            Intent i= new Intent(this, Dialog.class);
+            i.putExtra("message", "Por favor complete todos los campos");
+            startActivity(i);
         } else {
-            Toast.makeText(getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_LONG).show();
+            if (pass.equals(passConfirm)) {
+                SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+                preferences.put("dni", dni);
+                preferences.put("pass", pass);
+                preferences.put("apellido", surname);
+                preferences.put("nombre", name);
+                preferences.put("email", email);
+                preferences.put("login", "false");
+                loadSingin(Integer.valueOf(dni), pass, name, surname, email);
+            } else {
+                Intent i = new Intent(this, Dialog.class);
+                i.putExtra("message", "Las contraseñas no coinciden");
+                startActivity(i);
+            }
         }
     }
 
@@ -197,14 +205,18 @@ public class Singin extends Activity {
 
         @Override
         protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
-            if (result==null || result.second.isEmpty())
-                Toast.makeText(getBaseContext(), "No se ha podido crear la cuenta ", Toast.LENGTH_SHORT).show();
+            if (result==null || result.second.isEmpty()) {
+                Intent i = new Intent(Singin.this, Dialog.class);
+                i.putExtra("message", "No se ha podido crear la cuenta");
+                startActivity(i);
                 //this method will be running on UI <></>hread
-            else{
+            }else{
                 for (Map<String,Object> m: result.second){
                     if (m.containsKey("ret")){
                         if (((String) m.get("ret")).equals("-1")){
-                            Toast.makeText(getBaseContext(), "No se ha podido crear la cuenta ", Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(Singin.this, Dialog.class);
+                            i.putExtra("message", "No se ha podido crear la cuenta");
+                            startActivity(i);
                         } else {
                             Toast.makeText(getApplicationContext(), "Cuenta creada", Toast.LENGTH_LONG).show();
                             try {
