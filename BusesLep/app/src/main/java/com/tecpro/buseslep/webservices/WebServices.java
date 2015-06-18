@@ -153,7 +153,7 @@ public class WebServices  {
             request.addProperty("IdLocalidadDestino", idDestiny);
             request.addProperty("Fecha", date);
             request.addProperty("id_plataforma",1);
-        if(!dni.isEmpty()){
+        if(!(dni== null)){
             request.addProperty("DNI",Integer.valueOf(dni));
         }
         envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal

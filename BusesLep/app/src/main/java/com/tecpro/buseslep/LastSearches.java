@@ -60,7 +60,8 @@ public class LastSearches extends Activity implements OnItemClickListener{
     private DataBaseHelper dbh;
     private List<Map<String,Object>> searches;
     ListView listView; //lista de busquedas recientes
-
+    private String codeEnterpriseGo;
+    private String codeEnterpriseRet;
     private boolean userSesion; //para saber si hay sesion iniciada o no
 
     private DrawerLayout drawerLayout;
@@ -296,17 +297,21 @@ public class LastSearches extends Activity implements OnItemClickListener{
         i.putExtra("numberTickets",numberOfTickets.toString() );
         i.putExtra("Origin",cityOrigin );
         i.putExtra("Destiny",cityDestiny );
+        i.putExtra("codeGo",codeGoSchedule );
         i.putExtra("codeCityOrigin", idOrigin);
         i.putExtra("codeCityDestiny",idDestiny);
-        i.putExtra("codeGo",codeGoSchedule );
+        i.putExtra("idEnterpriseGo", codeEnterpriseGo);
         i.putExtra("priceGo",priceGo);
         i.putExtra("priceGoRet",priceGoRet);
+
         if(goReturn){
             i.putExtra("departTimeReturn",departTimeReturn );
             i.putExtra("departDateReturn",departDateReturn );
             i.putExtra("arrivDateReturn",arrivDateReturn );
             i.putExtra("arrivTimeReturn",arrivTimeReturn);
             i.putExtra("codeReturn",codeReturnSchedule );
+            i.putExtra("idEnterpriseRet", codeEnterpriseRet);
+
         }
         startActivity(i);
 
@@ -325,6 +330,8 @@ public class LastSearches extends Activity implements OnItemClickListener{
                 departTimeGo = data.getStringExtra("departTime");
                 arrivDateGo = data.getStringExtra("arrivDate");
                 arrivTimeGo = data.getStringExtra("arrivTime");
+                codeEnterpriseGo = data.getStringExtra("idEmpresa");
+
                 //debo corroborar si es ida y vuelta, en caso de ser ida y vuelta debo largar la gui para elegir retorno
                 if (isRoundtrip==1) {
                     asyncCallerSchedules = new AsyncCallerSchedules(this);
@@ -339,6 +346,8 @@ public class LastSearches extends Activity implements OnItemClickListener{
                 departTimeReturn = data.getStringExtra("departTime");
                 arrivDateReturn = data.getStringExtra("arrivDate");
                 arrivTimeReturn = data.getStringExtra("arrivTime");
+                codeEnterpriseRet = data.getStringExtra("idEmpresa");
+
                 launchBuyReserve(true);
                 break;
         }

@@ -227,7 +227,7 @@ public class Login extends Activity {
                         preferences.put("email", (String) m.get("Email"));
                     }
                     if (m.containsKey("DNI")){
-                        preferences.put("dni", (String) m.get("DNI"));
+                        preferences.put("dni", ((Integer) m.get("DNI")).toString());
                     }
                 }
                 preferences.put("login", "true");

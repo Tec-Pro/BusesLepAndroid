@@ -183,7 +183,9 @@ public class SearchScheludes extends Activity  {
                             //editar perfil
                                 break;
                         case 3:
-                            //cerrar sesion
+                            preferences.logout();
+                            findViewById(R.id.btnLogin).setVisibility(View.VISIBLE);
+                            dniLogged=null;
                             break;
                     }
                 }

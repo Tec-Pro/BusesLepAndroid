@@ -281,6 +281,8 @@ public class SummarySchedules extends Activity {
         i.putExtra("CodHorarioVuelta", codeReturn);
         i.putExtra("IDDestinoIda", idCityOrigin);
         i.putExtra("IDDestinoVuelta", idCityDestiny);
+        i.putExtra("priceGo", bundlePriceGo);//precio ida
+        i.putExtra("priceGoRet", bundlePriceGoRet); //precio ida vuelta
         startActivity(i);
 
     }
@@ -317,6 +319,8 @@ public class SummarySchedules extends Activity {
         i.putExtra("CodHorarioVuelta", codeReturn);
         i.putExtra("IDDestinoIda", idCityOrigin);
         i.putExtra("IDDestinoVuelta", idCityDestiny);
+        i.putExtra("priceGo", bundlePriceGo);//precio ida
+        i.putExtra("priceGoRet", bundlePriceGoRet); //precio ida vuelta
         startActivity(i);
     }
 
