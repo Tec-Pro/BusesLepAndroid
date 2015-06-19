@@ -27,6 +27,7 @@ import java.util.List;
 public class PurchaseDetails extends Activity {
 
     private String totalPrice;
+    private float t;
 
     protected List<String> mSupportedPaymentTypes = new ArrayList<String>(){{
         add("credit_card");
@@ -81,7 +82,7 @@ public class PurchaseDetails extends Activity {
         }
         else
             totalPrice = extras.getString("priceGoRet");
-        float t = Float.valueOf(totalPrice);
+        t = Float.valueOf(totalPrice);
         t *= Integer.valueOf(cantTick);
         total.setText( String.valueOf(t));
         /*TextView seatNum1 = (TextView)findViewById(R.id.seatNum1);
@@ -147,6 +148,7 @@ public class PurchaseDetails extends Activity {
                 .setActivity(this)
                 .setPublicKey(PaymentUtils.DUMMY_MERCHANT_PUBLIC_KEY)
                 .setSupportedPaymentTypes(mSupportedPaymentTypes)
+                .setAmount(new BigDecimal(String.valueOf(t)))
                 .startPaymentMethodsActivity();
     }
 

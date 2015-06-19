@@ -510,6 +510,7 @@ public class WebServices  {
         request.addProperty("IdlocalidadHastaVuelta", IdlocalidadHastaVuelta);
         request.addProperty("CantidadVuelta", CantidadVuelta);
         request.addProperty("Id_Plataforma", Id_Plataforma);
+        request.addProperty("EsCompra", 0);
 
 
         envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal

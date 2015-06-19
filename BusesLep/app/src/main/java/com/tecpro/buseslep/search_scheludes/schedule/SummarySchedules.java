@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.Menu;
@@ -131,7 +132,8 @@ public class SummarySchedules extends Activity {
 
         idCityOrigin= bundle.getInt("codeCityOrigin");
         idCityDestiny= bundle.getInt("codeCityDestiny");
-
+        Log.i("CITY",String.valueOf(idCityDestiny));
+        Log.i("CITY",String.valueOf(idCityOrigin));
         codeGo= bundle.getString("codeGo", "-1");
         codeReturn= bundle.getString("codeReturn", "-1");
 
@@ -277,8 +279,8 @@ public class SummarySchedules extends Activity {
         i.putExtra("roundtrip",Integer.valueOf(codeReturn));
         i.putExtra("IDEmpresaIda",Integer.valueOf(bundleIdEnterpriseGo));
         i.putExtra("IDEmpresaVuelta",Integer.valueOf(bundleIdEnterpriseRet));
-        i.putExtra("CodHorarioIda", codeGo);
-        i.putExtra("CodHorarioVuelta", codeReturn);
+        i.putExtra("CodHorarioIda", Integer.valueOf(codeGo));
+        i.putExtra("CodHorarioVuelta", Integer.valueOf(codeReturn));
         i.putExtra("IDDestinoIda", idCityOrigin);
         i.putExtra("IDDestinoVuelta", idCityDestiny);
         i.putExtra("priceGo", bundlePriceGo);//precio ida
@@ -315,10 +317,10 @@ public class SummarySchedules extends Activity {
         i.putExtra("roundtrip",Integer.valueOf(codeReturn));
         i.putExtra("IDEmpresaIda",Integer.valueOf(bundleIdEnterpriseGo));
         i.putExtra("IDEmpresaVuelta",Integer.valueOf(bundleIdEnterpriseRet));
-        i.putExtra("CodHorarioIda", codeGo);
-        i.putExtra("CodHorarioVuelta", codeReturn);
-        i.putExtra("IDDestinoIda", idCityOrigin);
-        i.putExtra("IDDestinoVuelta", idCityDestiny);
+        i.putExtra("CodHorarioIda", Integer.valueOf(codeGo));
+        i.putExtra("CodHorarioVuelta", Integer.valueOf(codeReturn));
+        i.putExtra("IDDestinoIda", Integer.valueOf(idCityOrigin));
+        i.putExtra("IDDestinoVuelta", Integer.valueOf(idCityDestiny));
         i.putExtra("priceGo", bundlePriceGo);//precio ida
         i.putExtra("priceGoRet", bundlePriceGoRet); //precio ida vuelta
         startActivity(i);
