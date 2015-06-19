@@ -86,6 +86,8 @@ public class ScheduleSearch extends Activity implements AdapterView.OnItemClickL
             //intent.putExtra("estado",scheduleSelected.getStatus());
             intent.putExtra("codigo", scheduleSelected.getCode());
             intent.putExtra("idEmpresa", scheduleSelected.getIdEnterprise());
+            intent.putExtra("id_destino", scheduleSelected.getIdDestino());
+
             setResult(RESULT_OK, intent);
             finish();
         }

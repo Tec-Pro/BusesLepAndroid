@@ -99,6 +99,8 @@ public class SearchScheludes extends Activity  {
     private String departDateGo;
     private String arrivTimeGo;
     private String arrivDateGo;
+    private String idDestinoIda;
+    private String idDestinoVuelta;
     //datos para la vuelta
     private String departTimeReturn;
     private String departDateReturn;
@@ -348,6 +350,7 @@ public class SearchScheludes extends Activity  {
                 arrivDateGo = data.getStringExtra("arrivDate");
                 arrivTimeGo = data.getStringExtra("arrivTime");
                 codeEnterpriseGo = data.getStringExtra("idEmpresa");
+
                 //debo corroborar si es ida y vuelta, en caso de ser ida y vuelta debo largar la gui para elegir retorno
                 if (chkRoundTrip.isChecked()) {
                     asyncCallerSchedules = new AsyncCallerSchedules(this);
@@ -403,7 +406,7 @@ public class SearchScheludes extends Activity  {
         i.putExtra("idEnterpriseGo", codeEnterpriseGo);
         i.putExtra("priceGo",priceGo);
         i.putExtra("priceGoRet",priceGoRet);
-
+        i.putExtra("id_destino_ida", idDestinoIda);
         if(goReturn){
             i.putExtra("departTimeReturn",departTimeReturn );
             i.putExtra("departDateReturn",departDateReturn );
@@ -411,7 +414,7 @@ public class SearchScheludes extends Activity  {
             i.putExtra("arrivTimeReturn",arrivTimeReturn);
             i.putExtra("codeReturn",codeReturnSchedule );
             i.putExtra("idEnterpriseRet", codeEnterpriseRet);
-
+            i.putExtra("id_destino_vuelta", idDestinoVuelta);
         }
         startActivity(i);
 
@@ -664,4 +667,15 @@ public class SearchScheludes extends Activity  {
         }
     }
 
+    @Override
+    public void onResume() { //actualiza la listview cada vez que regresa de otra activity
+        super.onResume();
+        if(preferences.isOnline()){
+            findViewById(R.id.btnLogin).setVisibility(View.GONE);
+            dniLogged= preferences.getDni();
+        }else{
+            dniLogged = null;
+        }
+        loadMenuOptions();
+    }
 }

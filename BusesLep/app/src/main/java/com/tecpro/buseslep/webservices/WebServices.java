@@ -188,6 +188,7 @@ public class WebServices  {
                     map.put("hora_sale", jsonObject.getString("fechahora").split(" ")[1].substring(0, 5));
                     map.put("codigo",jsonObject.getString("cod_horario"));
                     map.put("Id_Empresa",jsonObject.getString("Id_Empresa"));
+                    map.put("id_destino",jsonObject.getString("id_destino"));
                     ret.add(map);
                     i++;
                 }

@@ -71,7 +71,8 @@ public class LastSearches extends Activity implements OnItemClickListener{
     private static final String[] optionsNotSesion= {"Iniciar Sesion"};
     PreferencesUsing preferences;
     private static String dniLogged = null;
-
+    private String idDestinoIda;
+    private String idDestinoVuelta;
     public BaseAdapter adaptador;
 
     @Override
@@ -303,7 +304,7 @@ public class LastSearches extends Activity implements OnItemClickListener{
         i.putExtra("idEnterpriseGo", codeEnterpriseGo);
         i.putExtra("priceGo",priceGo);
         i.putExtra("priceGoRet",priceGoRet);
-
+        i.putExtra("id_destino_ida", idDestinoIda);
         if(goReturn){
             i.putExtra("departTimeReturn",departTimeReturn );
             i.putExtra("departDateReturn",departDateReturn );
@@ -311,7 +312,7 @@ public class LastSearches extends Activity implements OnItemClickListener{
             i.putExtra("arrivTimeReturn",arrivTimeReturn);
             i.putExtra("codeReturn",codeReturnSchedule );
             i.putExtra("idEnterpriseRet", codeEnterpriseRet);
-
+            i.putExtra("id_destino_vuelta", idDestinoVuelta);
         }
         startActivity(i);
 

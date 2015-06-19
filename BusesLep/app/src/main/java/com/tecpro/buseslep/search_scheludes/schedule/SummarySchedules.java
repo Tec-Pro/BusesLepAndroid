@@ -51,6 +51,8 @@ public class SummarySchedules extends Activity {
     private TextView arrivtDateGo;
     private static String priceGo;
     private static String priceGoRet;
+    private String idDestinoIda;
+    private String idDestinoVuelta;
 
     //textViews para mostrar la vuelta
     private TextView departTimeReturn;
@@ -126,7 +128,8 @@ public class SummarySchedules extends Activity {
         descriptionReturn = (TextView) findViewById(R.id.txt_description_return);
         price= (TextView) findViewById(R.id.txt_price);
         Bundle bundle = getIntent().getExtras();
-
+        idDestinoIda= bundle.getString("id_destino_ida","");
+        idDestinoVuelta= bundle.getString("id_destino_vuelta","");
         bundleIdEnterpriseGo= bundle.getString("idEnterpriseGo");
         bundleIdEnterpriseRet= bundle.getString("idEnterpriseRet", "-1");
 
@@ -284,7 +287,8 @@ public class SummarySchedules extends Activity {
         i.putExtra("IDDestinoIda", idCityOrigin);
         i.putExtra("IDDestinoVuelta", idCityDestiny);
         i.putExtra("priceGo", bundlePriceGo);//precio ida
-        i.putExtra("priceGoRet", bundlePriceGoRet); //precio ida vuelta
+        i.putExtra("id_destino_ida", idDestinoIda);
+        i.putExtra("id_destino_vuelta", idDestinoVuelta);
         startActivity(i);
 
     }
@@ -323,6 +327,8 @@ public class SummarySchedules extends Activity {
         i.putExtra("IDDestinoVuelta", Integer.valueOf(idCityDestiny));
         i.putExtra("priceGo", bundlePriceGo);//precio ida
         i.putExtra("priceGoRet", bundlePriceGoRet); //precio ida vuelta
+        i.putExtra("id_destino_ida", idDestinoIda);
+        i.putExtra("id_destino_vuelta", idDestinoVuelta);
         startActivity(i);
     }
 
@@ -348,7 +354,8 @@ public class SummarySchedules extends Activity {
                 arrivtDateGo.setText(data.getStringExtra("arrivDate"));
                 bundleDepartTimeGo =data.getStringExtra("departTime");
                 bundleDepartDateGo =data.getStringExtra("departDate");
-
+                bundleIdEnterpriseGo= data.getStringExtra("idEmpresa");
+                idDestinoIda= data.getStringExtra("id_destino");
                 break;
             case 3: //retorno de la seleccion de horario vuelta
                 codeReturn= data.getStringExtra("codigo");
@@ -358,6 +365,8 @@ public class SummarySchedules extends Activity {
                 arrivTimeReturn.setText(data.getStringExtra("arrivTime"));
                 bundleDepartTimeRet =data.getStringExtra("departTime");
                 bundleDepartDateRet =data.getStringExtra("departDate");
+                bundleIdEnterpriseRet= data.getStringExtra("idEmpresa");
+                idDestinoVuelta= data.getStringExtra("id_destino");
                 break;
         }
     }

@@ -45,7 +45,7 @@ public class AdaptatorSchedule extends BaseAdapter {
             String[] auxRet= dateRet.split("/");
             if (auxRet.length==3)
                 dateRet= auxRet[2]+"/"+auxRet[1]+"/"+auxRet[0];
-            Schedule s = new Schedule( dateGo,  (String)schedules.get(i).get("hora_sale"), dateRet,(String)schedules.get(i).get("estado"), (String)schedules.get(i).get("hora_llega"), (String)schedules.get(i).get("codigo"),(String)schedules.get(i).get("Id_Empresa"));
+            Schedule s = new Schedule( dateGo,  (String)schedules.get(i).get("hora_sale"), dateRet,(String)schedules.get(i).get("estado"), (String)schedules.get(i).get("hora_llega"), (String)schedules.get(i).get("codigo"),(String)schedules.get(i).get("Id_Empresa"),(String)schedules.get(i).get("id_destino") );
             result.add(s);
         }
         return result;

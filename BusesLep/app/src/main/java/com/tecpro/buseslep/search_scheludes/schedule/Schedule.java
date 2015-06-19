@@ -4,9 +4,9 @@ package com.tecpro.buseslep.search_scheludes.schedule;
  * Created by agustin on 26/05/15.
  */
 public class Schedule {
-    private String departDate, departTIme, arrivDate, arrivTime, status,code,idEnterprise;
+    private String departDate, departTIme, arrivDate, arrivTime, status,code,idEnterprise, idDestino;
 
-    public Schedule(String departDate, String departTIme, String arrivDate, String status, String arrivTime,String code, String idEnterprise) {
+    public Schedule(String departDate, String departTIme, String arrivDate, String status, String arrivTime,String code, String idEnterprise, String id_destino) {
         this.departDate = departDate;
         this.departTIme = departTIme;
         this.arrivDate = arrivDate;
@@ -14,6 +14,7 @@ public class Schedule {
         this.arrivTime = arrivTime;
         this.code= code;
         this.idEnterprise = idEnterprise;
+        this.idDestino = id_destino;
     }
 
     public String getDepartDate() {
@@ -70,5 +71,9 @@ public class Schedule {
 
     public void setIdEnterprise(String idEnterprise) {
         this.idEnterprise = idEnterprise;
+    }
+
+    public String getIdDestino() {
+        return idDestino;
     }
 }
