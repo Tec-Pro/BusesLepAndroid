@@ -28,9 +28,6 @@ import retrofit.client.Response;
 
 public class PaymentUtils {
 
-    public static final int SIMPLE_VAULT_REQUEST_CODE = 10;
-    public static final int ADVANCED_VAULT_REQUEST_CODE = 11;
-    public static final int FINAL_VAULT_REQUEST_CODE = 12;
     public static final int CARD_REQUEST_CODE = 13;
 
     // * Merchant public key
@@ -43,7 +40,7 @@ public class PaymentUtils {
 
     // * Merchant server vars
     public static final String DUMMY_MERCHANT_BASE_URL = "https://www.mercadopago.com";
-    public static final String DUMMY_MERCHANT_GET_CUSTOMER_URI = "/checkout/examples/getCustomer";
+    //public static final String DUMMY_MERCHANT_GET_CUSTOMER_URI = "/checkout/examples/getCustomer";
     public static final String DUMMY_MERCHANT_CREATE_PAYMENT_URI = "/checkout/examples/doPayment";
     //public static final String DUMMY_MERCHANT_GET_DISCOUNT_URI = "/checkout/examples/getDiscounts";
 

@@ -332,7 +332,7 @@ public class LastSearches extends Activity implements OnItemClickListener{
                 arrivDateGo = data.getStringExtra("arrivDate");
                 arrivTimeGo = data.getStringExtra("arrivTime");
                 codeEnterpriseGo = data.getStringExtra("idEmpresa");
-
+                idDestinoIda= data.getStringExtra("id_destino");
                 //debo corroborar si es ida y vuelta, en caso de ser ida y vuelta debo largar la gui para elegir retorno
                 if (isRoundtrip==1) {
                     asyncCallerSchedules = new AsyncCallerSchedules(this);
@@ -348,7 +348,7 @@ public class LastSearches extends Activity implements OnItemClickListener{
                 arrivDateReturn = data.getStringExtra("arrivDate");
                 arrivTimeReturn = data.getStringExtra("arrivTime");
                 codeEnterpriseRet = data.getStringExtra("idEmpresa");
-
+                idDestinoVuelta= data.getStringExtra("id_destino");
                 launchBuyReserve(true);
                 break;
         }

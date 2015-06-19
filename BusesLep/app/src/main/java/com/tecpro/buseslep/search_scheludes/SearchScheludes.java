@@ -350,7 +350,7 @@ public class SearchScheludes extends Activity  {
                 arrivDateGo = data.getStringExtra("arrivDate");
                 arrivTimeGo = data.getStringExtra("arrivTime");
                 codeEnterpriseGo = data.getStringExtra("idEmpresa");
-
+                idDestinoIda= data.getStringExtra("id_destino");
                 //debo corroborar si es ida y vuelta, en caso de ser ida y vuelta debo largar la gui para elegir retorno
                 if (chkRoundTrip.isChecked()) {
                     asyncCallerSchedules = new AsyncCallerSchedules(this);
@@ -366,6 +366,8 @@ public class SearchScheludes extends Activity  {
                 arrivDateReturn = data.getStringExtra("arrivDate");
                 arrivTimeReturn = data.getStringExtra("arrivTime");
                 codeEnterpriseRet = data.getStringExtra("idEmpresa");
+                idDestinoVuelta= data.getStringExtra("id_destino");
+
                 launchBuyReserve(true);
                 break;
             case 5: //retorno de elegir el numero de pasajeros
@@ -416,6 +418,7 @@ public class SearchScheludes extends Activity  {
             i.putExtra("idEnterpriseRet", codeEnterpriseRet);
             i.putExtra("id_destino_vuelta", idDestinoVuelta);
         }
+        System.out.println(idDestinoIda);
         startActivity(i);
 
 
