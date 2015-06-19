@@ -490,8 +490,8 @@ public class WebServices  {
     }
 
 
-    public static String CallAgregarReserva(String dni, int IDEmpresaIda, int IDDestinoIda, int CodHorarioIda,int IdLocalidadDesdeIda, int IdlocalidadHastaIda, int CantidadIda,int IDEmpresaVuelta, int IDDestinoVuelta,int CodHorarioVuelta, int IdLocalidadDesdeVuelta, int IdlocalidadHastaVuelta, int CantidadVuelta, int Id_Plataforma, Context context){
-        String result = null;
+    public static String CallAgregarReserva(boolean isRoundTrip, String dni, int IDEmpresaIda, int IDDestinoIda, int CodHorarioIda,int IdLocalidadDesdeIda, int IdlocalidadHastaIda, int CantidadIda,int IDEmpresaVuelta, int IDDestinoVuelta,int CodHorarioVuelta, int IdLocalidadDesdeVuelta, int IdlocalidadHastaVuelta, int CantidadVuelta, int Id_Plataforma, Context context){
+        String result = "";
 
        // ArrayList<Map<String,Object>> resultCode = new ArrayList<>();
         request = new SoapObject(NAMESPACE, AgregarReserva); //le digo que metodo voy a llamar
@@ -504,15 +504,24 @@ public class WebServices  {
         request.addProperty("IdLocalidadDesdeIda", IdLocalidadDesdeIda);
         request.addProperty("IdlocalidadHastaIda", IdlocalidadHastaIda);
         request.addProperty("CantidadIda", CantidadIda);
-        request.addProperty("IDEmpresaVuelta", IDEmpresaVuelta);
-        request.addProperty("IDDestinoVuelta", IDDestinoVuelta);
-        request.addProperty("CodHorarioVuelta", CodHorarioVuelta);
-        request.addProperty("IdLocalidadDesdeVuelta", IdLocalidadDesdeVuelta);
-        request.addProperty("IdlocalidadHastaVuelta", IdlocalidadHastaVuelta);
-        request.addProperty("CantidadVuelta", CantidadVuelta);
+        if(isRoundTrip) {
+            request.addProperty("IDEmpresaVuelta", IDEmpresaVuelta);
+            request.addProperty("IDDestinoVuelta", IDDestinoVuelta);
+            request.addProperty("CodHorarioVuelta", CodHorarioVuelta);
+            request.addProperty("IdLocalidadDesdeVuelta", IdLocalidadDesdeVuelta);
+            request.addProperty("IdlocalidadHastaVuelta", IdlocalidadHastaVuelta);
+            request.addProperty("CantidadVuelta", CantidadVuelta);
+        }
+        else{
+            request.addProperty("IDEmpresaVuelta", 0);
+            request.addProperty("IDDestinoVuelta", 0);
+            request.addProperty("CodHorarioVuelta", 0);
+            request.addProperty("IdLocalidadDesdeVuelta", 0);
+            request.addProperty("IdlocalidadHastaVuelta", 0);
+            request.addProperty("CantidadVuelta", 0);
+        }
         request.addProperty("Id_Plataforma", Id_Plataforma);
         request.addProperty("EsCompra", 0);
-
 
         envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
         envelope.enc = SoapSerializationEnvelope.ENC2003;
@@ -532,7 +541,7 @@ public class WebServices  {
                     context.startActivity(intentDialog);
                 }
             }
-            result= (String)envelope.getResponse();
+            result= String.valueOf(envelope.getResponse());;
         }
         catch(Exception e){
             e.printStackTrace();

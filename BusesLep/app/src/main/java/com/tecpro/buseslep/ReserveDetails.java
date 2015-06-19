@@ -36,6 +36,7 @@ public class ReserveDetails extends Activity {
     String arrdate2;
     String arrhour2;
     String cantTick;
+    String idDestinyGo, idDestinyRet;
     int idEmpresaIda, idEmpresaVuelta, codHorarioIda, codHorarioVuelta, idCityOrigin,idCityDestiny;
 
     @Override
@@ -97,8 +98,8 @@ public class ReserveDetails extends Activity {
         idEmpresaVuelta = extras.getInt("IDEmpresaVuelta");
         codHorarioVuelta = extras.getInt("CodHorarioVuelta");
         codHorarioIda = extras.getInt("CodHorarioIda");
-
-
+        idDestinyGo = extras.getString("id_destino_ida");
+        idDestinyRet = extras.getString("id_destino_vuelta");
     }
     public void reserve(View view) {
         asyncCallerReserve= new AsyncCallerReserve(this);
@@ -127,27 +128,33 @@ public class ReserveDetails extends Activity {
         protected Pair<String, List<String>> doInBackground(String... params) {
             String dni = preferences.getDni();
             String resultCode;
-
+            boolean isround = false;
+            int idDesGo = 0;
+            int idDesRet = 0;
+            if(idDestinyGo != null && !idDestinyGo.isEmpty())
+                idDesGo = Integer.valueOf(idDestinyGo);
+            if(idDestinyRet != null && !idDestinyRet.isEmpty())
+                idDesRet = Integer.valueOf(idDestinyRet);
             if(roundtrip  != -1)
-                resultCode = WebServices.CallAgregarReserva(dni,idEmpresaIda,idCityDestiny,codHorarioIda,idCityOrigin,idCityDestiny,Integer.valueOf(cantTick),idEmpresaVuelta,idCityOrigin,codHorarioVuelta,idCityDestiny,idCityOrigin,Integer.valueOf(cantTick),1,getApplicationContext());//harcode or die
-            else
-                resultCode = WebServices.CallAgregarReserva(dni,idEmpresaIda,idCityDestiny,codHorarioIda,idCityOrigin,idCityDestiny,Integer.valueOf(cantTick),0,0,0,0,0,0,1,getApplicationContext());
-            Log.i("DATA", "Dni " + dni);
+                isround = true;
+            resultCode = WebServices.CallAgregarReserva(isround,dni,idEmpresaIda,idDesGo,codHorarioIda,idCityOrigin,idCityDestiny,Integer.valueOf(cantTick),idEmpresaVuelta,idDesRet,codHorarioVuelta,idCityDestiny,idCityOrigin,Integer.valueOf(cantTick),1,getApplicationContext());
+           /* Log.i("DATA", "Dni " + dni);
             Log.i("DATA", "idEmpresaIda " + String.valueOf(idEmpresaIda));
-            Log.i("DATA", "idDestinoIda" + String.valueOf(idCityDestiny));
+            Log.i("DATA", "idDestinoIda" + idDestinyGo);
             Log.i("DATA", "CodHorarioIda " + String.valueOf(codHorarioIda));
             Log.i("DATA", "idLocalidadDesdeIda " + String.valueOf(idCityOrigin));
             Log.i("DATA", "idLocalidadHastaIda " + String.valueOf(idCityDestiny));
             Log.i("DATA", "CantidadIda " + cantTick);
             Log.i("DATA", "idEmpresavuelta " + String.valueOf(idEmpresaVuelta));
-            Log.i("DATA", "idDestinoVuelta" + String.valueOf(idCityOrigin));
+            Log.i("DATA", "idDestinoVuelta" + idDestinyRet);
             Log.i("DATA", "CodHorarioVuelta " + String.valueOf(codHorarioVuelta));
             Log.i("DATA", "idLocalidadDesdeVuelta " + String.valueOf(idCityDestiny));
             Log.i("DATA", "idLocalidadHastaVuelta " + String.valueOf(idCityOrigin));
             Log.i("DATA", "CantidadVuelta " + cantTick);
-            Log.i("RESERVA",resultCode);
-            if(!resultCode.equals("0"))
-                return null;
+            Log.i("ROUND",String.valueOf(isround));
+            Log.i("RESERVA",resultCode);*/
+           // if(!resultCode.equals("0"))
+             //   return null;
             return new Pair("resultado",  new ArrayList<String>().add(resultCode) );
         }
 
