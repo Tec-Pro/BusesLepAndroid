@@ -26,6 +26,8 @@ import java.util.List;
  */
 public class PurchaseDetails extends Activity {
 
+    private String totalPrice;
+
     protected List<String> mSupportedPaymentTypes = new ArrayList<String>(){{
         add("credit_card");
         add("debit_card");
@@ -51,25 +53,37 @@ public class PurchaseDetails extends Activity {
 
         TextView destiny1 = (TextView)findViewById(R.id.destiny1);
         TextView departure1 = (TextView)findViewById(R.id.departure1);
+        TextView dephour1 = (TextView)findViewById(R.id.depHour1);
         TextView cantTickets1 = (TextView)findViewById(R.id.cantTickets1);
 
         destiny1.setText(cityfrom + " - " + cityto);
-        departure1.setText(arrdate1 + "  " + arrhour1);
+       // departure1.setText(arrdate1 + "  " + arrhour1);
+        departure1.setText(arrdate1);
+        dephour1.setText(arrhour1);
         cantTickets1.setText(cantTick);
 
         TextView departure2 = (TextView)findViewById(R.id.departure2);
         TextView destiny2 = (TextView)findViewById(R.id.destiny2);
         TextView cantTickets2 = (TextView)findViewById(R.id.cantTickets2);
+        TextView dephour2 = (TextView)findViewById(R.id.depHour2);
 
         destiny2.setText(cityto + " - " + cityfrom);
-        departure2.setText(arrdate2 + "  " + arrhour2);
+       // departure2.setText(arrdate2 + "  " + arrhour2);
+        departure2.setText(arrdate2);
+        dephour2.setText(arrhour2);
         cantTickets2.setText(cantTick);
-
-        if(roundtrip == -1)  //si es ida y vuelta leo y seteo los otros datos
+        TextView total = (TextView)findViewById(R.id.totalPrice);
+        totalPrice = extras.getString("priceGoRet");
+        if(roundtrip == -1) {  //si es ida
             findViewById(R.id.backtrip).setVisibility(View.GONE);
+            totalPrice = extras.getString("priceGo");
 
-
-
+        }
+        else
+            totalPrice = extras.getString("priceGoRet");
+        float t = Float.valueOf(totalPrice);
+        t *= Integer.valueOf(cantTick);
+        total.setText( String.valueOf(t));
         /*TextView seatNum1 = (TextView)findViewById(R.id.seatNum1);
         TextView seatNum2 = (TextView)findViewById(R.id.seatNum2);
         TextView departurePlace1 = (TextView)findViewById(R.id.departurePlace1);
@@ -129,7 +143,6 @@ public class PurchaseDetails extends Activity {
     }
 
     public void submitForm(View view) {
-
         new MercadoPago.StartActivityBuilder()
                 .setActivity(this)
                 .setPublicKey(PaymentUtils.DUMMY_MERCHANT_PUBLIC_KEY)

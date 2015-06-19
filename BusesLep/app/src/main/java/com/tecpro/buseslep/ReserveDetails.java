@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tecpro.buseslep.utils.PreferencesUsing;
 import com.tecpro.buseslep.webservices.WebServices;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ import java.util.List;
 public class ReserveDetails extends Activity {
 
     private static AsyncCallerReserve asyncCallerReserve;
-
+    private PreferencesUsing preferences;
     int roundtrip;
     String cityfrom;
     String cityto;
@@ -41,6 +43,8 @@ public class ReserveDetails extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reserve_details);
+        preferences = new PreferencesUsing(this);
+        preferences.init();
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowCustomEnabled(false);
         getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
@@ -64,18 +68,24 @@ public class ReserveDetails extends Activity {
 
         TextView destiny1 = (TextView) findViewById(R.id.destiny1);
         TextView departure1 = (TextView) findViewById(R.id.departure1);
+        TextView dephour1 = (TextView)findViewById(R.id.depHour1);
         TextView cantTickets1 = (TextView) findViewById(R.id.cantTickets1);
 
         destiny1.setText(cityfrom + " - " + cityto);
-        departure1.setText(arrdate1 + "  " + arrhour1);
+       // departure1.setText(arrdate1 + "  " + arrhour1);
+        departure1.setText(arrdate1);
+        dephour1.setText(arrhour1);
         cantTickets1.setText(cantTick);
 
         TextView departure2 = (TextView) findViewById(R.id.departure2);
+        TextView dephour2 = (TextView)findViewById(R.id.depHour2);
         TextView destiny2 = (TextView) findViewById(R.id.destiny2);
         TextView cantTickets2 = (TextView) findViewById(R.id.cantTickets2);
 
         destiny2.setText(cityto + " - " + cityfrom);
-        departure2.setText(arrdate2 + "  " + arrhour2);
+        //departure2.setText(arrdate2 + "  " + arrhour2);
+        departure2.setText(arrdate2);
+        dephour2.setText(arrhour2);
         cantTickets2.setText(cantTick);
 
         if (roundtrip == -1)  //si es ida y vuelta leo y seteo los otros datos
@@ -114,19 +124,22 @@ public class ReserveDetails extends Activity {
         }
         @Override
         protected Pair<String, List<String>> doInBackground(String... params) {
-
-            /*String resultCode = WebServices.CallAgregarReserva(null,idEmpresaIda,idCityDestiny,codHorarioIda,idCityOrigin,idCityDestiny,Integer.valueOf(cantTick),idEmpresaVuelta,idCityOrigin,codHorarioVuelta,idCityDestiny,idCityOrigin,Integer.valueOf(cantTick),1,getApplicationContext());//harcode or die
-            Log.i("CABEZA",resultCode);
-            if(resultCode.equals("-1"))*/
+            String dni = preferences.getDni();
+            String resultCode = WebServices.CallAgregarReserva(dni,idEmpresaIda,idCityDestiny,codHorarioIda,idCityOrigin,idCityDestiny,Integer.valueOf(cantTick),idEmpresaVuelta,idCityOrigin,codHorarioVuelta,idCityDestiny,idCityOrigin,Integer.valueOf(cantTick),1,getApplicationContext());//harcode or die
+            Log.i("RESERVA",resultCode);
+            //if(resultCode.equals("-1"))
                 return null;
-           // return new Pair("resultado",  new ArrayList<String>().add(resultCode) );
+            //return new Pair("resultado",  new ArrayList<String>().add(resultCode) );
         }
 
         @Override
         protected void onPostExecute(Pair<String,List<String>> result) {
-            if (result== null )
-                Toast.makeText(getBaseContext(), "Error de Autenticacion", Toast.LENGTH_SHORT).show();
+            if (result== null ) {
+                Intent i= new Intent(ReserveDetails.this, Dialog.class);
+                i.putExtra("message", "No se ha podido reservar");
+                startActivity(i);
                 //this method will be running on UI thread
+            }
             else{
                 Toast.makeText(getBaseContext(), "Reserva realizada con exito \n Le enviamos un mail con los detalles", Toast.LENGTH_SHORT).show();
             }
