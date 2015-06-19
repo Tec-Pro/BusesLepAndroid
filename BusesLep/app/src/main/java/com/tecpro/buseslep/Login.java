@@ -152,24 +152,6 @@ public class Login extends Activity {
 
     public void launchSignin(View v){
         Intent i = new Intent(this, Singin.class);
-        Bundle bundle = getIntent().getExtras();
-        if (bundle.getString("next").equals("main")) {
-            i.putExtra("next", "main");
-        } else {
-            if (bundle.getString("next").equals("purchase")) {
-                i.putExtra("next","purchase");
-            } else {
-                i.putExtra("next","reserve");
-            }
-            i.putExtra("city_from", bundle.getString("city_from"));
-            i.putExtra("city_to", bundle.getString("city_to"));
-            i.putExtra("arrival_date1", bundle.getString("arrival_date1"));
-            i.putExtra("arrival_hour1", bundle.getString("arrival_hour1"));
-            i.putExtra("arrival_date2", bundle.getString("arrival_date2"));
-            i.putExtra("arrival_hour2", bundle.getString("arrival_hour2"));
-            i.putExtra("cant_tickets", bundle.getString("cant_tickets"));
-            i.putExtra("roundtrip", bundle.getInt("roundtrip"));
-        }
         startActivity(i);
     }
 
@@ -231,26 +213,7 @@ public class Login extends Activity {
                     }
                 }
                 preferences.put("login", "true");
-                Intent i;
-                Bundle bundle = getIntent().getExtras();
-                if (bundle.getString("next").equals("main")) {
-                    i = new Intent(Login.this, SearchScheludes.class);
-                } else {
-                    if (bundle.getString("next").equals("purchase")) {
-                        i = new Intent(Login.this, PurchaseDetails.class);
-                    } else {
-                        i = new Intent(Login.this, ReserveDetails.class);
-                    }
-                    i.putExtra("city_from",bundle.getString("city_from"));
-                    i.putExtra("city_to",bundle.getString("city_to"));
-                    i.putExtra("arrival_date1",bundle.getString("arrival_date1"));
-                    i.putExtra("arrival_hour1",bundle.getString("arrival_hour1"));
-                    i.putExtra("arrival_date2",bundle.getString("arrival_date2"));
-                    i.putExtra("arrival_hour2",bundle.getString("arrival_hour2"));
-                    i.putExtra("cant_tickets", bundle.getString("cant_tickets"));
-                    i.putExtra("roundtrip",bundle.getInt("roundtrip"));
-                }
-                startActivity(i);
+                finish();
             }
                 finish();
             pdLoading.dismiss();
