@@ -204,7 +204,8 @@
                 android:layout_margin="@dimen/margin_std"
                 android:text="@string/continue_label"
                 android:onClick="submitForm"
-                style="@style/button_normal"/>
+                android:background="@drawable/border"
+                />
 
         </LinearLayout>
 

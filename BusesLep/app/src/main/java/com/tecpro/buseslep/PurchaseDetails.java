@@ -40,7 +40,17 @@ public class PurchaseDetails extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.purchase_details);
-
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowCustomEnabled(false);
+        getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(getLayoutInflater().inflate(R.layout.action_bar, null),
+                new ActionBar.LayoutParams(
+                        ActionBar.LayoutParams.WRAP_CONTENT,
+                        ActionBar.LayoutParams.MATCH_PARENT,
+                        Gravity.CENTER
+                )
+        );
         Bundle extras = getIntent().getExtras();
 
         int roundtrip = extras.getInt("roundtrip");
