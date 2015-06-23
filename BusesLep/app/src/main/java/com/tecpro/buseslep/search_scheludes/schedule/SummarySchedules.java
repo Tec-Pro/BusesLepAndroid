@@ -37,6 +37,7 @@ import com.tecpro.buseslep.webservices.WebServices;
 
 import org.w3c.dom.Text;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -158,17 +159,18 @@ public class SummarySchedules extends Activity {
         arrivTimeReturn.setText(bundle.getString("arrivTimeReturn", ""));
         arrivtDateReturn.setText(bundle.getString("arrivDateReturn", ""));
         descriptionReturn.setText(bundle.getString("Destiny","")+" - "+ bundle.getString("Origin",""));
+        DecimalFormat df = new DecimalFormat("0.00");
 
         bundlePriceGo= bundle.getString("priceGo");
         bundlePriceGoRet= bundle.getString("priceGoRet");
         if(codeReturn=="-1") {
             descriptionReturn.setText("");
             ((TextView) findViewById(R.id.txt_flecha)).setVisibility(View.INVISIBLE);
-            price.setText("$ " + Integer.valueOf(bundlePriceGo)*Integer.valueOf(bundleNumberTickets)+".00");
+            price.setText("$ " + df.format(Float.valueOf(bundlePriceGo)*Integer.valueOf(bundleNumberTickets)));
 
         }
         else{
-            price.setText("$ " + Integer.valueOf(bundlePriceGoRet)*Integer.valueOf(bundleNumberTickets)+".00");
+            price.setText("$ " + df.format(Float.valueOf(bundlePriceGoRet)*Integer.valueOf(bundleNumberTickets)));
         }
 
         numberTickets.setText(bundleNumberTickets);
@@ -341,10 +343,12 @@ public class SummarySchedules extends Activity {
             case 1:
                 bundleNumberTickets =data.getStringExtra("number");
                 numberTickets.setText(bundleNumberTickets);
+                DecimalFormat df = new DecimalFormat("0.00");
+
                 if(codeReturn=="-1")
-                    price.setText("$ " + Integer.valueOf(bundlePriceGo)*Integer.valueOf(bundleNumberTickets)+".00");
+                    price.setText("$ " + df.format(Float.valueOf(bundlePriceGo)*Integer.valueOf(bundleNumberTickets)));
                 else
-                    price.setText("$ " + Integer.valueOf(bundlePriceGoRet)*Integer.valueOf(bundleNumberTickets)+".00");
+                    price.setText("$ " + df.format(Float.valueOf(bundlePriceGoRet)*Integer.valueOf(bundleNumberTickets)));
                 break;
             case 2://retorno de seleccion de horario ida
                 codeGo= data.getStringExtra("codigo");

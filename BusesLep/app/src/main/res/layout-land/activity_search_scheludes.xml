@@ -37,7 +37,7 @@
         android:layout_marginLeft="16dp"
         android:onClick="clickGoes"
         android:enabled="true"
-        android:checked="true"
+        android:checked="false"
         android:layout_marginRight="10dp" />
 
     <LinearLayout
@@ -80,21 +80,19 @@
                     android:clickable="true"
                     android:hint="Ciudad de origen"
                     android:paddingTop="4dp"
-                    android:paddingBottom="4dp" />
+                    android:paddingBottom="4dp"
+                    android:layout_weight="1" />
 
                 <ImageView
-                    android:src="@drawable/spinner"
-                    android:layout_width="match_parent"
+                    android:src="@drawable/spinner_ab_default_lep"
+                    android:layout_width="25dp"
                     android:layout_height="match_parent"
                     android:id="@+id/imageView5"
-                    android:scaleType="fitEnd"
+                    android:scaleType="centerInside"
                     android:layout_marginRight="3dp"
                     android:layout_gravity="center"
                     android:onClick="clickCityOrigin"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="3dp"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp" />
+                    android:layout_marginBottom="3dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -110,7 +108,7 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/txt_city_destiny"
                     android:editable="false"
                     android:textSize="20dp"
@@ -120,20 +118,18 @@
                     android:clickable="true"
                     android:hint="Ciudad de destino"
                     android:paddingTop="4dp"
-                    android:paddingBottom="4dp" />
+                    android:paddingBottom="4dp"
+                    android:layout_weight="1" />
 
                 <ImageView
-                    android:src="@drawable/spinner"
-                    android:layout_width="match_parent"
+                    android:src="@drawable/spinner_ab_default_lep"
+                    android:layout_width="25dp"
                     android:layout_height="match_parent"
                     android:id="@+id/imageView8"
-                    android:scaleType="fitEnd"
+                    android:scaleType="centerInside"
                     android:layout_marginRight="3dp"
                     android:onClick="clickCityDestiny"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="3dp"
-                    android:paddingBottom="4dp"
-                    android:paddingTop="4dp" />
+                    android:layout_marginBottom="3dp" />
 
             </LinearLayout>
 
@@ -144,6 +140,43 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:weightSum="1">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/border"
+                android:onClick="clickDateGo"
+                android:layout_weight="0.5">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/txt_date_from"
+                    android:editable="false"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="13dp"
+                    android:gravity="left|center"
+                    android:onClick="clickDateGo"
+                    android:clickable="true"
+                    android:hint="Fecha ida"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:src="@drawable/icon_calendar"
+                    android:layout_width="25dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/imageView7"
+                    android:scaleType="centerInside"
+                    android:layout_marginRight="3dp"
+                    android:onClick="clickDateGo"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -169,56 +202,21 @@
                     android:hint="Fecha vuelta"
                     android:nestedScrollingEnabled="false"
                     android:paddingTop="4dp"
-                    android:paddingBottom="4dp" />
+                    android:paddingBottom="4dp"
+                    android:layout_weight="1" />
 
                 <ImageView
                     android:src="@drawable/icon_calendar"
-                    android:layout_width="match_parent"
+                    android:layout_width="25dp"
                     android:layout_height="match_parent"
                     android:id="@+id/imageView3"
-                    android:scaleType="fitEnd"
+                    android:scaleType="centerInside"
                     android:layout_marginRight="3dp"
                     android:layout_gravity="center"
                     android:onClick="clickDateReturn"
                     android:layout_marginTop="3dp"
                     android:layout_marginBottom="3dp"
                     android:nestedScrollingEnabled="false"
-                    android:paddingBottom="4dp"
-                    android:paddingTop="4dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/border"
-                android:onClick="clickDateGo"
-                android:layout_weight="0.5">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/txt_date_from"
-                    android:editable="false"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="13dp"
-                    android:gravity="left|center"
-                    android:onClick="clickDateGo"
-                    android:clickable="true"
-                    android:hint="Fecha ida"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp" />
-
-                <ImageView
-                    android:src="@drawable/icon_calendar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/imageView7"
-                    android:scaleType="fitEnd"
-                    android:layout_marginRight="3dp"
-                    android:onClick="clickDateGo"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginBottom="3dp"
                     android:paddingBottom="4dp"
                     android:paddingTop="4dp" />
             </LinearLayout>
@@ -235,11 +233,12 @@
         android:layout_marginRight="10dp"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0"
-        android:onClick="clickNumberTickets">
+        android:onClick="clickNumberTickets"
+        android:weightSum="1">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/txt_number_tickets"
             android:editable="false"
             android:textSize="20dp"
@@ -249,20 +248,17 @@
             android:clickable="true"
             android:hint="Cantidad de pasajes"
             android:paddingTop="4dp"
-            android:paddingBottom="4dp" />
+            android:paddingBottom="4dp"
+            android:layout_weight="1" />
 
         <ImageView
-            android:src="@drawable/spinner"
-            android:layout_width="match_parent"
+            android:src="@drawable/spinner_ab_default_lep"
+            android:layout_width="25dp"
             android:layout_height="match_parent"
             android:id="@+id/imageView6"
-            android:scaleType="fitEnd"
+            android:scaleType="centerInside"
             android:layout_marginRight="3dp"
-            android:onClick="clickNumberTickets"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp" />
+            android:onClick="clickNumberTickets" />
     </LinearLayout>
 
     <LinearLayout

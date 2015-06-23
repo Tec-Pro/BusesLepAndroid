@@ -17,6 +17,7 @@ import com.tecpro.buseslep.AdaptatorLastSearch;
 import com.tecpro.buseslep.Dialog;
 import com.tecpro.buseslep.R;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -51,9 +52,10 @@ public class ScheduleSearch extends Activity implements AdapterView.OnItemClickL
         String priceGo = bundle.getString("priceGo");
         String priceGoRet = bundle.getString("priceGoRet");
         TextView txtPriceGo = (TextView) findViewById(R.id.txt_description_price_go);
-        txtPriceGo.setText("Ida $ "+priceGo+".00");
+        DecimalFormat df = new DecimalFormat("0.00");
+        txtPriceGo.setText("Ida $ "+df.format(Float.valueOf(priceGo)));
         TextView txtPriceGoRet = (TextView) findViewById(R.id.txt_description_price_go_ret);
-        txtPriceGoRet.setText("Ida y vuelta $ "+priceGoRet+".00");
+        txtPriceGoRet.setText("Ida y vuelta $ "+df.format(Float.valueOf(priceGoRet)));
         TextView txtDescription= (TextView) findViewById(R.id.txt_description_schedule);
         TextView txtGoRet= (TextView) findViewById(R.id.txt_description_go_ret);
         txtGoRet.setText(goOrReturn);

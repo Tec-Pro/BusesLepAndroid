@@ -130,6 +130,7 @@ public class SearchScheludes extends Activity  {
         }else{
             dniLogged = null;
         }
+
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         //actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -152,6 +153,7 @@ public class SearchScheludes extends Activity  {
         monthReturn = cal.get(Calendar.MONTH)+1;
         yearReturn = cal.get(Calendar.YEAR);
         dbh= new DataBaseHelper(this);
+        clickGoes(null);
     }
 
     private void loadMenuOptions(){
@@ -686,6 +688,7 @@ public class SearchScheludes extends Activity  {
         }else{
             dniLogged = null;
         }
+        clickGoes(null);
         loadMenuOptions();
     }
 }

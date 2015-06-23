@@ -40,6 +40,7 @@
 		android:background="#FF000000"
 		android:textColor="@color/white"
 		android:textStyle="bold"
-		android:layout_marginBottom="15dp" />
+		android:layout_marginBottom="15dp"
+		android:layout_marginTop="20dp" />
 
 </LinearLayout>
