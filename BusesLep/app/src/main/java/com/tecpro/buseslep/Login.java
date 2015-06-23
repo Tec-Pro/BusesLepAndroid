@@ -183,7 +183,7 @@ public class Login extends Activity {
 
             //this method will be running on UI thread
             pdLoading.setTitle("Por favor, espere.");
-            pdLoading.setMessage("Iniciando sesion");
+            pdLoading.setMessage("Iniciando sesión");
             pdLoading.show();
         }
 
@@ -192,10 +192,10 @@ public class Login extends Activity {
         protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
             if (result==null || result.second.isEmpty()) {
                 Intent i= new Intent(Login.this, Dialog.class);
-                i.putExtra("message", "No se ha podido iniciar sesion");
+                i.putExtra("message", "No se ha podido iniciar sesión");
                 startActivity(i);
             }else{
-                Toast.makeText(getApplicationContext(), "Sesion iniciada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Sesión iniciada", Toast.LENGTH_SHORT).show();
                 SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
 
                 for (Map<String,Object> m: result.second){

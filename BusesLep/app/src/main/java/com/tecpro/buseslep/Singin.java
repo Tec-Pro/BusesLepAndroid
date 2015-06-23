@@ -207,7 +207,7 @@ public class Singin extends Activity {
         protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
             if (result==null || result.second.isEmpty()) {
                 Intent i = new Intent(Singin.this, Dialog.class);
-                i.putExtra("message", "No se ha podido crear la cuenta");
+                i.putExtra("message", "No se ha podido registrar la cuenta");
                 startActivity(i);
                 //this method will be running on UI <></>hread
             }else{
@@ -215,10 +215,10 @@ public class Singin extends Activity {
                     if (m.containsKey("ret")){
                         if (((String) m.get("ret")).equals("-1")){
                             Intent i = new Intent(Singin.this, Dialog.class);
-                            i.putExtra("message", "No se ha podido crear la cuenta");
+                            i.putExtra("message", "Usted ya tiene una cuenta creada");
                             startActivity(i);
                         } else {
-                            Toast.makeText(getApplicationContext(), "Cuenta creada", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Cuenta registrada, sola por esta ves se le permitirá reservar sin activar la cuenta, la próxima vez que desee iniciar sesión active debe activar su cuenta con anterioridad desde su correo electrónico", Toast.LENGTH_LONG).show();
                             loadLogin(String.valueOf(user), pass);
                         }
                     }
@@ -236,12 +236,11 @@ public class Singin extends Activity {
     }
 
     private class AsyncCallerLogin extends AsyncTask<String, Void, Pair<String,ArrayList<Map<String,Object>>> > {
-        ProgressDialog pdLoading = new ProgressDialog(Singin.this);
+
         Context context; //contexto para largar la activity aca adentro
 
         private AsyncCallerLogin(Context context) {
             this.context = context.getApplicationContext();
-            pdLoading.setCancelable(false);
 
         }
 
@@ -254,25 +253,14 @@ public class Singin extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            //this method will be running on UI thread
-            pdLoading.setTitle("Por favor, espere.");
-            pdLoading.setMessage("Iniciando sesion");
-            pdLoading.show();
         }
 
 
         @Override
         protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
-            if (result==null || result.second.isEmpty())
-                Toast.makeText(getBaseContext(), "No se ha podido iniciar sesion ", Toast.LENGTH_SHORT).show();
-                //this method will be running on UI <></>hread
-            else{
-                Toast.makeText(getApplicationContext(), "Sesion iniciada", Toast.LENGTH_SHORT).show();
-                SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
-                preferences.put("login", "true");
-            }
+            SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+            preferences.put("login", "true");
             finish();
-            pdLoading.dismiss();
         }
     }
 
