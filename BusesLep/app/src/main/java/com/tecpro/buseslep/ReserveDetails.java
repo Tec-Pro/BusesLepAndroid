@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tecpro.buseslep.search_scheludes.SearchScheludes;
 import com.tecpro.buseslep.utils.PreferencesUsing;
 import com.tecpro.buseslep.webservices.WebServices;
 
@@ -167,9 +168,12 @@ public class ReserveDetails extends Activity {
                 //this method will be running on UI thread
             }
             else{
+                Intent j = new Intent(ReserveDetails.this, SearchScheludes.class);
+                startActivity(j);
                 Intent i= new Intent(ReserveDetails.this, Dialog.class);
                 i.putExtra("message", "Reserva realizada con exito \n Le enviamos un mail a " + preferences.getEmail() + " con los detalles");
                 startActivity(i);
+                finish();
                // Toast.makeText(getBaseContext(), "Reserva realizada con exito \n Le enviamos un mail con los detalles", Toast.LENGTH_SHORT).show();
             }
             pdLoading.dismiss();

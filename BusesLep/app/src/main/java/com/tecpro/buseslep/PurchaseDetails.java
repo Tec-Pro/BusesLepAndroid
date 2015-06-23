@@ -94,7 +94,7 @@ public class PurchaseDetails extends Activity {
             totalPrice = extras.getString("priceGoRet");
         t = Float.valueOf(totalPrice);
         t *= Integer.valueOf(cantTick);
-        total.setText( String.valueOf(t));
+        total.setText( String.format("%.2f", t));
         /*TextView seatNum1 = (TextView)findViewById(R.id.seatNum1);
         TextView seatNum2 = (TextView)findViewById(R.id.seatNum2);
         TextView departurePlace1 = (TextView)findViewById(R.id.departurePlace1);
