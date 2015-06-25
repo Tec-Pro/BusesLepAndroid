@@ -64,7 +64,7 @@ public class ScheduleSearch extends Activity implements AdapterView.OnItemClickL
         listView = (ListView) findViewById(R.id.list_view_shedule);
         listView.setAdapter(adaptador);
         listView.setOnItemClickListener(this);
-
+        listView.setSelection(AdaptatorSchedule.getIndexFirstAvailable());
     }
 
     @Override

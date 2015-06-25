@@ -24,6 +24,7 @@ public class AdaptatorSchedule extends BaseAdapter {
     private LayoutInflater inflador; // Crea Layouts a partir del XML
     private TextView departDate, departTIme, arrivDate, arrivTime, status;
     public static List<Map> schedules;
+    private static  int indexFirstAvailable=0;
 
     public AdaptatorSchedule(Context contexto, ArrayList<Map<String,Object>> schedules) {
         this.schedules = Schedules(schedules);
@@ -38,6 +39,7 @@ public class AdaptatorSchedule extends BaseAdapter {
      */
     static List Schedules( ArrayList<Map<String,Object>> schedules){
         ArrayList result = new ArrayList();
+        boolean firstAvailable =false;
         for (int i=0; i<schedules.size();i++){
             String dateGo= (String)schedules.get(i).get("fecha_sale");
             String[] aux= dateGo.split("/");
@@ -46,6 +48,10 @@ public class AdaptatorSchedule extends BaseAdapter {
             String[] auxRet= dateRet.split("/");
             if (auxRet.length==3)
                 dateRet= auxRet[2]+"/"+auxRet[1]+"/"+auxRet[0];
+            if(schedules.get(i).get("estado").toString().contains("disponible") && !firstAvailable){
+                firstAvailable=true;
+                indexFirstAvailable = i;
+            }
             Schedule s = new Schedule( dateGo,  (String)schedules.get(i).get("hora_sale"), dateRet,(String)schedules.get(i).get("estado"), (String)schedules.get(i).get("hora_llega"), (String)schedules.get(i).get("codigo"),(String)schedules.get(i).get("Id_Empresa"),(String)schedules.get(i).get("id_destino") );
             result.add(s);
         }
@@ -53,9 +59,9 @@ public class AdaptatorSchedule extends BaseAdapter {
     }
 
     public View getView(int posicion, View vistaReciclada,ViewGroup padre) {
-        Schedule s = (Schedule)schedules.get(posicion);
+        Schedule s = (Schedule) schedules.get(posicion);
         if (vistaReciclada == null) {
-            vistaReciclada= inflador.inflate(R.layout.schedule_element, null);
+            vistaReciclada = inflador.inflate(R.layout.schedule_element, null);
         }
         departDate = (TextView) vistaReciclada.findViewById(R.id.departure_date);
         departTIme = (TextView) vistaReciclada.findViewById(R.id.departure_time);
@@ -67,10 +73,13 @@ public class AdaptatorSchedule extends BaseAdapter {
         departTIme.setText(s.getDepartTIme());
         arrivDate.setText(s.getArrivDate());
         arrivTime.setText(s.getArrivTime());
-        if(!(s.getStatus().contains("viaje")||s.getStatus().contains("destino") ||s.getStatus().contains("completo")) )//si esta en viaje o destino lo pongo en rojo
-            status.setTextColor(Color.argb(255,0,39,204));
-        else
+        if (!(s.getStatus().contains("viaje") || s.getStatus().contains("destino") || s.getStatus().contains("completo"))){//si esta en viaje o destino lo pongo en rojo
+            status.setTextColor(Color.argb(255, 0, 39, 204));
+            departTIme.setTextColor(Color.argb(255, 0, 39, 204));
+        }else {
             status.setTextColor(Color.argb(255, 249, 0, 8));
+            departTIme.setTextColor(Color.argb(255, 249, 0, 8));
+        }
         status.setText(s.getStatus());
 
         return vistaReciclada;
@@ -83,5 +92,9 @@ public class AdaptatorSchedule extends BaseAdapter {
     }
     public long getItemId(int posicion) {
         return posicion;
+    }
+
+    public static int getIndexFirstAvailable() {
+        return indexFirstAvailable;
     }
 }
