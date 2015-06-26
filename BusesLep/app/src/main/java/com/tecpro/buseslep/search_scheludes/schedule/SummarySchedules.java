@@ -29,6 +29,7 @@ import com.tecpro.buseslep.Login;
 import com.tecpro.buseslep.PurchaseDetails;
 import com.tecpro.buseslep.R;
 import com.tecpro.buseslep.ReserveDetails;
+import com.tecpro.buseslep.SeatPicker;
 import com.tecpro.buseslep.search_scheludes.ChooseDate;
 import com.tecpro.buseslep.search_scheludes.SearchScheludes;
 import com.tecpro.buseslep.utils.PreferencesUsing;
@@ -304,7 +305,7 @@ public class SummarySchedules extends Activity {
         Intent i;
         if (preferences.getString("login") != null ) {
             if (preferences.getString("login").equals("true")) {
-                i =  new Intent(this, PurchaseDetails.class);
+                i =  new Intent(this, SeatPicker.class);
             } else {
                 i =  new Intent(this, Login.class);
                 i.putExtra("next","purchase");
