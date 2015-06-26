@@ -12,6 +12,8 @@
     <string name="title_activity_choose_number_tickets">Cantidad de pasajes</string>
     <string name="title_activity_dialog">Aviso</string>
 
+    <string name="title_activity_vault">Pagar</string>
+
 
 </resources>
 

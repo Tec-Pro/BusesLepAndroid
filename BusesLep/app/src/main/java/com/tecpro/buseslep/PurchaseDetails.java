@@ -109,42 +109,21 @@ public class PurchaseDetails extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == MercadoPago.PAYMENT_METHODS_REQUEST_CODE) {
+        if (requestCode == PaymentUtils.ADVANCED_VAULT_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
 
-                // Set payment method
-                PaymentMethod paymentMethod = JsonUtil.getInstance().fromJson(data.getStringExtra("paymentMethod"), PaymentMethod.class);
+                Long issuerId = (data.getStringExtra("issuerId") != null)
+                        ? Long.parseLong(data.getStringExtra("issuerId")) : null;
 
-                // Call new card activity
-                PaymentUtils.startCardActivity(this, PaymentUtils.DUMMY_MERCHANT_PUBLIC_KEY, paymentMethod);
+                // Create payment
+                PaymentUtils.createPayment(this, data.getStringExtra("token"),
+                        Integer.parseInt(data.getStringExtra("installments")),
+                        issuerId, JsonUtil.getInstance().fromJson(data.getStringExtra("paymentMethod"), PaymentMethod.class), null);
+
             } else {
 
                 if ((data != null) && (data.getStringExtra("apiException") != null)) {
                     Toast.makeText(getApplicationContext(), data.getStringExtra("apiException"), Toast.LENGTH_LONG).show();
-                }
-            }
-        } else if (requestCode == PaymentUtils.CARD_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-
-                // Create payment
-                PaymentUtils.createPayment(this, data.getStringExtra("token"),
-                        1, null, JsonUtil.getInstance().fromJson(data.getStringExtra("paymentMethod"), PaymentMethod.class), null);
-
-            } else {
-
-                if (data != null) {
-                    if (data.getStringExtra("apiException") != null) {
-
-                        Toast.makeText(getApplicationContext(), data.getStringExtra("apiException"), Toast.LENGTH_LONG).show();
-
-                    } else if (data.getBooleanExtra("backButtonPressed", false)) {
-
-                        new MercadoPago.StartActivityBuilder()
-                                .setActivity(this)
-                                .setPublicKey(PaymentUtils.DUMMY_MERCHANT_PUBLIC_KEY)
-                                .setSupportedPaymentTypes(mSupportedPaymentTypes)
-                                .startPaymentMethodsActivity();
-                    }
                 }
             }
         } else if (requestCode == MercadoPago.CONGRATS_REQUEST_CODE) {
@@ -153,13 +132,11 @@ public class PurchaseDetails extends Activity {
         }
     }
 
+
     public void submitForm(View view) {
-        new MercadoPago.StartActivityBuilder()
-                .setActivity(this)
-                .setPublicKey(PaymentUtils.DUMMY_MERCHANT_PUBLIC_KEY)
-                .setSupportedPaymentTypes(mSupportedPaymentTypes)
-                .setAmount(new BigDecimal(String.valueOf(t)))
-                .startPaymentMethodsActivity();
+
+        // Call final vault activity, le paso los pagos soportados, pero es al pedo pasarlo aća
+        PaymentUtils.startAdvancedVaultActivity(this, new BigDecimal(t), mSupportedPaymentTypes);
     }
 
 }
