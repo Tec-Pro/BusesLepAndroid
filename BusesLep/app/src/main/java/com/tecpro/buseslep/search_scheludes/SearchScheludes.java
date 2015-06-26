@@ -86,6 +86,8 @@ public class SearchScheludes extends Activity  {
     private static String dateReturn; //string para la fecha de vuelta en formato 20150605
     private AsyncCallerCities asyncCallerCities;
     private AsyncCallerSchedules asyncCallerSchedules;
+    private AsyncCallerMisReservas asyncCallerMisReservas;
+
     private static String priceGo;
     private static String priceGoRet;
 
@@ -115,7 +117,7 @@ public class SearchScheludes extends Activity  {
     private DrawerLayout drawerLayout;
     private ListView drawer;
     private ActionBarDrawerToggle toggle;
-    private static final String[] opciones = {"Recargar ciudades", "Últimas Búsquedas","Editar Perfil" , "Cerrar Sesion"};
+    private static final String[] opciones = {"Recargar ciudades", "Últimas Búsquedas","Editar Perfil" ,"Mis Reservas", "Cerrar Sesion"};
     private static final String[] optionsNotSesion= {"Recargar ciudades", "Últimas Búsquedas"};
 
     @Override
@@ -187,6 +189,10 @@ public class SearchScheludes extends Activity  {
                             //editar perfil
                                 break;
                         case 3:
+                            asyncCallerMisReservas= new AsyncCallerMisReservas(getApplicationContext());
+                            asyncCallerMisReservas.execute();
+                            break;
+                        case 4:
                             preferences.logout();
                             findViewById(R.id.btnLogin).setVisibility(View.VISIBLE);
                             dniLogged=null;
@@ -691,4 +697,49 @@ public class SearchScheludes extends Activity  {
         clickGoes(null);
         loadMenuOptions();
     }
+
+
+    /**
+     * el primer atributo que es String, son los nombres de los metodos que quiero llamar, lo hardcodeo con 1 solo atributo que es el nombre
+     * del metodo así lo corro
+     */
+    private class AsyncCallerMisReservas extends AsyncTask<String, Void, ArrayList<Map<String,Object>> > {
+        ProgressDialog pdLoading = new ProgressDialog(SearchScheludes.this);
+        Context context; //contexto para largar la activity aca adentro
+
+        private AsyncCallerMisReservas(Context context) {
+            this.context = context.getApplicationContext();
+            pdLoading.setCancelable(false);
+
+        }
+
+        @Override
+        protected ArrayList<Map<String,Object>> doInBackground(String... params) {
+
+                return WebServices.callListarMisReservas(dniLogged, getApplicationContext());
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setTitle("Por favor, espere.");
+            pdLoading.setMessage("Obteniendo reservas");
+            pdLoading.show();
+        }
+
+
+        @Override
+        protected void onPostExecute(ArrayList<Map<String,Object>> result) {
+            if (result==null || result.isEmpty())
+                Toast.makeText(getBaseContext(), "No se han encontrado reservas ", Toast.LENGTH_SHORT).show();
+                //this method will be running on UI thread
+            else{
+
+            }
+            pdLoading.dismiss();
+        }
+    }
+
 }
