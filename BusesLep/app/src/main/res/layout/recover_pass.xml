@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_edit_pass"
+    android:id="@+id/drawer_recover"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -42,7 +42,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Cambiar Contraseña"
+                    android:text="Recuperar contraseña"
                     android:id="@+id/textView2"
                     android:textColor="#ff000000"
                     android:textStyle="bold|normal|italic"
@@ -57,26 +57,27 @@
                     android:text=""
                     android:id="@+id/textView13" />
 
+
                 <EditText
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:hint=" Nueva Contraseña"
-                    android:id="@+id/txtPass"
-                    android:password="true" />
+                    android:hint=" DNI"
+                    android:id="@+id/textDNI"
+                    android:inputType="number"/>
+
+
+                <EditText
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:hint=" Dirección de correo electrónico"
+                    android:id="@+id/txtEmail"/>
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
                     android:id="@+id/textView9" />
-
-                <EditText
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:hint=" Confirmacion Contraseña"
-                    android:id="@+id/txtPassConfirm"
-                    android:password="true" />
-
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -88,19 +89,18 @@
                 <Button
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="Guardar"
+                    android:text="Recuperar"
                     android:id="@+id/btnJoin"
                     android:windowSoftInputMode="stateHidden"
                     android:layout_gravity="center_horizontal|bottom"
                     android:layout_weight="0"
-                    android:onClick="editPass"
+                    android:onClick="recover"
                     android:background="@drawable/border"
                     android:textStyle="bold"
                     android:layout_marginBottom="0dp"
                     android:layout_marginTop="0dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:nestedScrollingEnabled="false" />
+                    android:layout_marginRight="10dp" />
             </LinearLayout>
 
         </ScrollView>
@@ -109,7 +109,7 @@
     </LinearLayout>
 
     <ListView
-        android:id="@+id/options_edit_pass"
+        android:id="@+id/options_recover"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

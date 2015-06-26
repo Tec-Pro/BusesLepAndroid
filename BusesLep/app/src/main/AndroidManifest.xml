@@ -39,6 +39,21 @@
             android:noHistory="true"
             android:theme="@style/Theme.Lep" />
         <activity
+            android:name=".EditPass"
+            android:label="@string/app_name"
+            android:noHistory="true"
+            android:theme="@style/Theme.Lep" />
+        <activity
+            android:name=".EditProfile"
+            android:label="@string/app_name"
+            android:noHistory="true"
+            android:theme="@style/Theme.Lep" />
+        <activity
+            android:name=".RecoverPass"
+            android:label="@string/app_name"
+            android:noHistory="true"
+            android:theme="@style/Theme.Lep" />
+        <activity
             android:name=".Singin"
             android:label="@string/app_name"
             android:noHistory="true"

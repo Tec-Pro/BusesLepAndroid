@@ -82,8 +82,7 @@ public class Login extends Activity {
                 // Toast.makeText(SearchScheludes.this, "Pulsado: " + opciones[arg2], Toast.LENGTH_SHORT).show();
                 switch (arg2) {
                     case 0://presione recargar ciudades
-                        Intent i = new Intent(Login.this, SearchScheludes.class);
-                        startActivity(i);
+                        finish();
                         break;
                 }
 
@@ -148,6 +147,11 @@ public class Login extends Activity {
             preferences.put("login", "false");
             loadLogin(dni, pass);
         }
+    }
+
+    public void recover(View v){
+        Intent i = new Intent(this, RecoverPass.class);
+        startActivity(i);
     }
 
     public void launchSignin(View v){

@@ -21,6 +21,16 @@
                 android:layout_height="fill_parent"
                 android:id="@+id/scrollView" >
 
+
+                <LinearLayout
+
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:layout_width="0px"
+                    android:layout_height="0px" >
+                    <requestFocus />
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -59,13 +69,6 @@
                     android:layout_height="wrap_content"
                     android:hint=" Apellido"
                     android:id="@+id/txtSurname" />
-
-
-                <EditText
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:hint=" DNI"
-                    android:id="@+id/textDNI"/>
 
 
                 <EditText

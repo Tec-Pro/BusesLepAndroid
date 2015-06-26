@@ -21,7 +21,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.tecpro.buseslep.search_scheludes.SearchScheludes;
 import com.tecpro.buseslep.utils.SecurePreferences;
 import com.tecpro.buseslep.webservices.WebServices;
 
@@ -29,22 +28,21 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * Created by jacinto on 6/16/15.
+ * Created by jacinto on 6/26/15.
  */
-public class EditPass extends Activity {
+public class RecoverPass extends Activity{
+
     private DrawerLayout drawerLayout;
     private ListView drawer;
     private ActionBarDrawerToggle toggle;
     private static final String[] opciones = {"Inicio"};
-    private static AsyncCallerModificarContrasena asyncCallerModificarContrasena;
-    private static String pass;
-    private static String nuevapass;
-    private static int dni;
+    private static AsyncCallerRecover asyncCallerRecover;
+    private static String dni;
     private static String email;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_profile);
+        setContentView(R.layout.recover_pass);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         //actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -64,8 +62,8 @@ public class EditPass extends Activity {
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         // Declarar e inicializar componentes para el Navigation Drawer
-        drawer = (ListView) findViewById(R.id.options_edit_pass);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_edit_pass);
+        drawer = (ListView) findViewById(R.id.options_recover);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_recover);
 
         // Declarar adapter y eventos al hacer click
         drawer.setAdapter(new ArrayAdapter<String>(this, R.layout.element_menu, R.id.list_content, opciones));
@@ -127,38 +125,29 @@ public class EditPass extends Activity {
         toggle.syncState();
     }
 
-    public void editPass(View v){
-        nuevapass = ((EditText) findViewById(R.id.txtPass)).getText().toString();
-        String passConfirm =  ((EditText) findViewById(R.id.txtPassConfirm)).getText().toString();
-        if (nuevapass.isEmpty() || pass.isEmpty()){
+    public void recover(View v){
+        email =  ((EditText) findViewById(R.id.txtEmail)).getText().toString();
+        dni =  ((EditText) findViewById(R.id.textDNI)).getText().toString();
+        if (dni.isEmpty() || email.isEmpty()){
             Intent i= new Intent(this, Dialog.class);
             i.putExtra("message", "Por favor complete todos los campos");
             startActivity(i);
         } else {
-            if (nuevapass.equals(passConfirm)) {
-                loadEditPass();
-            } else {
-                Intent i = new Intent(this, Dialog.class);
-                i.putExtra("message", "Las contraseñas no coinciden");
-                startActivity(i);
-            }
+            loadRecover();
         }
+
     }
 
-    private void loadEditPass(){
-        SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
-        dni = Integer.valueOf(preferences.getString("dni"));
-        email = preferences.getString("email");
-        pass = preferences.getString("pass");
-        asyncCallerModificarContrasena= new AsyncCallerModificarContrasena(this);
-        asyncCallerModificarContrasena.execute();
+    private void loadRecover(){
+        asyncCallerRecover= new AsyncCallerRecover(this);
+        asyncCallerRecover.execute();
     }
 
-    private class AsyncCallerModificarContrasena extends AsyncTask<String, Void, Pair<String,ArrayList<Map<String,Object>>> > {
-        ProgressDialog pdLoading = new ProgressDialog(EditPass.this);
+    private class AsyncCallerRecover extends AsyncTask<String, Void, Pair<String,ArrayList<Map<String,Object>>> > {
+        ProgressDialog pdLoading = new ProgressDialog(RecoverPass.this);
         Context context; //contexto para largar la activity aca adentro
 
-        private AsyncCallerModificarContrasena(Context context) {
+        private AsyncCallerRecover(Context context) {
             this.context = context.getApplicationContext();
             pdLoading.setCancelable(false);
 
@@ -166,7 +155,7 @@ public class EditPass extends Activity {
 
         @Override
         protected Pair<String,ArrayList<Map<String,Object>>> doInBackground(String... params) {
-            return new Pair("resultado", WebServices.CallModificarContraseña(dni, email, pass, nuevapass, getApplicationContext()));
+            return new Pair("resultado", WebServices.CallRecuperarContrasena(Integer.valueOf(dni), email, getApplicationContext()));
         }
 
         @Override
@@ -175,7 +164,7 @@ public class EditPass extends Activity {
 
             //this method will be running on UI thread
             pdLoading.setTitle("Por favor, espere.");
-            pdLoading.setMessage("Cambiando contraseña");
+            pdLoading.setMessage("Recuperando contraseña");
             pdLoading.show();
         }
 
@@ -183,19 +172,17 @@ public class EditPass extends Activity {
         @Override
         protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
             if (result==null || result.second.isEmpty())
-                Toast.makeText(getBaseContext(), "No se ha podido editadar la contraseña ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "La cuenta no existe o no esta activada", Toast.LENGTH_SHORT).show();
                 //this method will be running on UI <></>hread
             else{
                 for (Map<String,Object> m: result.second){
                     if (m.containsKey("ret")){
                         if (((String) m.get("ret")).equals("-1")){
-                            Intent i= new Intent(EditPass.this, Dialog.class);
-                            i.putExtra("message", "No se ha podido editadar la contraseña");
+                            Intent i= new Intent(RecoverPass.this, Dialog.class);
+                            i.putExtra("message", "La cuenta no existe o no esta activada");
                             startActivity(i);
                         } else {
-                            Toast.makeText(getApplicationContext(), "Contraseña editada", Toast.LENGTH_SHORT).show();
-                            SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
-                            preferences.put("pass", nuevapass);
+                            Toast.makeText(getBaseContext(), "Se ha enviado a su email la contraseña", Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     }

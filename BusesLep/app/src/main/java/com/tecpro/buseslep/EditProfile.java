@@ -61,7 +61,7 @@ public class EditProfile extends Activity {
         ((EditText) findViewById(R.id.txtName)).setText(preferences.getString("nombre"));
         ((EditText) findViewById(R.id.txtSurname)).setText(preferences.getString("apellido"));
         ((EditText) findViewById(R.id.txtEmail)).setText(preferences.getString("email"));
-        ((EditText) findViewById(R.id.textDNI)).setText(preferences.getString("dni"));
+        dni = preferences.getString("dni");
 
     }
     private void loadMenuOptions(){
@@ -82,8 +82,7 @@ public class EditProfile extends Activity {
                 // Toast.makeText(SearchScheludes.this, "Pulsado: " + opciones[arg2], Toast.LENGTH_SHORT).show();
                 switch (arg2) {
                     case 0:
-                        Intent i = new Intent(EditProfile.this, SearchScheludes.class);
-                        startActivity(i);
+                        finish();
                         break;
                 }
 
@@ -138,8 +137,13 @@ public class EditProfile extends Activity {
         nombre =  ((EditText) findViewById(R.id.txtName)).getText().toString();
         ape =  ((EditText) findViewById(R.id.txtSurname)).getText().toString();
         email =  ((EditText) findViewById(R.id.txtEmail)).getText().toString();
-        dni =  ((EditText) findViewById(R.id.textDNI)).getText().toString();
-        loadEditProfile();
+        if (ape.isEmpty() || nombre.isEmpty() || email.isEmpty()){
+            Intent i= new Intent(this, Dialog.class);
+            i.putExtra("message", "Por favor complete todos los campos");
+            startActivity(i);
+        } else {
+            loadEditProfile();
+        }
     }
 
     private void loadEditProfile(){
@@ -179,14 +183,23 @@ public class EditProfile extends Activity {
                 Toast.makeText(getBaseContext(), "No se ha podido editar el perfil ", Toast.LENGTH_SHORT).show();
                 //this method will be running on UI <></>hread
             else{
-                Toast.makeText(getApplicationContext(), "Perfil editado", Toast.LENGTH_SHORT).show();
-                SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
-                preferences.put("apellido", ape);
-                preferences.put("nombre", nombre);
-                preferences.put("email", email);
-                preferences.put("dni", dni);
-                Intent i = new Intent(EditProfile.this, SearchScheludes.class);
-                startActivity(i);
+                for (Map<String,Object> m: result.second){
+                    if (m.containsKey("ret")){
+                        if (((String) m.get("ret")).equals("-1")){
+                            Intent i= new Intent(EditProfile.this, Dialog.class);
+                            i.putExtra("message", "No se ha podido editar el perfil");
+                            startActivity(i);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Perfil editado", Toast.LENGTH_SHORT).show();
+                            SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
+                            preferences.put("apellido", ape);
+                            preferences.put("nombre", nombre);
+                            preferences.put("email", email);
+                            preferences.put("dni", dni);
+                            finish();
+                        }
+                    }
+                }
             }
             pdLoading.dismiss();
         }

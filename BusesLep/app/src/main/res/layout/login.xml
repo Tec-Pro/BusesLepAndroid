@@ -128,7 +128,8 @@
             android:layout_height="wrap_content"
             android:text=" click aquí"
             android:id="@+id/txtClicHere"
-            android:textColor="#F90008" />
+            android:textColor="#F90008"
+            android:onClick="recover" />
 
     </LinearLayout>
 

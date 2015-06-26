@@ -86,8 +86,7 @@ public class Singin extends Activity {
                 // Toast.makeText(SearchScheludes.this, "Pulsado: " + opciones[arg2], Toast.LENGTH_SHORT).show();
                 switch (arg2) {
                     case 0://presione recargar ciudades
-                        Intent i = new Intent(Singin.this, SearchScheludes.class);
-                        startActivity(i);
+                        finish();
                         break;
                 }
 
