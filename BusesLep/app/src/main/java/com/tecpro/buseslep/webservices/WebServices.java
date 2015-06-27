@@ -41,6 +41,7 @@ public class WebServices  {
     private static String EditarPerfil = "EditarPerfilCliente";
     private static String AgregarReserva = "AgregarReserva";
     private static String ListarMisReserva = "ListarMisReserva";
+    private static String EstadoButacasPlantaHorario = "EstadoButacasPlantaHorario";
 
     private static String VALIDATION_URI = "http://webservices.buseslep.com.ar:8080/WebServices/WebServiceLep.dll/soap/ILepWebService";//tiene que ser la uri que muestra el xml, por donde bindea
     private static SoapSerializationEnvelope envelope = null;
@@ -554,6 +555,59 @@ public class WebServices  {
      * obtengo el precio
      * @return
      */
+    public static ArrayList<Map<String,Object>> callEstadoButacasPlantaHorario (int IdEmpresa, int IdDestino, int CodHorario, int IdLocalidadDesde, int IdLocalidadHasta,Context context){
+        String result;
+        ArrayList<Map<String,Object>> ret= new ArrayList<>();
+
+        request = new SoapObject(NAMESPACE, EstadoButacasPlantaHorario); //le digo que metodo voy a llamar
+        request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
+        request.addProperty("passWS","Lep1234");
+        request.addProperty("IdEmpresa",IdEmpresa);
+        request.addProperty("IdDestino",IdDestino);
+        request.addProperty("CodHorario", CodHorario);
+        request.addProperty("IdLocalidadDesde",IdLocalidadDesde);
+        request.addProperty("IdLocalidadHasta",IdLocalidadHasta);
+        request.addProperty("id_Plataforma",1);
+        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
+        envelope.enc = SoapSerializationEnvelope.ENC2003;
+        envelope.setOutputSoapObject(request);
+        httpTransportSE = new HttpTransportSE(VALIDATION_URI); //paso la uri donde transportaré
+        try {
+            try{
+                httpTransportSE.call(NAMESPACE + "#" + EstadoButacasPlantaHorario, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+            }catch (Exception e){
+                try {
+                    httpTransportSE.call(NAMESPACE + "#" + EstadoButacasPlantaHorario, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
+                    String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
+                    Intent intentDialog = new Intent(context, Dialog.class);
+                    intentDialog.putExtra("message",message);
+                    intentDialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intentDialog);
+                }
+            }
+            result= (String)envelope.getResponse();
+
+            JSONArray json= new JSONObject(result).getJSONArray("Data");
+
+            int i=0;
+            while(i<json.length()){
+                Map<String, Object> map= new HashMap<>();
+                JSONObject jsonObject= json.getJSONObject(i);
+                map.put("Columna", jsonObject.getString("Columna"));
+                map.put("NumButaca",jsonObject.getString("NumButaca"));
+                map.put("Fila",jsonObject.getString("Fila"));
+                map.put("Ocupado",jsonObject.getString("Ocupado"));
+                ret.add(map);
+                i++;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
     public static ArrayList<Map<String,Object>> callListarMisReservas(String Dni,Context context){
         String result;
         ArrayList<Map<String,Object>> ret= new ArrayList<>();

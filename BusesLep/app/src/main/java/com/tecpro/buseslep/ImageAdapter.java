@@ -1,6 +1,7 @@
 package com.tecpro.buseslep;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,21 +10,52 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by agustin on 26/06/15.
  */
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
+    private  ArrayList<Map<String,Object>> seats;
+
+    public static final int Occupied =  R.drawable.occupied_seat;
+    public static final int Free =  R.drawable.free_seat;
+    public static final int Selected = R.drawable.selected_seat;
+    public static final int None = R.drawable.none_seat;
 
     public int color;
 
-    public ImageAdapter(Context c) {
+    private Integer[] seatsArr = { None, None, None, None, None,
+                                    None, None, None, None, None,
+                                    None, None, None, None, None,
+                                    None, None, None, None, None,
+                                    None, None, None, None, None,
+                                    None, None, None, None, None,
+                                    None, None, None, None, None,
+                                    None, None, None, None, None,
+                                    None, None, None, None, None,
+                                    None, None, None, None, None,
+                                    None, None, None, None, None,
+                                    None, None, None, None, None
+    };
+
+    public ImageAdapter(Context c, ArrayList<Map<String,Object>> s ) {
         mContext = c;
+        seats = s;
+        for(int i=0; i< seats.size(); i++){
+            int col = Integer.valueOf((String)seats.get(i).get("Columna"));
+            int row = Integer.valueOf((String)seats.get(i).get("Fila"));
+            int ocu = Integer.valueOf((String)seats.get(i).get("Ocupado"));
+            if(ocu == 0)
+                seatsArr[5*(col-1) + (row-1)] = Free;
+            else
+                seatsArr[5*(col-1) + (row-1)] = Occupied;
+        }
     }
 
     public int getCount() {
-        return 20; //harcodeado por ahora
+        return 60; //harcodeado por ahora
     }
 
     public Object getItem(int position) {
@@ -46,13 +78,14 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
-        SeatPicker.seatStates[position] = SeatPicker.Free;
-        imageView.setImageResource(mThumbIds[0]);
+
+        SeatPicker.seatStates[position] = seatsArr[position];
+
+        imageView.setImageResource(seatsArr[position]);
         return imageView;
     }
 
     // references to our images
-    private Integer[] mThumbIds = {R.drawable.free_seat
-    };
+
 }
 

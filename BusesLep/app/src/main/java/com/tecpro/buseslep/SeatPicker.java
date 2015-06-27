@@ -1,17 +1,26 @@
 package com.tecpro.buseslep;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.tecpro.buseslep.search_scheludes.SearchScheludes;
+import com.tecpro.buseslep.webservices.WebServices;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -19,14 +28,20 @@ import java.util.List;
  */
 public class SeatPicker extends Activity {
 
-    public static final int Occupied = 1;
-    public static final int Free = 2;
-    public static final int Selected = 3;
-    public static int[] seatStates = new int[50];
+
+
+    public static int[] seatStates = new int[60];
+    private ArrayList<Map<String,Object>> seats = new ArrayList<>();
+
+    private static AsyncCallerSeatPicker asyncCallerSeatPicker;
 
     private int roundtrip;
+    String idDestinyGo, idDestinyRet;
     private String cityfrom,cityto, arrdate1,arrhour1,arrdate2,arrhour2,cantTick, totalPriceGo, totalPriceGoRet ;
+    int idEmpresaIda, idEmpresaVuelta, codHorarioIda, codHorarioVuelta, idCityOrigin,idCityDestiny;
     private int seatsToSelect;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,9 +61,28 @@ public class SeatPicker extends Activity {
         totalPriceGoRet = extras.getString("priceGoRet");
         totalPriceGo = extras.getString("priceGo");
 
+        idCityOrigin = extras.getInt("IDDestinoIda");
+        idCityDestiny = extras.getInt("IDDestinoVuelta");
+        idEmpresaIda = extras.getInt("IDEmpresaIda");
+        idEmpresaVuelta = extras.getInt("IDEmpresaVuelta");
+        codHorarioVuelta = extras.getInt("CodHorarioVuelta");
+        codHorarioIda = extras.getInt("CodHorarioIda");
+        idDestinyGo = extras.getString("id_destino_ida");
+        idDestinyRet = extras.getString("id_destino_vuelta");
+
         seatsToSelect = Integer.valueOf(cantTick);
+        loadSeats();
+        int l = 99999999;
+        while(seats.size()<1 && l>0){
+           l--;
+        } //spinlock para asegurar que se cargaron los asientos
+        if(l==0){
+            Toast.makeText(SeatPicker.this, "ERROR" ,
+                           Toast.LENGTH_SHORT).show();
+        }
+
         GridView gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ImageAdapter(this));
+        gridview.setAdapter(new ImageAdapter(this,seats));
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -56,24 +90,81 @@ public class SeatPicker extends Activity {
 
                 ImageView imageView = (ImageView) v;
 
-
-                if(seatStates[position] == Free && seatsToSelect > 0) {
-                    imageView.setImageResource(R.drawable.selected_seat);
-                    seatStates[position] = Selected;
-                    seatsToSelect--;
-                }
-                else{
-                    if(seatStates[position] == Selected){
-                        imageView.setImageResource(R.drawable.free_seat);
-                        seatStates[position] = Free;
-                        seatsToSelect++;
+                if(seatStates[position] != ImageAdapter.None) {
+                    if (seatStates[position] == ImageAdapter.Free && seatsToSelect > 0) {
+                        imageView.setImageResource(R.drawable.selected_seat);
+                        seatStates[position] = ImageAdapter.Selected;
+                        seatsToSelect--;
+                    } else {
+                        if (seatStates[position] == ImageAdapter.Selected) {
+                            imageView.setImageResource(R.drawable.free_seat);
+                            seatStates[position] = ImageAdapter.Free;
+                            seatsToSelect++;
+                        }
                     }
                 }
-
                // Toast.makeText(SeatPicker.this, "" + position,
                  //       Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+
+    private void loadSeats(){
+        asyncCallerSeatPicker= new AsyncCallerSeatPicker(this);
+        asyncCallerSeatPicker.execute();
+    }
+
+    private class AsyncCallerSeatPicker extends AsyncTask<String, Void, Pair<String,List<String>> > {
+
+        ProgressDialog pdLoading = new ProgressDialog(SeatPicker.this);
+        Context context;
+
+        private AsyncCallerSeatPicker(Context context){
+            this.context = context.getApplicationContext();
+            pdLoading.setCancelable(true);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setTitle("Por favor, espere.");
+            pdLoading.setMessage("Obteniendo datos del servidor");
+            pdLoading.show();
+        }
+        @Override
+        protected Pair<String, List<String>> doInBackground(String... params) {
+
+            boolean isround = false;
+            int idDesGo = 0;
+            int idDesRet = 0;
+            if(idDestinyGo != null && !idDestinyGo.isEmpty())
+                idDesGo = Integer.valueOf(idDestinyGo);
+            //if(idDestinyRet != null && !idDestinyRet.isEmpty())
+              //  idDesRet = Integer.valueOf(idDestinyRet);
+            if(roundtrip  != -1)
+                isround = true;
+            seats = WebServices.callEstadoButacasPlantaHorario(idEmpresaIda,idDesGo,codHorarioIda,idCityOrigin, idCityDestiny,getApplicationContext());
+            Log.i("CABEZA",String.valueOf(seats.size()));
+
+            return new Pair("seats",  seats);
+        }
+
+        @Override
+        protected void onPostExecute(Pair<String,List<String>> result) {
+            if (result== null ) {
+                Intent i= new Intent(SeatPicker.this, Dialog.class);
+                i.putExtra("message", "Error al mostrar asientos");
+                startActivity(i);
+                //this method will be running on UI thread
+            }
+            else{
+
+            }
+            pdLoading.dismiss();
+        }
     }
 
     public void loadPurchaseDetails(View view) {
