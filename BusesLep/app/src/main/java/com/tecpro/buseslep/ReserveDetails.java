@@ -138,8 +138,8 @@ public class ReserveDetails extends Activity {
                 idDesRet = Integer.valueOf(idDestinyRet);
             if(roundtrip  != -1)
                 isround = true;
-            resultCode = WebServices.CallAgregarReserva(isround,dni,idEmpresaIda,idDesGo,codHorarioIda,idCityOrigin,idCityDestiny,Integer.valueOf(cantTick),idEmpresaVuelta,idDesRet,codHorarioVuelta,idCityDestiny,idCityOrigin,Integer.valueOf(cantTick),1,getApplicationContext());
-            Log.i("DATA", "Dni " + dni);
+            resultCode = WebServices.CallAgregarReserva(isround,dni,idEmpresaIda,idDesGo,codHorarioIda,idCityOrigin,idCityDestiny,Integer.valueOf(cantTick),idEmpresaVuelta,idDesRet,codHorarioVuelta,idCityDestiny,idCityOrigin,Integer.valueOf(cantTick),0,getApplicationContext());
+           /* Log.i("DATA", "Dni " + dni);
             Log.i("DATA", "idEmpresaIda " + String.valueOf(idEmpresaIda));
             Log.i("DATA", "idDestinoIda" + idDestinyGo);
             Log.i("DATA", "CodHorarioIda " + String.valueOf(codHorarioIda));
@@ -153,7 +153,7 @@ public class ReserveDetails extends Activity {
             Log.i("DATA", "idLocalidadHastaVuelta " + String.valueOf(idCityOrigin));
             Log.i("DATA", "CantidadVuelta " + cantTick);
             Log.i("ROUND",String.valueOf(isround));
-            Log.i("RESERVA",resultCode);
+            Log.i("RESERVA",resultCode);*/
             if(!resultCode.equals("0"))
                 return null;
             return new Pair("resultado",  new ArrayList<String>().add(resultCode) );

@@ -42,6 +42,7 @@ public class WebServices  {
     private static String AgregarReserva = "AgregarReserva";
     private static String ListarMisReserva = "ListarMisReserva";
     private static String EstadoButacasPlantaHorario = "EstadoButacasPlantaHorario";
+    private static String SeleccionarButaca = "SeleccionarButaca";
 
     private static String VALIDATION_URI = "http://webservices.buseslep.com.ar:8080/WebServices/WebServiceLep.dll/soap/ILepWebService";//tiene que ser la uri que muestra el xml, por donde bindea
     private static SoapSerializationEnvelope envelope = null;
@@ -490,7 +491,7 @@ public class WebServices  {
     }
 
 
-    public static String CallAgregarReserva(boolean isRoundTrip, String dni, int IDEmpresaIda, int IDDestinoIda, int CodHorarioIda,int IdLocalidadDesdeIda, int IdlocalidadHastaIda, int CantidadIda,int IDEmpresaVuelta, int IDDestinoVuelta,int CodHorarioVuelta, int IdLocalidadDesdeVuelta, int IdlocalidadHastaVuelta, int CantidadVuelta, int Id_Plataforma, Context context){
+    public static String CallAgregarReserva(boolean isRoundTrip, String dni, int IDEmpresaIda, int IDDestinoIda, int CodHorarioIda,int IdLocalidadDesdeIda, int IdlocalidadHastaIda, int CantidadIda,int IDEmpresaVuelta, int IDDestinoVuelta,int CodHorarioVuelta, int IdLocalidadDesdeVuelta, int IdlocalidadHastaVuelta, int CantidadVuelta, int EsCompra, Context context){
         String result = "";
 
        // ArrayList<Map<String,Object>> resultCode = new ArrayList<>();
@@ -520,8 +521,8 @@ public class WebServices  {
             request.addProperty("IdlocalidadHastaVuelta", 0);
             request.addProperty("CantidadVuelta", 0);
         }
-        request.addProperty("Id_Plataforma", Id_Plataforma);
-        request.addProperty("EsCompra", 0);
+        request.addProperty("Id_Plataforma", 1);
+        request.addProperty("EsCompra", EsCompra);
 
         envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
         envelope.enc = SoapSerializationEnvelope.ENC2003;
@@ -549,12 +550,6 @@ public class WebServices  {
         return result;
     }
 
-
-
-    /**
-     * obtengo el precio
-     * @return
-     */
     public static ArrayList<Map<String,Object>> callEstadoButacasPlantaHorario (int IdEmpresa, int IdDestino, int CodHorario, int IdLocalidadDesde, int IdLocalidadHasta,Context context){
         String result;
         ArrayList<Map<String,Object>> ret= new ArrayList<>();
@@ -606,6 +601,44 @@ public class WebServices  {
             e.printStackTrace();
         }
         return ret;
+    }
+
+
+
+    public static String callSeleccionarButaca(int NroButaca, int IDVenta, int EsIda, int  EsSeleccion,Context context){
+        String result = "";
+        request = new SoapObject(NAMESPACE, SeleccionarButaca); //le digo que metodo voy a llamar
+        request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
+        request.addProperty("passWS","Lep1234");
+        request.addProperty("NroButaca",NroButaca);
+        request.addProperty("IDVenta",IDVenta);
+        request.addProperty("EsIda", EsIda);
+        request.addProperty("EsSeleccion",EsSeleccion);
+        request.addProperty("id_Plataforma",1);
+        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
+        envelope.enc = SoapSerializationEnvelope.ENC2003;
+        envelope.setOutputSoapObject(request);
+        httpTransportSE = new HttpTransportSE(VALIDATION_URI); //paso la uri donde transportaré
+        try {
+            try{
+                httpTransportSE.call(NAMESPACE + "#" + SeleccionarButaca, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+            }catch (Exception e){
+                try {
+                    httpTransportSE.call(NAMESPACE + "#" + SeleccionarButaca, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
+                    String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
+                    Intent intentDialog = new Intent(context, Dialog.class);
+                    intentDialog.putExtra("message",message);
+                    intentDialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intentDialog);
+                }
+            }
+            result= (String)envelope.getResponse();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public static ArrayList<Map<String,Object>> callListarMisReservas(String Dni,Context context){

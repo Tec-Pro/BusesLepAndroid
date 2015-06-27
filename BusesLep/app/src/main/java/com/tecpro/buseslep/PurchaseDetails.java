@@ -28,6 +28,7 @@ public class PurchaseDetails extends Activity {
 
     private String totalPrice;
     private float t;
+    private int idSell;
 
     protected List<String> mSupportedPaymentTypes = new ArrayList<String>(){{
         add("credit_card");
@@ -52,7 +53,7 @@ public class PurchaseDetails extends Activity {
                 )
         );
         Bundle extras = getIntent().getExtras();
-
+        idSell = extras.getInt("idVenta");
         int roundtrip = extras.getInt("roundtrip");
         String cityfrom = extras.getString("city_from");
         String cityto = extras.getString("city_to");

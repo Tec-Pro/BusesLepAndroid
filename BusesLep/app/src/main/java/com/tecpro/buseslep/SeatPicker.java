@@ -1,14 +1,17 @@
 package com.tecpro.buseslep;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -29,27 +32,40 @@ import java.util.Map;
 public class SeatPicker extends Activity {
 
 
-
-    public static int[] seatStates = new int[60];
     private ArrayList<Map<String,Object>> seats = new ArrayList<>();
 
     private static AsyncCallerSeatPicker asyncCallerSeatPicker;
+    private static AsyncCallerSelectSeat asyncCallerSelectSeat;
 
     private int roundtrip;
     String idDestinyGo, idDestinyRet;
     private String cityfrom,cityto, arrdate1,arrhour1,arrdate2,arrhour2,cantTick, totalPriceGo, totalPriceGoRet ;
     int idEmpresaIda, idEmpresaVuelta, codHorarioIda, codHorarioVuelta, idCityOrigin,idCityDestiny;
     private int seatsToSelect;
-    GridView gridview;
 
+    private int seatNum, idSell, isGo, isSelection;
+
+    GridView gridview;
+    ImageAdapter imgAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.seat_picker);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowCustomEnabled(false);
+        getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(getLayoutInflater().inflate(R.layout.action_bar, null),
+                new ActionBar.LayoutParams(
+                        ActionBar.LayoutParams.WRAP_CONTENT,
+                        ActionBar.LayoutParams.MATCH_PARENT,
+                        Gravity.CENTER
+                )
+        );
 
         Bundle extras = getIntent().getExtras();
-
+        isGo = 1;
         roundtrip = extras.getInt("roundtrip");
         cityfrom = extras.getString("city_from");
         cityto = extras.getString("city_to");
@@ -69,7 +85,7 @@ public class SeatPicker extends Activity {
         codHorarioIda = extras.getInt("CodHorarioIda");
         idDestinyGo = extras.getString("id_destino_ida");
         idDestinyRet = extras.getString("id_destino_vuelta");
-
+        idSell = extras.getInt("idVenta");
         seatsToSelect = Integer.valueOf(cantTick);
         loadSeats();
 
@@ -82,31 +98,87 @@ public class SeatPicker extends Activity {
                                     int position, long id) {
 
                 ImageView imageView = (ImageView) v;
-
-                if(seatStates[position] != ImageAdapter.None) {
-                    if (seatStates[position] == ImageAdapter.Free && seatsToSelect > 0) {
+                seatNum = imgAdapter.seatsArr[position][1];
+                if(imgAdapter.seatsArr[position][0] != ImageAdapter.None) {
+                    if (imgAdapter.seatsArr[position][0] == ImageAdapter.Free && seatsToSelect > 0) {
                         imageView.setImageResource(R.drawable.selected_seat);
-                        seatStates[position] = ImageAdapter.Selected;
+                        imgAdapter.seatsArr[position][0] = ImageAdapter.Selected;
+                        isSelection = 1;
                         seatsToSelect--;
+                        selectSeat();
                     } else {
-                        if (seatStates[position] == ImageAdapter.Selected) {
+                        if (imgAdapter.seatsArr[position][0] == ImageAdapter.Selected) {
                             imageView.setImageResource(R.drawable.free_seat);
-                            seatStates[position] = ImageAdapter.Free;
+                            imgAdapter.seatsArr[position][0] = ImageAdapter.Free;
+                            isSelection = 0;
                             seatsToSelect++;
+                            selectSeat();
                         }
                     }
                 }
-               // Toast.makeText(SeatPicker.this, "" + position,
-                 //       Toast.LENGTH_SHORT).show();
+                //Toast.makeText(SeatPicker.this, "numero" + imgAdapter.seatsArr[position][1],
+                  //      Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    private void selectSeat(){
+        asyncCallerSelectSeat= new AsyncCallerSelectSeat(this);
+        asyncCallerSelectSeat.execute();
+    }
 
     private void loadSeats(){
         asyncCallerSeatPicker= new AsyncCallerSeatPicker(this);
         asyncCallerSeatPicker.execute();
     }
+
+    private class AsyncCallerSelectSeat extends AsyncTask<String, Void, Pair<String,List<String>> > {
+
+        ProgressDialog pdLoading = new ProgressDialog(SeatPicker.this);
+        Context context;
+
+        private AsyncCallerSelectSeat(Context context){
+            this.context = context.getApplicationContext();
+            pdLoading.setCancelable(true);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setTitle("Por favor, espere.");
+            pdLoading.setMessage("Obteniendo datos del servidor");
+            pdLoading.show();
+        }
+        @Override
+        protected Pair<String, List<String>> doInBackground(String... params) {
+            String resultCode = "";
+
+            resultCode = WebServices.callSeleccionarButaca(seatNum,idSell,isGo,isSelection,getApplicationContext());
+            Log.i("SEAT",resultCode.toString());
+            if(resultCode == "1")
+                return new Pair("res",  new ArrayList<String>().add(resultCode));
+            else
+                return null;
+        }
+
+        @Override
+        protected void onPostExecute(Pair<String,List<String>> result) {
+            if (result == null) {
+                /*Intent i= new Intent(SeatPicker.this, Dialog.class);
+                i.putExtra("message", "Error al seleccionar");
+                startActivity(i);*/
+                //this method will be running on UI thread
+            }
+            else{
+                Toast.makeText(SeatPicker.this, "all good man",
+                              Toast.LENGTH_SHORT).show();
+            }
+            pdLoading.dismiss();
+        }
+    }
+
 
     private class AsyncCallerSeatPicker extends AsyncTask<String, Void, Pair<String,List<String>> > {
 
@@ -153,7 +225,8 @@ public class SeatPicker extends Activity {
                 //this method will be running on UI thread
             }
             else{
-                gridview.setAdapter(new ImageAdapter(context,seats));
+                imgAdapter = new ImageAdapter(context,seats);
+                gridview.setAdapter(imgAdapter);
             }
             pdLoading.dismiss();
         }
@@ -177,6 +250,7 @@ public class SeatPicker extends Activity {
         i.putExtra("roundtrip",Integer.valueOf(roundtrip));
         i.putExtra("priceGo", totalPriceGo);//precio ida
         i.putExtra("priceGoRet", totalPriceGoRet); //precio ida vuelta
+        i.putExtra("idVenta",idSell);
         startActivity(i);
     }
 }

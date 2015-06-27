@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tecpro.buseslep.Dialog;
 import com.tecpro.buseslep.LastSearches;
 import com.tecpro.buseslep.Login;
 import com.tecpro.buseslep.PurchaseDetails;
@@ -40,6 +41,7 @@ import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class SummarySchedules extends Activity {
@@ -80,6 +82,10 @@ public class SummarySchedules extends Activity {
     private String bundlePriceGo;
     private String bundlePriceGoRet;
     private String bundleNumberTickets;
+
+
+    private static AsyncCallerReserve asyncCallerReserve;
+    private int idSell;
 
     private String bundleCityOrigin;
     private String bundleCityDestiny;
@@ -305,16 +311,19 @@ public class SummarySchedules extends Activity {
         Intent i;
         if (preferences.getString("login") != null ) {
             if (preferences.getString("login").equals("true")) {
-                i =  new Intent(this, SeatPicker.class);
+                reserveAndLoadSeatPicker();
+
             } else {
                 i =  new Intent(this, Login.class);
                 i.putExtra("next","purchase");
+                startActivity(i);
             }
         } else {
             i =  new Intent(this, Login.class);
             i.putExtra("next","purchase");
+            startActivity(i);
         }
-        i.putExtra("city_from",bundleCityOrigin);
+       /* i.putExtra("city_from",bundleCityOrigin);
         i.putExtra("city_to",bundleCityDestiny);
         i.putExtra("arrival_date1",bundleDepartDateGo);
         i.putExtra("arrival_hour1",bundleDepartTimeGo);
@@ -331,8 +340,101 @@ public class SummarySchedules extends Activity {
         i.putExtra("priceGo", bundlePriceGo);//precio ida
         i.putExtra("priceGoRet", bundlePriceGoRet); //precio ida vuelta
         i.putExtra("id_destino_ida", idDestinoIda);
-        i.putExtra("id_destino_vuelta", idDestinoVuelta);
-        startActivity(i);
+        i.putExtra("id_destino_vuelta", idDestinoVuelta);*/
+
+    }
+
+    private void reserveAndLoadSeatPicker(){
+        asyncCallerReserve= new AsyncCallerReserve(this);
+        asyncCallerReserve.execute();
+    }
+
+
+    private class AsyncCallerReserve extends AsyncTask<String, Void, Pair<String,List<String>> > {
+        ProgressDialog pdLoading = new ProgressDialog(SummarySchedules.this);
+        Context context;
+
+        private AsyncCallerReserve(Context context){
+            this.context = context.getApplicationContext();
+            pdLoading.setCancelable(true);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setTitle("Por favor, espere.");
+            pdLoading.setMessage("Obteniendo datos del servidor");
+            pdLoading.show();
+        }
+        @Override
+        protected Pair<String, List<String>> doInBackground(String... params) {
+            String dni = preferences.getDni();
+            String resultCode;
+            boolean isround = false;
+            int idDesGo = 0;
+            int idDesRet = 0;
+            if(idDestinoIda != null && !idDestinoIda.isEmpty())
+                idDesGo = Integer.valueOf(idDestinoIda);
+            if(idDestinoVuelta != null && !idDestinoVuelta.isEmpty())
+                idDesRet = Integer.valueOf(idDestinoVuelta);
+            if(Integer.valueOf(codeReturn)  != -1)
+                isround = true;
+            resultCode = WebServices.CallAgregarReserva(isround,dni,Integer.valueOf(bundleIdEnterpriseGo),idDesGo, Integer.valueOf(codeGo),Integer.valueOf(idCityOrigin),Integer.valueOf(idCityDestiny),Integer.valueOf(bundleNumberTickets),Integer.valueOf(bundleIdEnterpriseRet),idDesRet,Integer.valueOf(codeReturn),Integer.valueOf(idCityOrigin),Integer.valueOf(idCityDestiny),Integer.valueOf(bundleNumberTickets),1,getApplicationContext());
+
+            Log.i("RESULTC",resultCode.toString());
+            try{
+                idSell = Integer.valueOf(resultCode);
+            }
+            catch (NumberFormatException e){
+                idSell = -1;
+            }
+            if(idSell<=0)
+                return null;
+            return new Pair("resultado",  new ArrayList<String>().add(resultCode) );
+        }
+
+        @Override
+        protected void onPostExecute(Pair<String,List<String>> result) {
+            if (result== null ) {
+                Intent i= new Intent(SummarySchedules.this, Dialog.class);
+                i.putExtra("message", "No se ha podido reservar");
+                startActivity(i);
+                //this method will be running on UI thread
+            }
+            else{
+               Intent i =  new Intent(context, SeatPicker.class);
+                i.putExtra("city_from",bundleCityOrigin);
+                i.putExtra("city_to",bundleCityDestiny);
+                i.putExtra("arrival_date1",bundleDepartDateGo);
+                i.putExtra("arrival_hour1",bundleDepartTimeGo);
+                i.putExtra("arrival_date2",bundleDepartDateRet);
+                i.putExtra("arrival_hour2",bundleDepartTimeRet);
+                i.putExtra("cant_tickets",bundleNumberTickets);
+                i.putExtra("roundtrip",Integer.valueOf(codeReturn));
+                i.putExtra("IDEmpresaIda",Integer.valueOf(bundleIdEnterpriseGo));
+                i.putExtra("IDEmpresaVuelta",Integer.valueOf(bundleIdEnterpriseRet));
+                i.putExtra("CodHorarioIda", Integer.valueOf(codeGo));
+                i.putExtra("CodHorarioVuelta", Integer.valueOf(codeReturn));
+                i.putExtra("IDDestinoIda", Integer.valueOf(idCityOrigin));
+                i.putExtra("IDDestinoVuelta", Integer.valueOf(idCityDestiny));
+                i.putExtra("priceGo", bundlePriceGo);//precio ida
+                i.putExtra("priceGoRet", bundlePriceGoRet); //precio ida vuelta
+                i.putExtra("id_destino_ida", idDestinoIda);
+                i.putExtra("id_destino_vuelta", idDestinoVuelta);
+                i.putExtra("idVenta", idSell);
+                startActivity(i);
+                /*Intent j = new Intent(SummarySchedules.this, SearchScheludes.class);
+                startActivity(j);
+                Intent i= new Intent(SummarySchedules.this, Dialog.class);
+                i.putExtra("message", "Reserva realizada con exito \n Le enviamos un mail a " + preferences.getEmail() + " con los detalles");
+                startActivity(i);
+                finish();*/
+                // Toast.makeText(getBaseContext(), "Reserva realizada con exito \n Le enviamos un mail con los detalles", Toast.LENGTH_SHORT).show();
+            }
+            pdLoading.dismiss();
+        }
     }
 
     @Override
