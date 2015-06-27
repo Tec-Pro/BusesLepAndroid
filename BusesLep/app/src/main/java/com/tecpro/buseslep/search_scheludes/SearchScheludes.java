@@ -32,6 +32,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.tecpro.buseslep.Dialog;
 import com.tecpro.buseslep.LastSearches;
 import com.tecpro.buseslep.Login;
@@ -45,11 +46,15 @@ import com.tecpro.buseslep.search_scheludes.select_city.ChooseCity;
 import com.tecpro.buseslep.utils.PreferencesUsing;
 import com.tecpro.buseslep.webservices.WebServices;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -117,7 +122,7 @@ public class SearchScheludes extends Activity  {
     private DrawerLayout drawerLayout;
     private ListView drawer;
     private ActionBarDrawerToggle toggle;
-    private static final String[] opciones = {"Recargar ciudades", "Últimas Búsquedas","Editar Perfil" ,"Mis Reservas", "Cerrar Sesion"};
+    private static final String[] opciones = {"Recargar ciudades", "Últimas Búsquedas","Editar Perfil" ,"Mis Reservas","Mis Compras", "Cerrar Sesion"};
     private static final String[] optionsNotSesion= {"Recargar ciudades", "Últimas Búsquedas"};
 
     @Override
@@ -193,6 +198,9 @@ public class SearchScheludes extends Activity  {
                             asyncCallerMisReservas.execute();
                             break;
                         case 4:
+
+                            break;
+                        case 5:
                             preferences.logout();
                             findViewById(R.id.btnLogin).setVisibility(View.VISIBLE);
                             dniLogged=null;

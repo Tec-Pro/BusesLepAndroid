@@ -69,11 +69,15 @@
             android:layout_height="wrap_content"
             android:text="  C4W1  "
             android:id="@+id/txtTiketCode"
-         android:background="#ff1d1d1d"
+         android:background="#f03e3d40"
          android:textColor="#ffffffff"
          android:textSize="30dp"
          android:gravity="center_horizontal"
-         android:layout_gravity="center_horizontal" />
+         android:layout_gravity="center_horizontal"
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="5dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -111,8 +115,10 @@
         android:id="@+id/txtConsult"
         android:textColor="#ff000000"
         android:layout_gravity="center_horizontal"
-        android:textSize="10dp"
-        android:gravity="center_horizontal" />
+        android:textSize="13dp"
+        android:gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -137,6 +143,10 @@
         android:text="Finalizar"
         android:id="@+id/btnEnd"
         android:gravity="center_vertical|center_horizontal"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:background="@drawable/border"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:onClick="clickFinish" />
 
 </LinearLayout>

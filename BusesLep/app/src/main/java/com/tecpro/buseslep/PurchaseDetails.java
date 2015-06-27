@@ -112,14 +112,10 @@ public class PurchaseDetails extends Activity {
 
         if (requestCode == PaymentUtils.ADVANCED_VAULT_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-
-                Long issuerId = (data.getStringExtra("issuerId") != null)
-                        ? Long.parseLong(data.getStringExtra("issuerId")) : null;
-
                 // Create payment
                 PaymentUtils.createPayment(this, data.getStringExtra("token"),
                         Integer.parseInt(data.getStringExtra("installments")),
-                        issuerId, JsonUtil.getInstance().fromJson(data.getStringExtra("paymentMethod"), PaymentMethod.class), null);
+                         JsonUtil.getInstance().fromJson(data.getStringExtra("paymentMethod"), PaymentMethod.class));
 
             } else {
 
@@ -127,9 +123,14 @@ public class PurchaseDetails extends Activity {
                     Toast.makeText(getApplicationContext(), data.getStringExtra("apiException"), Toast.LENGTH_LONG).show();
                 }
             }
-        } else if (requestCode == MercadoPago.CONGRATS_REQUEST_CODE) {
-
-            LayoutUtil.showRegularLayout(this);
+        }  if (requestCode == MercadoPago.CONGRATS_REQUEST_CODE) {
+            if(PaymentUtils.exito){
+                Intent i= new Intent(this, EndPurchase.class);
+                i.putExtra("code",PaymentUtils.codImpresion);
+                startActivity(i);
+            }
+            else
+                LayoutUtil.showRegularLayout(this);
         }
     }
 
@@ -137,7 +138,7 @@ public class PurchaseDetails extends Activity {
     public void submitForm(View view) {
 
         // Call final vault activity, le paso los pagos soportados, pero es al pedo pasarlo aća
-        PaymentUtils.startAdvancedVaultActivity(this, new BigDecimal(t), mSupportedPaymentTypes);
+        PaymentUtils.startAdvancedVaultActivity(this, new BigDecimal(t), mSupportedPaymentTypes,idSell);
     }
 
 }

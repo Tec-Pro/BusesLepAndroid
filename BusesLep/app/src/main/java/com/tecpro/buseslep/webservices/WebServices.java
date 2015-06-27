@@ -696,4 +696,52 @@ public class WebServices  {
         }
         return ret;
     }
+
+    public static Map<String,Object> realizarCobroMercadoPago(String  DatosCompra,Context context){
+        String result;
+        Map<String,Object> ret= new HashMap<>();
+        /**
+         * NOMBRES DE ATRIBUTOS PARA WEBSERVICE DE MERCADOPAGO
+         * CAMBIA EL NAMESPACE Y TODO LO REFERIDO
+         */
+        String namespaceMP ="urn:WSCobroMercadoPagoIntf-IWSCobroMercadoPago";
+        String RealizarCobroMercadoPago = "RealizarCobroMercadoPago";
+        String validationUri = "http://webservices.buseslep.com.ar:8080/WebServices/WSCobroMercadoPago.dll/soap/ILepWebService";//tiene que ser la uri que muestra el xml, por donde bindea
+
+        request = new SoapObject(namespaceMP, RealizarCobroMercadoPago); //le digo que metodo voy a llamar
+        request.addProperty("UserCobro","54GFDG2224785486DG"); //paso los parametros que pide el metodo
+        request.addProperty("PassCobro","15eQiDeCtCaDmS2506");
+        request.addProperty("DatosCompra", DatosCompra);
+        request.addProperty("id_Plataforma", 1);
+        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
+        envelope.enc = SoapSerializationEnvelope.ENC2003;
+        envelope.setOutputSoapObject(request);
+        httpTransportSE = new HttpTransportSE(validationUri); //paso la uri donde transportaré
+        try {
+            try{
+                httpTransportSE.call(namespaceMP + "#" + RealizarCobroMercadoPago, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+            }catch (Exception e){
+                try {
+                    httpTransportSE.call(namespaceMP + "#" + RealizarCobroMercadoPago, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
+                    String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
+                    Intent intentDialog = new Intent(context, Dialog.class);
+                    intentDialog.putExtra("message",message);
+                    intentDialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intentDialog);
+                }
+            }
+            result= (String)envelope.getResponse();
+            JSONObject json= new JSONObject(result);
+            String codImpresion=result.split("Cod_Impresion\":\"")[1];
+            codImpresion =codImpresion.substring(0,codImpresion.length()-2);
+            ret.put("datosCompra",json);
+            ret.put("codImpresion",codImpresion);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
 }

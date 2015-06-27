@@ -1,7 +1,10 @@
 package com.tecpro.buseslep.utils;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.google.gson.FieldNamingPolicy;
@@ -17,19 +20,33 @@ import com.mercadopago.model.Payment;
 import com.mercadopago.model.PaymentMethod;
 import com.mercadopago.util.JsonUtil;
 import com.mercadopago.util.LayoutUtil;
+import com.tecpro.buseslep.Dialog;
 import com.tecpro.buseslep.mercadopago.AdvancedVaultActivity;
+import com.tecpro.buseslep.webservices.WebServices;
 
+
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class PaymentUtils {
+
+    private static  Activity activ;
+    private static Integer idVenta;
+    private static BigDecimal amount;
+    private static Payment payment;
+    public static String codImpresion;
+    private static PaymentMethod paymentMethod;
+    public static boolean exito=false;
 
     public static final int ADVANCED_VAULT_REQUEST_CODE = 11;
 
@@ -38,62 +55,41 @@ public class PaymentUtils {
     // DUMMY_MERCHANT_PUBLIC_KEY_AR = "444a9ef5-8a6b-429f-abdf-587639155d88";
 
 
-    // * Merchant server vars
-    public static final String MERCHANT_BASE_URL = "https://www.mercadopago.com";
-    public static final String MERCHANT_CREATE_PAYMENT_URI = "/checkout/examples/doPayment";
-
     // * Merchant access token
-    public static final String DUMMY_MERCHANT_ACCESS_TOKEN = "mla-cards-data";
     // DUMMY_MERCHANT_ACCESS_TOKEN_AR = "mla-cards-data";
 
-    // * Payment item
-    public static final String DUMMY_ITEM_ID = "id1";
-    public static final Integer DUMMY_ITEM_QUANTITY = 1;
-    public static final BigDecimal DUMMY_ITEM_UNIT_PRICE = new BigDecimal("100");
 
-    public static void startAdvancedVaultActivity(Activity activity , BigDecimal amount, List<String> supportedPaymentTypes) {
 
+    public static void startAdvancedVaultActivity(Activity activity , BigDecimal amountParams, List<String> supportedPaymentTypes, Integer idSell) {
+        activ = activity;
+        idVenta=idSell;
+        amount= amountParams;
         Intent advVaultIntent = new Intent(activity, AdvancedVaultActivity.class);
         advVaultIntent.putExtra("merchantPublicKey", MERCHANT_PUBLIC_KEY);
-        advVaultIntent.putExtra("merchantBaseUrl", MERCHANT_BASE_URL);
-        advVaultIntent.putExtra("merchantAccessToken", MERCHANT_CREATE_PAYMENT_URI);
-        advVaultIntent.putExtra("amount", amount.toString());
+        advVaultIntent.putExtra("amount", amountParams.toString());
         putListExtra(advVaultIntent, "supportedPaymentTypes", supportedPaymentTypes);
         activity.startActivityForResult(advVaultIntent, ADVANCED_VAULT_REQUEST_CODE);
     }
 
 
 
-    public static void createPayment(final Activity activity, String token, Integer installments, Long cardIssuerId, final PaymentMethod paymentMethod, Discount discount) {
-
-        if (paymentMethod != null) {
-
+    public static void createPayment( final Activity activity, String token, Integer installments, final PaymentMethod paymentMethodParam ) {
+        activ=activity;
+        if (paymentMethodParam != null) {
+            paymentMethod =paymentMethodParam;
             LayoutUtil.showProgressLayout(activity);
-
-            // Set item
-            Item item = new Item(DUMMY_ITEM_ID, DUMMY_ITEM_QUANTITY,
-                    DUMMY_ITEM_UNIT_PRICE);
-
             // Set payment method id
-            String paymentMethodId = paymentMethod.getId();
+            String paymentMethodId = paymentMethodParam.getId();
 
-            // Set campaign id
-            Long campaignId = (discount != null) ? discount.getId() : null;
-
-            // Set merchant payment
-            MerchantPayment payment = new MerchantPayment(item, installments, cardIssuerId,
-                    token, paymentMethodId, campaignId, DUMMY_MERCHANT_ACCESS_TOKEN);
-            System.out.println("token "+token);
-
-            //TESTINGGGGGGGGGGGGGGGGGG
             Gson mGson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).serializeNulls().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
-            Payment test=mGson.fromJson("{\"id\":28931,\"date_created\":\"2015-06-26T12:48:46.507-04:00\",\"date_approved\":null,\"date_last_updated\":\"2015-06-26T12:48:46.461-04:00\",\"money_release_date\":null,\"operation_type\":\"regular_payment\",\"issuer_id\":\"3\",\"payment_method_id\":\"master\",\"payment_type_id\":\"credit_card\",\"status\":\"rejected\",\"status_detail\":\"cc_rejected_call_for_authorize\",\"currency_id\":\"ARS\",\"description\":\"desc\",\"live_mode\":false,\"sponsor_id\":null,\"collector_id\":101777428,\"payer\":{\"type\":\"guest\",\"id\":null,\"email\":\"nico.orcasitas@gmail.com\",\"identification\":{\"type\":null,\"number\":\"\"}},\"metadata\":{},\"order\":{},\"external_reference\":\"externalref\",\"transaction_amount\":150,\"transaction_amount_refunded\":0,\"coupon_amount\":0,\"differential_pricing_id\":null,\"transaction_details\":{\"net_received_amount\":0,\"total_paid_amount\":174.89,\"overpaid_amount\":0,\"external_resource_url\":null,\"installment_amount\":58.3,\"financial_institution\":null,\"payment_method_reference_id\":null},\"fee_details\":[],\"captured\":true,\"binary_mode\":false,\"call_for_authorize_id\":null,\"statement_descriptor\":\"WWW.MERCADOPAGO.COM\",\"installments\":3,\"card\":{\"id\":null,\"first_six_digits\":\"503175\",\"last_four_digits\":\"0604\",\"expiration_month\":11,\"expiration_year\":2016,\"date_created\":\"2015-06-26T12:48:46.457-04:00\",\"date_last_updated\":\"2015-06-26T12:48:46.199-04:00\",\"cardholder\":{\"name\":\"CALL\",\"identification\":{\"number\":\"32111111\",\"type\":\"DNI\"}}},\"notification_url\":null,\"refunds\":[]}\n",Payment.class);
 
-            new MercadoPago.StartActivityBuilder()
-                    .setActivity(activity)
-                    .setPayment(test)
-                    .setPaymentMethod(paymentMethod)
-                    .startCongratsActivity();
+            PreferencesUsing preferences= new PreferencesUsing(activity);
+            preferences.init();
+            PaymentTecPro paymentTecPro = new PaymentTecPro("boletos","boleto:"+idVenta,installments,preferences.getEmail(),paymentMethodId,token,amount);//pago a enviar al server
+            String datosCompra = mGson.toJson(paymentTecPro); //lo convierto en json
+            AsyncCallerCompraMP asyncCallerCompraMP= new AsyncCallerCompraMP(activity.getApplicationContext());
+            asyncCallerCompraMP.execute(datosCompra);
+
             //FIN DE TESTING
 
 
@@ -130,4 +126,100 @@ public class PaymentUtils {
             intent.putExtra(listName, gson.toJson(list, listType));
         }
     }
+
+
+    /**
+     * asynctask para realizar una compra por mercadopago, llamo al servidor de la lep
+     */
+    private static class AsyncCallerCompraMP extends AsyncTask<String, Void, Map<String,Object>> {
+        ProgressDialog pdLoading = new ProgressDialog(activ);
+        Context context; //contexto para largar la activity aca adentro
+
+        private AsyncCallerCompraMP(Context context) {
+            this.context = context.getApplicationContext();
+            pdLoading.setCancelable(false);
+
+        }
+
+        @Override
+        protected Map<String,Object> doInBackground(String... params) {
+
+            return WebServices.realizarCobroMercadoPago(params[0], activ);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setTitle("Por favor, espere.");
+            pdLoading.setMessage("Realizando compra");
+            pdLoading.show();
+        }
+
+
+        @Override
+        protected void onPostExecute(Map<String,Object> result) {
+            System.out.println(result);
+            if (result==null || result.isEmpty())
+                Toast.makeText(activ.getBaseContext(), "Ocurrió un  error", Toast.LENGTH_SHORT).show();
+                //this method will be running on UI thread
+            else{
+                Gson mGson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).serializeNulls().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
+                payment = mGson.fromJson(((JSONObject)result.get("datosCompra")).toString(), Payment.class);
+                codImpresion = (String)result.get("codImpresion");
+                new MercadoPago.StartActivityBuilder()
+                        .setActivity(activ)
+                        .setPayment(payment)
+                        .setPaymentMethod(paymentMethod)
+                        .startCongratsActivity() ;
+                String messageError= "ERROR";
+                Intent i= new Intent(activ, Dialog.class);
+                exito=false;
+                switch (payment.getStatusDetail()){
+                    case "accredited": //Pago aprobado
+                        exito=true;
+                        break;
+                    case "pending_contingency": //Pago pendiente
+                        messageError="ERROR: Pago pendiente";
+                        i.putExtra("message", messageError);
+                        activ.startActivity(i);
+                        break;
+                    case "cc_rejected_call_for_authorize": //Pago rechazado, llamar para autorizar.
+                        messageError="ERROR: Pago rechazado, llamar para autorizar.";
+                        i.putExtra("message", messageError);
+                        activ.startActivity(i);
+                        break;
+                    case "cc_rejected_insufficient_amount": //Pago rechazado, saldo insuficiente.
+                        messageError="ERROR: Pago rechazado, saldo insuficiente.";
+                        i.putExtra("message", messageError);
+                        activ.startActivity(i);
+                        break;
+                    case "cc_rejected_bad_filled_security_code": //Pago rechazado por código de seguridad.
+                        messageError="ERROR: Pago rechazado por código de seguridad.";
+                        i.putExtra("message", messageError);
+                        activ.startActivity(i);
+                        break;
+                    case "cc_rejected_bad_filled_date": //Pago rechazado por fecha de expiración.
+                        messageError="ERROR: Pago rechazado por fecha de expiración.";
+                        i.putExtra("message", messageError);
+                        activ.startActivity(i);
+                        break;
+                    case "cc_rejected_bad_filled_other": //Pago rechazado por error en el formulario
+                        messageError="ERROR: Pago rechazado por error en el formulario";
+                        i.putExtra("message", messageError);
+                        activ.startActivity(i);
+                        break;
+                    default: //Pago rechazado
+                        messageError="ERROR";
+                        i.putExtra("message", messageError);
+                        activ.startActivity(i);
+                        break;
+                }
+
+            }
+                pdLoading.dismiss();
+        }
+    }
+
 }
