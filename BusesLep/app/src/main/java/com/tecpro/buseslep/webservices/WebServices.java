@@ -733,10 +733,14 @@ public class WebServices  {
             }
             result= (String)envelope.getResponse();
             JSONObject json= new JSONObject(result);
-            String codImpresion=result.split("Cod_Impresion\":\"")[1];
-            codImpresion =codImpresion.substring(0,codImpresion.length()-2);
+            if(result.contains("Cod_Impresion")){
+                String codImpresion=result.split("Cod_Impresion\":\"")[1];
+                codImpresion =codImpresion.substring(0,codImpresion.length()-2);
+                ret.put("codImpresion",codImpresion);
+
+            }else
+                ret.put("codImpresion","");
             ret.put("datosCompra",json);
-            ret.put("codImpresion",codImpresion);
         }
         catch(Exception e){
             e.printStackTrace();

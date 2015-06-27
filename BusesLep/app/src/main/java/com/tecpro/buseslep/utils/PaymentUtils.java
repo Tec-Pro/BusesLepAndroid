@@ -89,29 +89,6 @@ public class PaymentUtils {
             String datosCompra = mGson.toJson(paymentTecPro); //lo convierto en json
             AsyncCallerCompraMP asyncCallerCompraMP= new AsyncCallerCompraMP(activity.getApplicationContext());
             asyncCallerCompraMP.execute(datosCompra);
-
-            //FIN DE TESTING
-
-
-            // Create payment
-            /*MerchantServer.createPayment(activity, MERCHANT_BASE_URL, MERCHANT_CREATE_PAYMENT_URI, payment, new Callback<Payment>() {
-                @Override
-                public void success(Payment payment, Response response) {
-
-                    new MercadoPago.StartActivityBuilder()
-                            .setActivity(activity)
-                            .setPayment(payment)
-                            .setPaymentMethod(paymentMethod)
-                            .startCongratsActivity() ;
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-
-                    LayoutUtil.showRegularLayout(activity);
-                    Toast.makeText(activity, error.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });*/
         } else {
 
             Toast.makeText(activity, "Invalid payment method", Toast.LENGTH_LONG).show();
