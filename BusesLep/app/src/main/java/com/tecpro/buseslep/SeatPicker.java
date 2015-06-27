@@ -40,7 +40,7 @@ public class SeatPicker extends Activity {
     private String cityfrom,cityto, arrdate1,arrhour1,arrdate2,arrhour2,cantTick, totalPriceGo, totalPriceGoRet ;
     int idEmpresaIda, idEmpresaVuelta, codHorarioIda, codHorarioVuelta, idCityOrigin,idCityDestiny;
     private int seatsToSelect;
-
+    GridView gridview;
 
 
     @Override
@@ -72,17 +72,10 @@ public class SeatPicker extends Activity {
 
         seatsToSelect = Integer.valueOf(cantTick);
         loadSeats();
-        int l = 99999999;
-        while(seats.size()<1 && l>0){
-           l--;
-        } //spinlock para asegurar que se cargaron los asientos
-        if(l==0){
-            Toast.makeText(SeatPicker.this, "ERROR" ,
-                           Toast.LENGTH_SHORT).show();
-        }
 
-        GridView gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ImageAdapter(this,seats));
+
+        gridview = (GridView) findViewById(R.id.gridview);
+
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -147,7 +140,6 @@ public class SeatPicker extends Activity {
             if(roundtrip  != -1)
                 isround = true;
             seats = WebServices.callEstadoButacasPlantaHorario(idEmpresaIda,idDesGo,codHorarioIda,idCityOrigin, idCityDestiny,getApplicationContext());
-            Log.i("CABEZA",String.valueOf(seats.size()));
 
             return new Pair("seats",  seats);
         }
@@ -161,7 +153,7 @@ public class SeatPicker extends Activity {
                 //this method will be running on UI thread
             }
             else{
-
+                gridview.setAdapter(new ImageAdapter(context,seats));
             }
             pdLoading.dismiss();
         }
