@@ -39,11 +39,12 @@ public class SeatPicker extends Activity {
 
     private int roundtrip;
     String idDestinyGo, idDestinyRet;
-    private String cityfrom,cityto, arrdate1,arrhour1,arrdate2,arrhour2,cantTick, totalPriceGo, totalPriceGoRet ;
+    private String cantTick;
     int idEmpresaIda, idEmpresaVuelta, codHorarioIda, codHorarioVuelta, idCityOrigin,idCityDestiny;
     private int seatsToSelect;
-
-    private int seatNum, idSell, isGo, isSelection;
+    private Integer seatNum;
+    private int idSell, isGo, isSelection;
+    private List<Integer> butacas = new ArrayList<>();
 
     GridView gridview;
     ImageAdapter imgAdapter;
@@ -65,26 +66,23 @@ public class SeatPicker extends Activity {
         );
 
         Bundle extras = getIntent().getExtras();
-        isGo = 1;
-        roundtrip = extras.getInt("roundtrip");
+        isGo = extras.getInt("isGo");
+        /*roundtrip = extras.getInt("roundtrip");
         cityfrom = extras.getString("city_from");
         cityto = extras.getString("city_to");
         arrdate1 = extras.getString("arrival_date1");
         arrhour1 = extras.getString("arrival_hour1");
         arrdate2 = extras.getString("arrival_date2");
-        arrhour2 = extras.getString("arrival_hour2");
+        arrhour2 = extras.getString("arrival_hour2");*/
         cantTick = extras.getString("cant_tickets");
-        totalPriceGoRet = extras.getString("priceGoRet");
-        totalPriceGo = extras.getString("priceGo");
+       /* totalPriceGoRet = extras.getString("priceGoRet");
+        totalPriceGo = extras.getString("priceGo");*/
 
         idCityOrigin = extras.getInt("IDDestinoIda");
         idCityDestiny = extras.getInt("IDDestinoVuelta");
         idEmpresaIda = extras.getInt("IDEmpresaIda");
-        idEmpresaVuelta = extras.getInt("IDEmpresaVuelta");
-        codHorarioVuelta = extras.getInt("CodHorarioVuelta");
         codHorarioIda = extras.getInt("CodHorarioIda");
         idDestinyGo = extras.getString("id_destino_ida");
-        idDestinyRet = extras.getString("id_destino_vuelta");
         idSell = extras.getInt("idVenta");
         seatsToSelect = Integer.valueOf(cantTick);
         loadSeats();
@@ -104,6 +102,7 @@ public class SeatPicker extends Activity {
                         imageView.setImageResource(R.drawable.selected_seat);
                         imgAdapter.seatsArr[position][0] = ImageAdapter.Selected;
                         isSelection = 1;
+                        butacas.add(seatNum);
                         seatsToSelect--;
                         selectSeat();
                     } else {
@@ -111,6 +110,7 @@ public class SeatPicker extends Activity {
                             imageView.setImageResource(R.drawable.free_seat);
                             imgAdapter.seatsArr[position][0] = ImageAdapter.Free;
                             isSelection = 0;
+                            butacas.remove(seatNum);
                             seatsToSelect++;
                             selectSeat();
                         }
@@ -123,6 +123,7 @@ public class SeatPicker extends Activity {
     }
 
     private void selectSeat(){
+
         asyncCallerSelectSeat= new AsyncCallerSelectSeat(this);
         asyncCallerSelectSeat.execute();
     }
@@ -156,8 +157,13 @@ public class SeatPicker extends Activity {
             String resultCode = "";
 
             resultCode = WebServices.callSeleccionarButaca(seatNum,idSell,isGo,isSelection,getApplicationContext());
-            Log.i("SEAT",resultCode.toString());
-            if(resultCode == "1")
+            /*Log.i("DETE","num asiento: " + String.valueOf(seatNum));
+            Log.i("DETE","id venta " +String.valueOf(idSell));
+            Log.i("DETE","es ida " +String.valueOf(isGo));
+            Log.i("DETE","es seleccion " + String.valueOf(isSelection));
+            Log.i("SEAT",resultCode.toString());*/
+
+            if(resultCode.equals("1"))
                 return new Pair("res",  new ArrayList<String>().add(resultCode));
             else
                 return null;
@@ -172,8 +178,8 @@ public class SeatPicker extends Activity {
                 //this method will be running on UI thread
             }
             else{
-                Toast.makeText(SeatPicker.this, "all good man",
-                              Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(SeatPicker.this, "all good man",
+                //              Toast.LENGTH_SHORT).show();
             }
             pdLoading.dismiss();
         }
@@ -202,16 +208,14 @@ public class SeatPicker extends Activity {
         @Override
         protected Pair<String, List<String>> doInBackground(String... params) {
 
-            boolean isround = false;
-            int idDesGo = 0;
-            int idDesRet = 0;
+
+            int idDes= 0;
+
             if(idDestinyGo != null && !idDestinyGo.isEmpty())
-                idDesGo = Integer.valueOf(idDestinyGo);
+                idDes = Integer.valueOf(idDestinyGo);
             //if(idDestinyRet != null && !idDestinyRet.isEmpty())
               //  idDesRet = Integer.valueOf(idDestinyRet);
-            if(roundtrip  != -1)
-                isround = true;
-            seats = WebServices.callEstadoButacasPlantaHorario(idEmpresaIda,idDesGo,codHorarioIda,idCityOrigin, idCityDestiny,getApplicationContext());
+            seats = WebServices.callEstadoButacasPlantaHorario(idEmpresaIda,idDes,codHorarioIda,idCityOrigin, idCityDestiny,getApplicationContext());
 
             return new Pair("seats",  seats);
         }
@@ -238,8 +242,8 @@ public class SeatPicker extends Activity {
                            Toast.LENGTH_SHORT).show();
             return;
         }
-
-        Intent i =  new Intent(this, PurchaseDetails.class);
+        Intent intent = new Intent();
+       /* Intent i =  new Intent(this, PurchaseDetails.class);
         i.putExtra("city_from",cityfrom);
         i.putExtra("city_to",cityto);
         i.putExtra("arrival_date1",arrdate1);
@@ -249,8 +253,9 @@ public class SeatPicker extends Activity {
         i.putExtra("cant_tickets",cantTick);
         i.putExtra("roundtrip",Integer.valueOf(roundtrip));
         i.putExtra("priceGo", totalPriceGo);//precio ida
-        i.putExtra("priceGoRet", totalPriceGoRet); //precio ida vuelta
-        i.putExtra("idVenta",idSell);
-        startActivity(i);
+        i.putExtra("priceGoRet", totalPriceGoRet); //precio ida vuelta*/
+        intent.putExtra("butacas",butacas.toString());
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

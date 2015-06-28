@@ -62,6 +62,8 @@ public class PurchaseDetails extends Activity {
         String arrdate2 = extras.getString("arrival_date2");
         String arrhour2 = extras.getString("arrival_hour2");
         String cantTick = extras.getString("cant_tickets");
+        String butacasIda = extras.getString("butacasIda");
+        String butacasVuelta = extras.getString("butacasVuelta");
 
         TextView destiny1 = (TextView)findViewById(R.id.destiny1);
         TextView departure1 = (TextView)findViewById(R.id.departure1);
@@ -85,6 +87,14 @@ public class PurchaseDetails extends Activity {
         dephour2.setText(arrhour2);
         cantTickets2.setText(cantTick);
         TextView total = (TextView)findViewById(R.id.totalPrice);
+        TextView seatNum1 = (TextView)findViewById(R.id.seatNum1);
+        TextView seatNum2 = (TextView)findViewById(R.id.seatNum2);
+        butacasIda = butacasIda.replace("[","");
+        butacasIda = butacasIda.replace("]","");
+        butacasVuelta = butacasVuelta.replace("[","");
+        butacasVuelta = butacasVuelta.replace("]","");
+        seatNum1.setText(butacasIda);
+        seatNum2.setText(butacasVuelta);
         totalPrice = extras.getString("priceGoRet");
         if(roundtrip == -1) {  //si es ida
             findViewById(R.id.backtrip).setVisibility(View.GONE);
@@ -96,9 +106,9 @@ public class PurchaseDetails extends Activity {
         t = Float.valueOf(totalPrice);
         t *= Integer.valueOf(cantTick);
         total.setText( String.format("%.2f", t));
-        /*TextView seatNum1 = (TextView)findViewById(R.id.seatNum1);
-        TextView seatNum2 = (TextView)findViewById(R.id.seatNum2);
-        TextView departurePlace1 = (TextView)findViewById(R.id.departurePlace1);
+
+
+        /*TextView departurePlace1 = (TextView)findViewById(R.id.departurePlace1);
         TextView departurePlace2 = (TextView)findViewById(R.id.departurePlace2);
         TextView platform1 = (TextView)findViewById(R.id.platform1);
         TextView platform2 = (TextView)findViewById(R.id.platform2);

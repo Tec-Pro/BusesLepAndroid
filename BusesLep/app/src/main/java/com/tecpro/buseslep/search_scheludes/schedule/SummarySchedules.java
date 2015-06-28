@@ -82,7 +82,7 @@ public class SummarySchedules extends Activity {
     private String bundlePriceGo;
     private String bundlePriceGoRet;
     private String bundleNumberTickets;
-
+    private String butacasIda = "", butacasVuelta = "";
 
     private static AsyncCallerReserve asyncCallerReserve;
     private int idSell;
@@ -344,11 +344,62 @@ public class SummarySchedules extends Activity {
 
     }
 
+    private void launchBuy(){
+        Intent i =  new Intent(this, PurchaseDetails.class);
+        i.putExtra("city_from",bundleCityOrigin);
+        i.putExtra("city_to",bundleCityDestiny);
+        i.putExtra("arrival_date1",bundleDepartDateGo);
+        i.putExtra("arrival_hour1",bundleDepartTimeGo);
+        i.putExtra("arrival_date2",bundleDepartDateRet);
+        i.putExtra("arrival_hour2",bundleDepartTimeRet);
+        i.putExtra("cant_tickets",bundleNumberTickets);
+        i.putExtra("roundtrip",Integer.valueOf(codeReturn));
+        i.putExtra("IDEmpresaIda",Integer.valueOf(bundleIdEnterpriseGo));
+        i.putExtra("IDEmpresaVuelta",Integer.valueOf(bundleIdEnterpriseRet));
+        i.putExtra("CodHorarioIda", Integer.valueOf(codeGo));
+        i.putExtra("CodHorarioVuelta", Integer.valueOf(codeReturn));
+        i.putExtra("IDDestinoIda", Integer.valueOf(idCityOrigin));
+        i.putExtra("IDDestinoVuelta", Integer.valueOf(idCityDestiny));
+        i.putExtra("priceGo", bundlePriceGo);//precio ida
+        i.putExtra("priceGoRet", bundlePriceGoRet); //precio ida vuelta
+        i.putExtra("id_destino_ida", idDestinoIda);
+        i.putExtra("id_destino_vuelta", idDestinoVuelta);
+        i.putExtra("idVenta", idSell);
+        i.putExtra("butacasIda",butacasIda);
+        i.putExtra("butacasVuelta", butacasVuelta);
+        startActivity(i);
+    }
+
     private void reserveAndLoadSeatPicker(){
         asyncCallerReserve= new AsyncCallerReserve(this);
         asyncCallerReserve.execute();
     }
 
+    private void loadSeatPicker(boolean isGo){
+        Intent i =  new Intent(this, SeatPicker.class);
+        int resultCode = 4;
+        i.putExtra("cant_tickets",bundleNumberTickets);
+        if(isGo){
+            i.putExtra("isGo",1);
+            i.putExtra("IDEmpresaIda",Integer.valueOf(bundleIdEnterpriseGo));
+            i.putExtra("CodHorarioIda", Integer.valueOf(codeGo));
+            i.putExtra("IDDestinoIda", Integer.valueOf(idCityOrigin));
+            i.putExtra("IDDestinoVuelta", Integer.valueOf(idCityDestiny));
+            i.putExtra("id_destino_ida", idDestinoIda);
+            i.putExtra("idVenta", idSell);
+        }
+        else{
+            i.putExtra("isGo",0);
+            i.putExtra("IDEmpresaIda",Integer.valueOf(bundleIdEnterpriseRet));
+            i.putExtra("CodHorarioIda", Integer.valueOf(codeReturn));
+            i.putExtra("IDDestinoIda", Integer.valueOf(idCityDestiny));
+            i.putExtra("IDDestinoVuelta", Integer.valueOf(idCityOrigin));
+            i.putExtra("id_destino_ida", idDestinoVuelta);
+            i.putExtra("idVenta", idSell);
+            resultCode = 5;
+        }
+        startActivityForResult(i, resultCode);
+    }
 
     private class AsyncCallerReserve extends AsyncTask<String, Void, Pair<String,List<String>> > {
         ProgressDialog pdLoading = new ProgressDialog(SummarySchedules.this);
@@ -404,27 +455,7 @@ public class SummarySchedules extends Activity {
                 //this method will be running on UI thread
             }
             else{
-               Intent i =  new Intent(context, SeatPicker.class);
-                i.putExtra("city_from",bundleCityOrigin);
-                i.putExtra("city_to",bundleCityDestiny);
-                i.putExtra("arrival_date1",bundleDepartDateGo);
-                i.putExtra("arrival_hour1",bundleDepartTimeGo);
-                i.putExtra("arrival_date2",bundleDepartDateRet);
-                i.putExtra("arrival_hour2",bundleDepartTimeRet);
-                i.putExtra("cant_tickets",bundleNumberTickets);
-                i.putExtra("roundtrip",Integer.valueOf(codeReturn));
-                i.putExtra("IDEmpresaIda",Integer.valueOf(bundleIdEnterpriseGo));
-                i.putExtra("IDEmpresaVuelta",Integer.valueOf(bundleIdEnterpriseRet));
-                i.putExtra("CodHorarioIda", Integer.valueOf(codeGo));
-                i.putExtra("CodHorarioVuelta", Integer.valueOf(codeReturn));
-                i.putExtra("IDDestinoIda", Integer.valueOf(idCityOrigin));
-                i.putExtra("IDDestinoVuelta", Integer.valueOf(idCityDestiny));
-                i.putExtra("priceGo", bundlePriceGo);//precio ida
-                i.putExtra("priceGoRet", bundlePriceGoRet); //precio ida vuelta
-                i.putExtra("id_destino_ida", idDestinoIda);
-                i.putExtra("id_destino_vuelta", idDestinoVuelta);
-                i.putExtra("idVenta", idSell);
-                startActivity(i);
+                loadSeatPicker(true);
                 /*Intent j = new Intent(SummarySchedules.this, SearchScheludes.class);
                 startActivity(j);
                 Intent i= new Intent(SummarySchedules.this, Dialog.class);
@@ -474,6 +505,19 @@ public class SummarySchedules extends Activity {
                 bundleDepartDateRet =data.getStringExtra("departDate");
                 bundleIdEnterpriseRet= data.getStringExtra("idEmpresa");
                 idDestinoVuelta= data.getStringExtra("id_destino");
+                break;
+            case 4: //retorno de la seleccion de butacas ida
+                butacasIda = data.getStringExtra("butacas");
+
+                if(codeReturn == "-1")
+                    launchBuy();
+                else
+                    loadSeatPicker(false);
+                break;
+            case 5:
+                butacasVuelta = data.getStringExtra("butacas");
+
+                launchBuy();
                 break;
         }
     }
