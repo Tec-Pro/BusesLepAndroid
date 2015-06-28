@@ -110,7 +110,8 @@
         <activity
             android:name=".SeatPicker"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Lep">
+            android:theme="@style/Theme.Lep"
+            android:screenOrientation="portrait">
 
         </activity>
     </application>

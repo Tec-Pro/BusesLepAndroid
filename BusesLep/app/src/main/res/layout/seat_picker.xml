@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Seleccione las butacas deseadas"
-        android:id="@+id/textView21"
+        android:id="@+id/seat_picker_txt"
         android:layout_marginBottom="10dp"
         android:background="#808080"
         android:textColor="#ffffff"

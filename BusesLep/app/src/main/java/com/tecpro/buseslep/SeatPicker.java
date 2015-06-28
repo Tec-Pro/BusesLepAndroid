@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tecpro.buseslep.search_scheludes.SearchScheludes;
@@ -85,6 +86,11 @@ public class SeatPicker extends Activity {
         idDestinyGo = extras.getString("id_destino_ida");
         idSell = extras.getInt("idVenta");
         seatsToSelect = Integer.valueOf(cantTick);
+        TextView txt = (TextView)findViewById(R.id.seat_picker_txt);
+        if(isGo == 1)
+            txt.setText("Seleccione butacas para ida");
+        else
+            txt.setText("Seleccione butacas para vuelta");
         loadSeats();
 
 
