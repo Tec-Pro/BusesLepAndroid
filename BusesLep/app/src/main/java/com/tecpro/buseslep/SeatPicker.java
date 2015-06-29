@@ -38,6 +38,7 @@ public class SeatPicker extends Activity {
     private static AsyncCallerSeatPicker asyncCallerSeatPicker;
     private static AsyncCallerSelectSeat asyncCallerSelectSeat;
 
+    private int p;
     private int roundtrip;
     String idDestinyGo, idDestinyRet;
     private String cantTick;
@@ -46,6 +47,7 @@ public class SeatPicker extends Activity {
     private Integer seatNum;
     private int idSell, isGo, isSelection;
     private List<Integer> butacas = new ArrayList<>();
+    private ImageView imageView;
 
     GridView gridview;
     ImageAdapter imgAdapter;
@@ -96,28 +98,29 @@ public class SeatPicker extends Activity {
 
         gridview = (GridView) findViewById(R.id.gridview);
 
-
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
 
-                ImageView imageView = (ImageView) v;
+                imageView = (ImageView) v;
+                p = position;
                 seatNum = imgAdapter.seatsArr[position][1];
+
                 if(imgAdapter.seatsArr[position][0] != ImageAdapter.None) {
                     if (imgAdapter.seatsArr[position][0] == ImageAdapter.Free && seatsToSelect > 0) {
-                        imageView.setImageResource(R.drawable.selected_seat);
-                        imgAdapter.seatsArr[position][0] = ImageAdapter.Selected;
+                      //  imageView.setImageResource(R.drawable.selected_seat);
+                       // imgAdapter.seatsArr[position][0] = ImageAdapter.Selected;
                         isSelection = 1;
-                        butacas.add(seatNum);
-                        seatsToSelect--;
+                        //butacas.add(seatNum);
+                        //seatsToSelect--;
                         selectSeat();
                     } else {
                         if (imgAdapter.seatsArr[position][0] == ImageAdapter.Selected) {
-                            imageView.setImageResource(R.drawable.free_seat);
-                            imgAdapter.seatsArr[position][0] = ImageAdapter.Free;
+                          //  imageView.setImageResource(R.drawable.free_seat);
+                           // imgAdapter.seatsArr[position][0] = ImageAdapter.Free;
                             isSelection = 0;
-                            butacas.remove(seatNum);
-                            seatsToSelect++;
+                           // butacas.remove(seatNum);
+                            //seatsToSelect++;
                             selectSeat();
                         }
                     }
@@ -163,13 +166,13 @@ public class SeatPicker extends Activity {
             String resultCode = "";
 
             resultCode = WebServices.callSeleccionarButaca(seatNum,idSell,isGo,isSelection,getApplicationContext());
-            /*Log.i("DETE","num asiento: " + String.valueOf(seatNum));
+           /* Log.i("DETE","num asiento: " + String.valueOf(seatNum));
             Log.i("DETE","id venta " +String.valueOf(idSell));
             Log.i("DETE","es ida " +String.valueOf(isGo));
-            Log.i("DETE","es seleccion " + String.valueOf(isSelection));
-            Log.i("SEAT",resultCode.toString());*/
+            Log.i("DETE","es seleccion " + String.valueOf(isSelection));*/
+            //Log.i("SEAT",resultCode.toString());
 
-            if(resultCode.equals("1"))
+            if(resultCode != null && ((isSelection == 1 && resultCode.equals("1")) || (isSelection==0 && resultCode.equals("0"))))
                 return new Pair("res",  new ArrayList<String>().add(resultCode));
             else
                 return null;
@@ -178,14 +181,28 @@ public class SeatPicker extends Activity {
         @Override
         protected void onPostExecute(Pair<String,List<String>> result) {
             if (result == null) {
-                /*Intent i= new Intent(SeatPicker.this, Dialog.class);
-                i.putExtra("message", "Error al seleccionar");
-                startActivity(i);*/
-                //this method will be running on UI thread
+
             }
             else{
-              //  Toast.makeText(SeatPicker.this, "all good man",
-                //              Toast.LENGTH_SHORT).show();
+                if(imgAdapter.seatsArr[p][0] != ImageAdapter.None) {
+                    if (imgAdapter.seatsArr[p][0] == ImageAdapter.Free && seatsToSelect > 0) {
+                        imageView.setImageResource(R.drawable.selected_seat);
+                        imgAdapter.seatsArr[p][0] = ImageAdapter.Selected;
+                        isSelection = 1;
+                        butacas.add(seatNum);
+                        seatsToSelect--;
+
+                    } else {
+                        if (imgAdapter.seatsArr[p][0] == ImageAdapter.Selected) {
+                            imageView.setImageResource(R.drawable.free_seat);
+                            imgAdapter.seatsArr[p][0] = ImageAdapter.Free;
+                            isSelection = 0;
+                            butacas.remove(seatNum);
+                            seatsToSelect++;
+
+                        }
+                    }
+                }
             }
             pdLoading.dismiss();
         }
@@ -235,7 +252,7 @@ public class SeatPicker extends Activity {
                 //this method will be running on UI thread
             }
             else{
-                imgAdapter = new ImageAdapter(context,seats);
+                imgAdapter = new ImageAdapter(context,seats,gridview);
                 gridview.setAdapter(imgAdapter);
             }
             pdLoading.dismiss();

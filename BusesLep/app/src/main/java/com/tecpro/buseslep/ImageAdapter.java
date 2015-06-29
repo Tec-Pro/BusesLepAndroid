@@ -2,6 +2,7 @@ package com.tecpro.buseslep;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -18,6 +19,7 @@ import java.util.Map;
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private  ArrayList<Map<String,Object>> seats;
+    private GridView gridView;
 
     public static final int Occupied =  R.drawable.occupied_seat;
     public static final int Free =  R.drawable.free_seat;
@@ -40,19 +42,29 @@ public class ImageAdapter extends BaseAdapter {
             {None,0}, {None,0}, {None,0}, {None,0}, {None,0}
     };
 
-    public ImageAdapter(Context c, ArrayList<Map<String,Object>> s ) {
+    public ImageAdapter(Context c, ArrayList<Map<String,Object>> s , GridView grid) {
         mContext = c;
         seats = s;
+        gridView = grid;
         for (int i = 0; i < seats.size(); i++) {
             int col = Integer.valueOf((String) seats.get(i).get("Columna"));
             int row = Integer.valueOf((String) seats.get(i).get("Fila"));
             int ocu = Integer.valueOf((String) seats.get(i).get("Ocupado"));
             int num = Integer.valueOf((String) seats.get(i).get("NumButaca"));
+            int index = 5 * (col - 1) + (row - 1);
+            if(index > 59){
+                index = 59;
+            }
             if (ocu == 0)
-                seatsArr[5 * (col - 1) + (row - 1)][0] = Free;
+                seatsArr[index][0] = Free;
             else
-                seatsArr[5 * (col - 1) + (row - 1)][0] = Occupied;
-            seatsArr[5 * (col - 1) + (row - 1)][1] = num;
+                seatsArr[index][0] = Occupied;
+            seatsArr[index][1] = num;
+        }
+        if(seatsArr[59][0] != None && seatsArr[58][0] == None && seatsArr[54][0] == None && seatsArr[53][0] == None && seatsArr[48][0] == None){
+            seatsArr[48][0] = seatsArr[59][0];
+            seatsArr[48][1] = seatsArr[59][1];
+            seatsArr[59][0] = None;
         }
         int noneCount = 0;
         while (seatsArr[noneCount][0] == None) { // cuenta la cantidad de lugares vacios de atras
@@ -72,7 +84,48 @@ public class ImageAdapter extends BaseAdapter {
                 auxArr[j][1] = seatsArr[j][1];
             }
             seatsArr = auxArr.clone();
-         }
+        }
+        boolean n = true;
+        for(int i = seatsArr.length-1; i> seatsArr.length - 6; i--){ //me fijo si la ultima fila es nula
+            n = n &&seatsArr[i][0] == None;
+        }
+        if(n){
+            Integer[][] auxArr = new Integer[seatsArr.length - 5][2]; //le saco la ultima fila
+            for(int i = 0 ; i< seatsArr.length - 5; i++){
+                auxArr[i][0] = seatsArr[i][0];
+                auxArr[i][1] = seatsArr[i][1];
+
+            }
+            seatsArr = auxArr.clone();
+        }
+
+        boolean noneCol = true;
+        int noneColCount = 0;
+        for(int i = 4; i < seatsArr.length ; i += 5){ //se fija si la columna de la derecha esta vacia
+            noneCol = noneCol && seatsArr[i][0] == None;
+            noneColCount++;
+        }
+
+        if(noneCol){
+            Integer[][] auxArr = new Integer[seatsArr.length - noneColCount][2]; //muevo los asientos para sacar la columna vacia
+            int colcount = 1;
+            int i2 = 0;
+            for(int i = 0; i< seatsArr.length; i++){
+                if(colcount == 5)
+                    colcount = 1;
+                else {
+                    auxArr[i2][0] = seatsArr[i][0];
+                    auxArr[i2][1] = seatsArr[i][1];
+                    i2++;
+                    colcount++;
+                }
+            }
+            seatsArr = auxArr.clone();
+            gridView.setNumColumns(4);
+        }
+
+
+
     }
 
     public int getCount() {
@@ -96,6 +149,7 @@ public class ImageAdapter extends BaseAdapter {
             imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setPadding(8, 8, 8, 8);
+
         } else {
             imageView = (ImageView) convertView;
         }
