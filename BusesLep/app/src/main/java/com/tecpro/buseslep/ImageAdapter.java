@@ -25,6 +25,7 @@ public class ImageAdapter extends BaseAdapter {
     public static final int Free =  R.drawable.free_seat;
     public static final int Selected = R.drawable.selected_seat;
     public static final int None = R.drawable.none_seat;
+    public static  final int Driver = R.drawable.driver_seat;
 
     public int color;
 
@@ -39,7 +40,7 @@ public class ImageAdapter extends BaseAdapter {
             {None,0}, {None,0}, {None,0}, {None,0}, {None,0},
             {None,0}, {None,0}, {None,0}, {None,0}, {None,0},
             {None,0}, {None,0}, {None,0}, {None,0}, {None,0},
-            {None,0}, {None,0}, {None,0}, {None,0}, {None,0}
+            {None,0}, {None,0}, {None,0}, {None,0}, {None,0},
     };
 
     public ImageAdapter(Context c, ArrayList<Map<String,Object>> s , GridView grid) {
@@ -61,7 +62,7 @@ public class ImageAdapter extends BaseAdapter {
                 seatsArr[index][0] = Occupied;
             seatsArr[index][1] = num;
         }
-        if(seatsArr[59][0] != None && seatsArr[58][0] == None && seatsArr[54][0] == None && seatsArr[53][0] == None && seatsArr[48][0] == None){
+        if(seatsArr[59][0] != None && seatsArr[58][0] == None && seatsArr[54][0] == None && seatsArr[53][0] == None && seatsArr[48][0] == None){ //un temita
             seatsArr[48][0] = seatsArr[59][0];
             seatsArr[48][1] = seatsArr[59][1];
             seatsArr[59][0] = None;
@@ -105,7 +106,7 @@ public class ImageAdapter extends BaseAdapter {
             noneCol = noneCol && seatsArr[i][0] == None;
             noneColCount++;
         }
-
+        int numcols = 5;
         if(noneCol){
             Integer[][] auxArr = new Integer[seatsArr.length - noneColCount][2]; //muevo los asientos para sacar la columna vacia
             int colcount = 1;
@@ -122,10 +123,31 @@ public class ImageAdapter extends BaseAdapter {
             }
             seatsArr = auxArr.clone();
             gridView.setNumColumns(4);
+            numcols = 4;
         }
+        boolean z = true;
+        for(int i = seatsArr.length-1; i> seatsArr.length - numcols-1; i--){ //me fijo si la ultima fila es nula
+            z = z &&seatsArr[i][0] == None;
+        }
+        if(!z){
+            Integer[][] auxArr2 = new Integer[seatsArr.length + numcols][2]; //agrega una fila al ultimo
+            for(int i = 0; i < seatsArr.length; i++){
+                auxArr2[i][0] = seatsArr[i][0];
+                auxArr2[i][1] = seatsArr[i][1];
+            }
+            for(int i = seatsArr.length; i < auxArr2.length-1; i++){
+                auxArr2[i][0] = None;
+                auxArr2[i][1] = 0;
+            }
+            auxArr2[auxArr2.length-1][0] = Driver; //agrego el conductor a la ultima fila
+            auxArr2[auxArr2.length-1][1] = 0;
 
-
-
+            seatsArr = auxArr2.clone();
+        }
+        else{
+            seatsArr[seatsArr.length-1][0] = Driver;
+            seatsArr[seatsArr.length-1][1] = 0;
+        }
     }
 
     public int getCount() {
@@ -148,7 +170,7 @@ public class ImageAdapter extends BaseAdapter {
             imageView = new ImageView(mContext);
             imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
+            imageView.setPadding(1, 1, 1, 1);
 
         } else {
             imageView = (ImageView) convertView;

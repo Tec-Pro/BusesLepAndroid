@@ -184,7 +184,7 @@ public class SeatPicker extends Activity {
 
             }
             else{
-                if(imgAdapter.seatsArr[p][0] != ImageAdapter.None) {
+                if(imgAdapter.seatsArr[p][0] != ImageAdapter.None &&  imgAdapter.seatsArr[p][0] != ImageAdapter.Driver) {
                     if (imgAdapter.seatsArr[p][0] == ImageAdapter.Free && seatsToSelect > 0) {
                         imageView.setImageResource(R.drawable.selected_seat);
                         imgAdapter.seatsArr[p][0] = ImageAdapter.Selected;
