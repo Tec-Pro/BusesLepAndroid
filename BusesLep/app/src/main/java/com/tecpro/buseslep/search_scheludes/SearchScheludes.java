@@ -34,6 +34,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.tecpro.buseslep.Dialog;
+import com.tecpro.buseslep.EditPass;
+import com.tecpro.buseslep.EditProfile;
 import com.tecpro.buseslep.LastSearches;
 import com.tecpro.buseslep.Login;
 import com.tecpro.buseslep.R;
@@ -122,7 +124,7 @@ public class SearchScheludes extends Activity  {
     private DrawerLayout drawerLayout;
     private ListView drawer;
     private ActionBarDrawerToggle toggle;
-    private static final String[] opciones = {"Recargar ciudades", "Últimas Búsquedas","Editar Perfil" ,"Mis Reservas","Mis Compras", "Cerrar Sesion"};
+    private static final String[] opciones = {"Recargar ciudades", "Últimas Búsquedas","Editar Perfil","Cambiar Contraseña" ,"Mis Reservas","Mis Compras", "Cerrar Sesion"};
     private static final String[] optionsNotSesion= {"Recargar ciudades", "Últimas Búsquedas"};
 
     @Override
@@ -191,16 +193,19 @@ public class SearchScheludes extends Activity  {
                             loadLastSearches();
                             break;
                         case 2:
-                            //editar perfil
-                                break;
+                            editProfile();
+                            break;
                         case 3:
+                            editPass();
+                            break;
+                        case 4:
                             asyncCallerMisReservas= new AsyncCallerMisReservas(getApplicationContext());
                             asyncCallerMisReservas.execute();
                             break;
-                        case 4:
+                        case 5:
 
                             break;
-                        case 5:
+                        case 6:
                             preferences.logout();
                             findViewById(R.id.btnLogin).setVisibility(View.VISIBLE);
                             dniLogged=null;
@@ -268,6 +273,16 @@ public class SearchScheludes extends Activity  {
 
     private void loadLastSearches(){
         Intent i =  new Intent(this, LastSearches.class);
+        startActivity(i);
+    }
+
+    private void editProfile(){
+        Intent i =  new Intent(this, EditProfile.class);
+        startActivity(i);
+    }
+
+    private void editPass(){
+        Intent i =  new Intent(this, EditPass.class);
         startActivity(i);
     }
 
