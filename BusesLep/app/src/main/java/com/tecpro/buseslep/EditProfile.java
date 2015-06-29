@@ -180,7 +180,7 @@ public class EditProfile extends Activity {
         @Override
         protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
             if (result==null || result.second.isEmpty())
-                Toast.makeText(getBaseContext(), "No se ha podido editar el perfil ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "No se ha podido editar el perfil ", Toast.LENGTH_LONG).show();
                 //this method will be running on UI <></>hread
             else{
                 for (Map<String,Object> m: result.second){

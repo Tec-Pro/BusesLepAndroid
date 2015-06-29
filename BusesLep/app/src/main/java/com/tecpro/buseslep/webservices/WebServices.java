@@ -379,9 +379,11 @@ public class WebServices  {
                 map.put("ret","-1");
                 cities.add(map);
             } else {
+                if (result.equals("1")) {
                     HashMap<String, Object> map = new HashMap<>();
-                    map.put("ret","1");
+                    map.put("ret", "1");
                     cities.add(map);
+                }
             }
         }
         catch(Exception e){
@@ -425,9 +427,11 @@ public class WebServices  {
                 map.put("ret","-1");
                 cities.add(map);
             } else {
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("ret","1");
-                cities.add(map);
+                if (result.equals("1")) {
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("ret", "1");
+                    cities.add(map);
+                }
             }
         }
         catch(Exception e){
@@ -479,9 +483,11 @@ public class WebServices  {
                 map.put("ret","-1");
                 cities.add(map);
             } else {
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("ret","1");
-                cities.add(map);
+                if (result.equals("1")) {
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("ret", "1");
+                    cities.add(map);
+                }
             }
         }
         catch(Exception e){

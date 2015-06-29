@@ -135,7 +135,8 @@
             android:text=" click aquí"
             android:id="@+id/txtClicHere"
             android:textColor="#F90008"
-            android:onClick="recover" />
+            android:onClick="recover"
+            android:clickable="true" />
 
     </LinearLayout>
 

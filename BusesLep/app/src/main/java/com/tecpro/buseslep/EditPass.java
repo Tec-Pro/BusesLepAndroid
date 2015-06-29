@@ -44,7 +44,7 @@ public class EditPass extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_profile);
+        setContentView(R.layout.edit_pass);
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         //actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -65,7 +65,7 @@ public class EditPass extends Activity {
         getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         // Declarar e inicializar componentes para el Navigation Drawer
         drawer = (ListView) findViewById(R.id.options_edit_pass);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_edit_pass);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_pass);
 
         // Declarar adapter y eventos al hacer click
         drawer.setAdapter(new ArrayAdapter<String>(this, R.layout.element_menu, R.id.list_content, opciones));
@@ -183,7 +183,7 @@ public class EditPass extends Activity {
         @Override
         protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
             if (result==null || result.second.isEmpty())
-                Toast.makeText(getBaseContext(), "No se ha podido editadar la contraseña ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "No se ha podido editadar la contraseña ", Toast.LENGTH_LONG).show();
                 //this method will be running on UI <></>hread
             else{
                 for (Map<String,Object> m: result.second){
@@ -193,7 +193,7 @@ public class EditPass extends Activity {
                             i.putExtra("message", "No se ha podido editadar la contraseña");
                             startActivity(i);
                         } else {
-                            Toast.makeText(getApplicationContext(), "Contraseña editada", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Contraseña editada", Toast.LENGTH_LONG).show();
                             SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
                             preferences.put("pass", nuevapass);
                             finish();
