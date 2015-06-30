@@ -40,6 +40,8 @@ import com.tecpro.buseslep.LastSearches;
 import com.tecpro.buseslep.Login;
 import com.tecpro.buseslep.R;
 import com.tecpro.buseslep.batabase.DataBaseHelper;
+import com.tecpro.buseslep.my_purchases.MyPurchases;
+import com.tecpro.buseslep.my_reserves.MyReserves;
 import com.tecpro.buseslep.search_scheludes.schedule.ChooseNumberTickets;
 import com.tecpro.buseslep.search_scheludes.schedule.ScheduleSearch;
 import com.tecpro.buseslep.search_scheludes.schedule.SummarySchedules;
@@ -94,6 +96,7 @@ public class SearchScheludes extends Activity  {
     private AsyncCallerCities asyncCallerCities;
     private AsyncCallerSchedules asyncCallerSchedules;
     private AsyncCallerMisReservas asyncCallerMisReservas;
+    private AsyncCallerMisCompras asyncCallerMisCompras;
 
     private static String priceGo;
     private static String priceGoRet;
@@ -203,7 +206,8 @@ public class SearchScheludes extends Activity  {
                             asyncCallerMisReservas.execute();
                             break;
                         case 5:
-
+                            asyncCallerMisCompras= new AsyncCallerMisCompras(getApplicationContext());
+                            asyncCallerMisCompras.execute();
                             break;
                         case 6:
                             preferences.logout();
@@ -759,10 +763,57 @@ public class SearchScheludes extends Activity  {
                 Toast.makeText(getBaseContext(), "No se han encontrado reservas ", Toast.LENGTH_SHORT).show();
                 //this method will be running on UI thread
             else{
-
+                Intent i= new Intent(context, MyReserves.class);
+                i.putExtra("reserves",result);
+                startActivity(i);
             }
             pdLoading.dismiss();
         }
     }
 
+
+    /**
+     * el primer atributo que es String, son los nombres de los metodos que quiero llamar, lo hardcodeo con 1 solo atributo que es el nombre
+     * del metodo así lo corro
+     */
+    private class AsyncCallerMisCompras extends AsyncTask<String, Void, ArrayList<Map<String,Object>> > {
+        ProgressDialog pdLoading = new ProgressDialog(SearchScheludes.this);
+        Context context; //contexto para largar la activity aca adentro
+
+        private AsyncCallerMisCompras(Context context) {
+            this.context = context.getApplicationContext();
+            pdLoading.setCancelable(false);
+
+        }
+
+        @Override
+        protected ArrayList<Map<String,Object>> doInBackground(String... params) {
+
+            return WebServices.callListarMisCompras(dniLogged, getApplicationContext());
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setTitle("Por favor, espere.");
+            pdLoading.setMessage("Obteniendo compras");
+            pdLoading.show();
+        }
+
+
+        @Override
+        protected void onPostExecute(ArrayList<Map<String,Object>> result) {
+            if (result==null || result.isEmpty())
+                Toast.makeText(getBaseContext(), "No se han encontrado compras ", Toast.LENGTH_SHORT).show();
+                //this method will be running on UI thread
+            else{
+                Intent i= new Intent(context, MyPurchases.class);
+                i.putExtra("purchases",result);
+                startActivity(i);
+            }
+            pdLoading.dismiss();
+        }
+    }
 }

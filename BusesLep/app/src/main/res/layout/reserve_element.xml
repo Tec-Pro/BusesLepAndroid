@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Destino:"
+                android:id="@+id/textView21"
+                android:textSize="15dp"
+                android:gravity="center_vertical" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Rio cuarto-Cordoba"
+                android:id="@+id/txt_destiny"
+                android:layout_weight="1"
+                android:paddingLeft="5dp"
+                android:textSize="20dp"
+                android:textStyle="normal|bold"
+                android:textColor="#ff000000"
+                android:gravity="center_vertical" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Salida:"
+                android:id="@+id/textView25"
+                android:textSize="15dp"
+                android:gravity="center_vertical" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="06/07/2015"
+                android:id="@+id/txt_date"
+                android:layout_weight="1"
+                android:paddingLeft="5dp"
+                android:textSize="20dp"
+                android:textStyle="normal|bold"
+                android:textColor="#ff3fa346"
+                android:gravity="center_vertical" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="16:30"
+                android:id="@+id/txt_hour"
+                android:layout_weight="1"
+                android:paddingLeft="5dp"
+                android:textSize="20dp"
+                android:textStyle="normal|bold"
+                android:textColor="#ff3fa346"
+                android:gravity="center_vertical" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:weightSum="1" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Cantidad de pasajeros:"
+                android:id="@+id/textView23"
+                android:textSize="15dp"
+                android:gravity="center_vertical" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="2"
+                android:id="@+id/txt_cant"
+                android:layout_weight="1"
+                android:paddingLeft="5dp"
+                android:textSize="20dp"
+                android:textStyle="normal|bold"
+                android:textColor="#ff000000"
+                android:gravity="center_vertical" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

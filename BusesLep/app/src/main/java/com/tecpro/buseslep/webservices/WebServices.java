@@ -41,6 +41,8 @@ public class WebServices  {
     private static String EditarPerfil = "EditarPerfilCliente";
     private static String AgregarReserva = "AgregarReserva";
     private static String ListarMisReserva = "ListarMisReserva";
+    private static String ListarMisCompras = "ListarMisCompras";
+
     private static String EstadoButacasPlantaHorario = "EstadoButacasPlantaHorario";
     private static String SeleccionarButaca = "SeleccionarButaca";
 
@@ -682,17 +684,12 @@ public class WebServices  {
                 Map<String, Object> map= new HashMap<>();
                 JSONObject jsonObject= json.getJSONObject(i);
                 //System.out.println(jsonObject);
-                map.put("lugar", jsonObject.get("COLUMN1"));
+                map.put("lugar", jsonObject.get("Destino"));
                 map.put("fecha_reservado",jsonObject.getString("FechaHoraReserva").split(" ")[0].replace('-', '/'));
                 map.put("hora_reservado",jsonObject.getString("FechaHoraReserva").split(" ")[1].substring(0, 5));
-                map.put("fecha_sale",jsonObject.getString("Horario").split(" ")[0].replace('-', '/'));
-                map.put("hora_sale", jsonObject.getString("Horario").split(" ")[1].substring(0, 5));
-                map.put("Cod_Horario",jsonObject.getString("Cod_Horario"));
-                map.put("NroButaca",jsonObject.getString("NroButaca"));
-                map.put("ID_Reserva",jsonObject.getString("ID_Reserva"));
-                map.put("Id_Empresa",jsonObject.getString("Id_Empresa"));
-                map.put("Id_Destino",jsonObject.getString("Id_Destino"));
-
+                map.put("fecha_sale",jsonObject.getString("Salida").split(" ")[0].replace('-', '/'));
+                map.put("hora_sale", jsonObject.getString("Salida").split(" ")[1].substring(0, 5));
+                map.put("cantidad",jsonObject.getString("cantidad"));
                 ret.add(map);
                 i++;
             }
@@ -730,6 +727,7 @@ public class WebServices  {
                 try {
                     httpTransportSE.call(namespaceMP + "#" + RealizarCobroMercadoPago, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
                 }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
+                    System.err.println(ex);
                     String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
                     Intent intentDialog = new Intent(context, Dialog.class);
                     intentDialog.putExtra("message",message);
@@ -738,6 +736,7 @@ public class WebServices  {
                 }
             }
             result= (String)envelope.getResponse();
+            System.out.println(result);
             JSONObject json= new JSONObject(result);
             if(result.contains("Cod_Impresion")){
                 String codImpresion=result.split("Cod_Impresion\":\"")[1];
@@ -754,4 +753,51 @@ public class WebServices  {
         return ret;
     }
 
+    public static ArrayList<Map<String,Object>> callListarMisCompras(String Dni,Context context){
+        String result;
+        ArrayList<Map<String,Object>> ret= new ArrayList<>();
+
+        request = new SoapObject(NAMESPACE, ListarMisCompras); //le digo que metodo voy a llamar
+        request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
+        request.addProperty("passWS","Lep1234");
+        request.addProperty("Dni", Dni);
+        request.addProperty("id_Plataforma", 1);
+        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
+        envelope.enc = SoapSerializationEnvelope.ENC2003;
+        envelope.setOutputSoapObject(request);
+        httpTransportSE = new HttpTransportSE(VALIDATION_URI); //paso la uri donde transportaré
+        try {
+            try{
+                httpTransportSE.call(NAMESPACE + "#" + ListarMisCompras, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+            }catch (Exception e){
+                try {
+                    httpTransportSE.call(NAMESPACE + "#" + ListarMisCompras, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
+                    String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
+                    Intent intentDialog = new Intent(context, Dialog.class);
+                    intentDialog.putExtra("message",message);
+                    intentDialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intentDialog);
+                }
+            }
+            result= (String)envelope.getResponse();
+            JSONArray json= new JSONObject(result).getJSONArray("Data");
+            int i=0;
+            while(i<json.length()){
+                Map<String, Object> map= new HashMap<>();
+                JSONObject jsonObject= json.getJSONObject(i);
+                map.put("lugar", jsonObject.get("Destino"));
+                map.put("fecha_sale",jsonObject.getString("Salida").split(" ")[0].replace('-', '/'));
+                map.put("hora_sale", jsonObject.getString("Salida").split(" ")[1].substring(0, 5));
+                map.put("cantidad",jsonObject.getString("cantidad"));
+                map.put("CodImpresion",jsonObject.getString("CodImpresion"));
+                ret.add(map);
+                i++;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return ret;
+    }
 }
