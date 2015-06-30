@@ -17,19 +17,20 @@
 
     <GridView
         android:id="@+id/gridview"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="match_parent"
-        android:columnWidth="80dp"
+        android:columnWidth="50dp"
         android:numColumns="5"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="4dp"
+        android:verticalSpacing="1dp"
+        android:horizontalSpacing="1dp"
         android:stretchMode="columnWidth"
         android:background="@drawable/border"
         android:gravity="center"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:layout_weight="0.4"
-        android:clickable="false" />
+        android:clickable="false"
+        android:layout_gravity="center" />
 
     <Space
         android:layout_width="match_parent"

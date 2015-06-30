@@ -1,8 +1,10 @@
 package com.tecpro.buseslep;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -123,6 +125,9 @@ public class ImageAdapter extends BaseAdapter {
             }
             seatsArr = auxArr.clone();
             gridView.setNumColumns(4);
+            ViewGroup.LayoutParams layoutParams = gridView.getLayoutParams();
+            layoutParams.width = convertDpToPixels(200,mContext); //this is in pixels
+            gridView.setLayoutParams(layoutParams);
             numcols = 4;
         }
         boolean z = true;
@@ -168,8 +173,8 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setLayoutParams(new GridView.LayoutParams(convertDpToPixels(50,mContext), convertDpToPixels(50,mContext)));
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             imageView.setPadding(1, 1, 1, 1);
 
         } else {
@@ -180,6 +185,14 @@ public class ImageAdapter extends BaseAdapter {
         return imageView;
     }
 
+    public static int convertDpToPixels(float dp, Context context){
+        Resources resources = context.getResources();
+        return (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dp,
+                resources.getDisplayMetrics()
+        );
+    }
 
 }
 
