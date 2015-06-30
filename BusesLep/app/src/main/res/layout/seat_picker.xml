@@ -26,8 +26,8 @@
         android:stretchMode="columnWidth"
         android:background="@drawable/border"
         android:gravity="center"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:layout_weight="0.4"
         android:clickable="false" />
 

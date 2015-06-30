@@ -170,7 +170,7 @@ public class SeatPicker extends Activity {
             Log.i("DETE","id venta " +String.valueOf(idSell));
             Log.i("DETE","es ida " +String.valueOf(isGo));
             Log.i("DETE","es seleccion " + String.valueOf(isSelection));*/
-            //Log.i("SEAT",resultCode.toString());
+            //Log.i("RES",resultCode.toString());
 
             if(resultCode != null && ((isSelection == 1 && resultCode.equals("1")) || (isSelection==0 && resultCode.equals("0"))))
                 return new Pair("res",  new ArrayList<String>().add(resultCode));
