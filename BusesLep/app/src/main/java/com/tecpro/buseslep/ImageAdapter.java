@@ -22,6 +22,7 @@ public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private  ArrayList<Map<String,Object>> seats;
     private GridView gridView;
+    private boolean driverAdded = false;
 
     public static final int Occupied =  R.drawable.occupied_seat;
     public static final int Free =  R.drawable.free_seat;
@@ -65,10 +66,27 @@ public class ImageAdapter extends BaseAdapter {
             seatsArr[index][1] = num;
         }
         if(seatsArr[59][0] != None && seatsArr[58][0] == None && seatsArr[54][0] == None && seatsArr[53][0] == None && seatsArr[48][0] == None){ //un temita
-            seatsArr[48][0] = seatsArr[59][0];
-            seatsArr[48][1] = seatsArr[59][1];
+            seatsArr[58][0] = seatsArr[59][0];
+            seatsArr[58][1] = seatsArr[59][1];
             seatsArr[59][0] = None;
+            seatsArr[55][0] = Driver;
+            driverAdded = true;
         }
+        for(int i=0; i<seatsArr.length;i += 5){ //hago el espejo de la "matriz"
+            int aux1;
+            int aux2;
+            int ind = i;
+            for(int j = i+4; j > i+2; j-- ){
+                aux1 =  seatsArr[j][0];
+                aux2 = seatsArr[j][1];
+                seatsArr[j][0] = seatsArr[ind][0];
+                seatsArr[j][1] = seatsArr[ind][1];
+                seatsArr[ind][0] = aux1;
+                seatsArr[ind][1] = aux2;
+                ind++;
+            }
+        }
+
         int noneCount = 0;
         while (seatsArr[noneCount][0] == None) { // cuenta la cantidad de lugares vacios de atras
             noneCount++;
@@ -76,7 +94,7 @@ public class ImageAdapter extends BaseAdapter {
         noneCount = noneCount / 5;
         if (noneCount > 0){
             int i = 0;
-            for (i = 0; i < seatsArr.length - noneCount * 5; i++) { //corre los acientos hacia atras, asi no queda nada en blanco
+            for (i = 0; i < seatsArr.length - noneCount * 5; i++) { //corre los asientos hacia atras, asi no queda nada en blanco
                 seatsArr[i][0] = seatsArr[noneCount * 5 + i][0];
                 seatsArr[i][1] = seatsArr[noneCount * 5 + i][1];
                 seatsArr[noneCount * 5 + i][0] = None;
@@ -104,14 +122,14 @@ public class ImageAdapter extends BaseAdapter {
 
         boolean noneCol = true;
         int noneColCount = 0;
-        for(int i = 4; i < seatsArr.length ; i += 5){ //se fija si la columna de la derecha esta vacia
+        for(int i = 0; i < seatsArr.length ; i += 5){ //se fija si la columna de la izq esta vacia
             noneCol = noneCol && seatsArr[i][0] == None;
             noneColCount++;
         }
         int numcols = 5;
         if(noneCol){
             Integer[][] auxArr = new Integer[seatsArr.length - noneColCount][2]; //muevo los asientos para sacar la columna vacia
-            int colcount = 1;
+            int colcount = 5;
             int i2 = 0;
             for(int i = 0; i< seatsArr.length; i++){
                 if(colcount == 5)
@@ -130,33 +148,34 @@ public class ImageAdapter extends BaseAdapter {
             gridView.setLayoutParams(layoutParams);
             numcols = 4;
         }
-        boolean z = true;
-        for(int i = seatsArr.length-1; i> seatsArr.length - numcols-1; i--){ //me fijo si la ultima fila es nula
-            z = z &&seatsArr[i][0] == None;
-        }
-        if(!z){
-            Integer[][] auxArr2 = new Integer[seatsArr.length + numcols][2]; //agrega una fila al ultimo
-            for(int i = 0; i < seatsArr.length; i++){
-                auxArr2[i][0] = seatsArr[i][0];
-                auxArr2[i][1] = seatsArr[i][1];
+        if(!driverAdded) {
+            boolean z = true;
+            for (int i = seatsArr.length - 1; i > seatsArr.length - numcols - 1; i--) { //me fijo si la ultima fila es nula
+                z = z && seatsArr[i][0] == None;
             }
-            for(int i = seatsArr.length; i < auxArr2.length-1; i++){
-                auxArr2[i][0] = None;
-                auxArr2[i][1] = 0;
-            }
-            auxArr2[auxArr2.length-1][0] = Driver; //agrego el conductor a la ultima fila
-            auxArr2[auxArr2.length-1][1] = 0;
+            if (!z) {
+                Integer[][] auxArr2 = new Integer[seatsArr.length + numcols][2]; //agrega una fila al ultimo
+                for (int i = 0; i < seatsArr.length; i++) {
+                    auxArr2[i][0] = seatsArr[i][0];
+                    auxArr2[i][1] = seatsArr[i][1];
+                }
+                for (int i = seatsArr.length; i < auxArr2.length - 1; i++) {
+                    auxArr2[i][0] = None;
+                    auxArr2[i][1] = 0;
+                }
+                auxArr2[auxArr2.length - 1][0] = Driver; //agrego el conductor a la ultima fila
+                auxArr2[auxArr2.length - 1][1] = 0;
 
-            seatsArr = auxArr2.clone();
-        }
-        else{
-            seatsArr[seatsArr.length-1][0] = Driver;
-            seatsArr[seatsArr.length-1][1] = 0;
+                seatsArr = auxArr2.clone();
+            } else {
+                seatsArr[seatsArr.length - 1][0] = Driver;
+                seatsArr[seatsArr.length - 1][1] = 0;
+            }
         }
     }
 
     public int getCount() {
-        return seatsArr.length; //harcodeado por ahora
+        return seatsArr.length;
     }
 
     public Object getItem(int position) {
