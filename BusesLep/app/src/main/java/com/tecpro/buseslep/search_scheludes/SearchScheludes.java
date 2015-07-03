@@ -47,6 +47,8 @@ import com.tecpro.buseslep.search_scheludes.schedule.ScheduleSearch;
 import com.tecpro.buseslep.search_scheludes.schedule.SummarySchedules;
 import com.tecpro.buseslep.search_scheludes.select_city.AdaptatorCity;
 import com.tecpro.buseslep.search_scheludes.select_city.ChooseCity;
+import com.tecpro.buseslep.utils.DrawerItem;
+import com.tecpro.buseslep.utils.DrawerListAdapter;
 import com.tecpro.buseslep.utils.PreferencesUsing;
 import com.tecpro.buseslep.webservices.WebServices;
 
@@ -178,11 +180,25 @@ public class SearchScheludes extends Activity  {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_search_schedules);
 
         // Declarar adapter y eventos al hacer click
-        if(preferences.isOnline())
-            drawer.setAdapter(new ArrayAdapter<String>(this,R.layout.element_menu, R.id.list_content, opciones));
-        else
-            drawer.setAdapter(new ArrayAdapter<String>(this, R.layout.element_menu, R.id.list_content, optionsNotSesion));
-        drawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        if(preferences.isOnline()) {
+            //Nueva lista de drawer items
+            ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
+            items.add(new DrawerItem(opciones[0],R.drawable.localidades));
+            items.add(new DrawerItem(opciones[1], R.drawable.busqueda));
+            items.add(new DrawerItem(opciones[2], R.drawable.mis_datos));
+            items.add(new DrawerItem(opciones[3], R.drawable.mis_datos));
+            items.add(new DrawerItem(opciones[4],R.drawable.reservas));
+            items.add(new DrawerItem(opciones[5],R.drawable.compras));
+            items.add(new DrawerItem(opciones[6],R.drawable.cerrar_sesion));
+
+            drawer.setAdapter(new DrawerListAdapter(this, items));
+        }else {
+            //Nueva lista de drawer items
+            ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
+            items.add(new DrawerItem(optionsNotSesion[0],R.drawable.localidades));
+            items.add(new DrawerItem(optionsNotSesion[1], R.drawable.busqueda));
+
+            drawer.setAdapter(new DrawerListAdapter(this, items));        }drawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 if(preferences.isOnline()) { //si el usuario tiene una sesion
@@ -759,8 +775,11 @@ public class SearchScheludes extends Activity  {
 
         @Override
         protected void onPostExecute(ArrayList<Map<String,Object>> result) {
-            if (result==null || result.isEmpty())
-                Toast.makeText(getBaseContext(), "No se han encontrado reservas ", Toast.LENGTH_SHORT).show();
+            if (result==null || result.isEmpty()){
+                Intent i = new Intent(context, Dialog.class);
+                i.putExtra("message","No se han encontrado reservas ");
+                startActivity(i);
+            }
                 //this method will be running on UI thread
             else{
                 Intent i= new Intent(context, MyReserves.class);
@@ -805,8 +824,11 @@ public class SearchScheludes extends Activity  {
 
         @Override
         protected void onPostExecute(ArrayList<Map<String,Object>> result) {
-            if (result==null || result.isEmpty())
-                Toast.makeText(getBaseContext(), "No se han encontrado compras ", Toast.LENGTH_SHORT).show();
+            if (result==null || result.isEmpty()) {
+                Intent i = new Intent(context, Dialog.class);
+                i.putExtra("message","No se han encontrado compras ");
+                startActivity(i);
+            }
                 //this method will be running on UI thread
             else{
                 Intent i= new Intent(context, MyPurchases.class);

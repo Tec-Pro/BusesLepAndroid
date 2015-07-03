@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp">
 
         <LinearLayout
@@ -21,22 +21,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Destino:"
-                android:id="@+id/textView21"
+                android:text="Rio cuarto-Cordoba"
+                android:id="@+id/txt_destiny_go"
+                android:layout_weight="1"
+                android:paddingLeft="5dp"
                 android:textSize="15dp"
+                android:textStyle="normal"
+                android:textColor="#ff000000"
                 android:gravity="center_vertical" />
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Rio cuarto-Cordoba"
-                android:id="@+id/txt_destiny"
-                android:layout_weight="1"
-                android:paddingLeft="5dp"
-                android:textSize="20dp"
-                android:textStyle="normal|bold"
-                android:textColor="#ff000000"
-                android:gravity="center_vertical" />
+                android:layout_height="wrap_content"
+                android:text="IDA"
+                android:id="@+id/textView32"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -58,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="06/07/2015"
-                android:id="@+id/txt_date"
+                android:id="@+id/txt_date_go"
                 android:layout_weight="1"
                 android:paddingLeft="5dp"
                 android:textSize="20dp"
@@ -70,13 +69,90 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="16:30"
-                android:id="@+id/txt_hour"
+                android:id="@+id/txt_hour_go"
                 android:layout_weight="1"
                 android:paddingLeft="5dp"
                 android:textSize="20dp"
                 android:textStyle="normal|bold"
                 android:textColor="#ff3fa346"
                 android:gravity="center_vertical" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/layout_ret"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Rio cuarto-Cordoba"
+                    android:id="@+id/txt_destiny_ret"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dp"
+                    android:textSize="15dp"
+                    android:textStyle="normal"
+                    android:textColor="#ff000000"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="VUELTA"
+                    android:id="@+id/textView33"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:weightSum="2" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Salida:"
+                    android:id="@+id/textView30"
+                    android:textSize="15dp"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="06/07/2015"
+                    android:id="@+id/txt_date_ret"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dp"
+                    android:textSize="20dp"
+                    android:textStyle="normal|bold"
+                    android:textColor="#ff3fa346"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="16:30"
+                    android:id="@+id/txt_hour_ret"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dp"
+                    android:textSize="20dp"
+                    android:textStyle="normal|bold"
+                    android:textColor="#ff3fa346"
+                    android:gravity="center_vertical" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -101,8 +177,8 @@
                 android:id="@+id/txt_cant"
                 android:layout_weight="1"
                 android:paddingLeft="5dp"
-                android:textSize="20dp"
-                android:textStyle="normal|bold"
+                android:textSize="15dp"
+                android:textStyle="normal"
                 android:textColor="#ff000000"
                 android:gravity="center_vertical" />
         </LinearLayout>

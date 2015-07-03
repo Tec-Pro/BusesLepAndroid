@@ -49,10 +49,13 @@ public class MyReserves extends Activity implements AdapterView.OnItemClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-       /* Intent intent = new Intent();
-        intent.putExtra("number", (String)tickets.getItemAtPosition(position));
-        setResult(RESULT_OK, intent);
-        finish();*/
+        Intent intent = new Intent(this,DialogReserve.class);
+        System.out.println("click" + adaptador.getItem(position));
+        ArrayList<Map<String, Object>> aux= new ArrayList<>();
+        aux.add((Map<String, Object>) adaptador.getItem(position));
+        intent.putExtra("reserve", aux);
+        startActivity(intent);
+        finish();
     }
 
 

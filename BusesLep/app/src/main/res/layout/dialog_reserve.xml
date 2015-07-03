@@ -7,15 +7,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Realizar compra"
-        android:id="@+id/btn_search"
+        android:id="@+id/btn_buy"
         android:layout_gravity="center_horizontal"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:background="@drawable/border"
         android:longClickable="true"
-        android:layout_marginTop="15dp"
         android:onClick="clickBuyReserve"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="#ff373435"
+        android:layout_marginTop="10dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cancelar Compra"
+        android:id="@+id/btn_cancel"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/border"
+        android:longClickable="true"
+        android:onClick="clickBuyReserve"
+        android:layout_marginBottom="10dp"
         android:textColor="#ff373435" />
 
 </LinearLayout>

@@ -46,6 +46,9 @@ public class WebServices  {
     private static String EstadoButacasPlantaHorario = "EstadoButacasPlantaHorario";
     private static String SeleccionarButaca = "SeleccionarButaca";
 
+    private static String PasarReservasaPrepago = "PasarReservasaPrepago";
+
+
     private static String VALIDATION_URI = "http://webservices.buseslep.com.ar:8080/WebServices/WebServiceLep.dll/soap/ILepWebService";//tiene que ser la uri que muestra el xml, por donde bindea
     private static SoapSerializationEnvelope envelope = null;
     private static SoapObject request = null;
@@ -215,6 +218,7 @@ public class WebServices  {
         request.addProperty("passWS","Lep1234");
         request.addProperty("ID_LocalidadOrigen", idOrigin);
         request.addProperty("ID_LocalidadDestino", idDestiny);
+        request.addProperty("id_Plataforma", 1);
         envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
         envelope.enc = SoapSerializationEnvelope.ENC2003;
         envelope.setOutputSoapObject(request);
@@ -276,7 +280,6 @@ public class WebServices  {
                 }
             }
             result= String.valueOf(envelope.getResponse());
-            System.out.println("ssssss "+result+" daaaaaaaaaaaaaaaaa");
             JSONArray json= new JSONObject(result).getJSONArray("Data");
             int i=0;
             while(i<json.length()){
@@ -326,7 +329,6 @@ public class WebServices  {
                 }
             }
             result= String.valueOf(envelope.getResponse());
-            System.out.println("ssssss "+result+" daaaaaaaaaaaaaaaaa");
             JSONArray json= new JSONObject(result).getJSONArray("Data");
             int i=0;
             while(i<json.length()){
@@ -375,7 +377,6 @@ public class WebServices  {
                 }
             }
             result= String.valueOf(envelope.getResponse());
-            System.out.println("ssssss "+result+" daaaaaaaaaaaaaaaaa");
             if (result.equals("-1")){
                 HashMap<String,Object> map= new HashMap<>();
                 map.put("ret","-1");
@@ -423,7 +424,6 @@ public class WebServices  {
                 }
             }
             result= String.valueOf(envelope.getResponse());
-            System.out.println("ssssss "+result+" daaaaaaaaaaaaaaaaa");
             if (result.equals("-1")){
                 HashMap<String,Object> map= new HashMap<>();
                 map.put("ret","-1");
@@ -677,7 +677,6 @@ public class WebServices  {
                 }
             }
             result= (String)envelope.getResponse();
-            System.out.println(result);
             JSONArray json= new JSONObject(result).getJSONArray("Data");
             int i=0;
             while(i<json.length()){
@@ -685,12 +684,34 @@ public class WebServices  {
                 JSONObject jsonObject= json.getJSONObject(i);
                 //System.out.println(jsonObject);
                 map.put("lugar", jsonObject.get("Destino"));
-                map.put("fecha_reservado",jsonObject.getString("FechaHoraReserva").split(" ")[0].replace('-', '/'));
-                map.put("hora_reservado",jsonObject.getString("FechaHoraReserva").split(" ")[1].substring(0, 5));
-                map.put("fecha_sale",jsonObject.getString("Salida").split(" ")[0].replace('-', '/'));
+                map.put("FechaHoraReserva",jsonObject.getString("FechaHoraReserva"));
+                String fecha_sale=jsonObject.getString("Salida").split(" ")[0].replace('-', '/');
+                String[] auxString= fecha_sale.split("/");
+                fecha_sale= auxString[2]+"/"+auxString[1]+"/"+auxString[0];
+                map.put("fecha_sale",fecha_sale);
                 map.put("hora_sale", jsonObject.getString("Salida").split(" ")[1].substring(0, 5));
                 map.put("cantidad",jsonObject.getString("cantidad"));
-                ret.add(map);
+                map.put("Id_Empresa",jsonObject.getString("Id_Empresa"));
+                map.put("Id_Destino",jsonObject.getString("Id_Destino"));
+                map.put("IdLocalidadHasta",jsonObject.getString("IdLocalidadHasta"));
+                map.put("IdLocalidadDesde",jsonObject.getString("IdLocalidadDesde"));
+                map.put("Cod_Horario", jsonObject.getString("Cod_Horario"));
+                Map<String, Object> mapAux= new HashMap<>();
+                if(ret.size()>0){
+                    String hora1=(String)((Map)ret.get(ret.size()-1).get("ida")).get("FechaHoraReserva");
+                    String hora2= jsonObject.getString("FechaHoraReserva");
+                    if(hora1.equals(hora2)) {
+                        Map<String, Object> aux = (Map) ret.get(ret.size() - 1);
+                        ret.remove(ret.size() - 1);
+                        mapAux.put("ida", map);
+                        mapAux.put("vuelta",aux.get("ida"));
+                    }else
+                        mapAux.put("ida",map);
+                }
+                else
+                    mapAux.put("ida",map);
+
+                ret.add(mapAux);
                 i++;
             }
         }
@@ -800,4 +821,43 @@ public class WebServices  {
         }
         return ret;
     }
+
+
+    public static String callPasarReservasaPrepago(String dni, String FechaHoraReserva, Context context){
+        String result = "";
+
+        // ArrayList<Map<String,Object>> resultCode = new ArrayList<>();
+        request = new SoapObject(NAMESPACE, PasarReservasaPrepago); //le digo que metodo voy a llamar
+        request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
+        request.addProperty("passWS","Lep1234");
+        request.addProperty("Dni", dni);
+        request.addProperty("FechaHoraReserva", FechaHoraReserva);
+        request.addProperty("Id_Plataforma", 1);
+
+        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
+        envelope.enc = SoapSerializationEnvelope.ENC2003;
+        envelope.setOutputSoapObject(request);
+        httpTransportSE = new HttpTransportSE(VALIDATION_URI); //paso la uri donde transportaré
+        try {
+            try{
+                httpTransportSE.call(NAMESPACE + "#" + PasarReservasaPrepago, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+            }catch (Exception e){
+                try {
+                    httpTransportSE.call(NAMESPACE + "#" + PasarReservasaPrepago, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                }catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex){
+                    String message= "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
+                    Intent intentDialog = new Intent(context, Dialog.class);
+                    intentDialog.putExtra("message",message);
+                    intentDialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intentDialog);
+                }
+            }
+            result= String.valueOf(envelope.getResponse());;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
 }
