@@ -171,9 +171,13 @@ public class SeatPicker extends Activity {
             Log.i("DETE","es ida " +String.valueOf(isGo));
             Log.i("DETE","es seleccion " + String.valueOf(isSelection));*/
             //Log.i("RES",resultCode.toString());
-
+            ArrayList<String>ret =new ArrayList<String>();
+            ret.add(resultCode);
             if(resultCode != null && ((isSelection == 1 && resultCode.equals("1")) || (isSelection==0 && resultCode.equals("0"))))
-                return new Pair("res",  new ArrayList<String>().add(resultCode));
+                return new Pair("res", ret);
+            else
+            if(resultCode.equals("-1") || resultCode.equals("-2"))
+                return new Pair("res", ret);
             else
                 return null;
         }
@@ -181,27 +185,36 @@ public class SeatPicker extends Activity {
         @Override
         protected void onPostExecute(Pair<String,List<String>> result) {
             if (result == null) {
-
+                imageView.setImageResource(R.drawable.occupied_seat);
+                imgAdapter.seatsArr[p][0] = ImageAdapter.Occupied;
             }
             else{
-                if(imgAdapter.seatsArr[p][0] != ImageAdapter.None &&  imgAdapter.seatsArr[p][0] != ImageAdapter.Driver) {
-                    if (imgAdapter.seatsArr[p][0] == ImageAdapter.Free && seatsToSelect > 0) {
-                        imageView.setImageResource(R.drawable.selected_seat);
-                        imgAdapter.seatsArr[p][0] = ImageAdapter.Selected;
-                        isSelection = 1;
-                        butacas.add(seatNum);
-                        seatsToSelect--;
+                if(!result.second.get(0).equals("-1") && !result.second.get(0).equals("-2")) {
+                    if (imgAdapter.seatsArr[p][0] != ImageAdapter.None && imgAdapter.seatsArr[p][0] != ImageAdapter.Driver) {
+                        if (imgAdapter.seatsArr[p][0] == ImageAdapter.Free && seatsToSelect > 0) {
+                            imageView.setImageResource(R.drawable.selected_seat);
+                            imgAdapter.seatsArr[p][0] = ImageAdapter.Selected;
+                            isSelection = 1;
+                            butacas.add(seatNum);
+                            seatsToSelect--;
 
-                    } else {
-                        if (imgAdapter.seatsArr[p][0] == ImageAdapter.Selected) {
-                            imageView.setImageResource(R.drawable.free_seat);
-                            imgAdapter.seatsArr[p][0] = ImageAdapter.Free;
-                            isSelection = 0;
-                            butacas.remove(seatNum);
-                            seatsToSelect++;
+                        } else {
+                            if (imgAdapter.seatsArr[p][0] == ImageAdapter.Selected) {
+                                imageView.setImageResource(R.drawable.free_seat);
+                                imgAdapter.seatsArr[p][0] = ImageAdapter.Free;
+                                isSelection = 0;
+                                butacas.remove(seatNum);
+                                seatsToSelect++;
 
+                            }
                         }
                     }
+                }else
+                {
+                    if(result.second.get(0).equals("-1"))
+                        Toast.makeText(getApplicationContext(),"Butaca ocupada",Toast.LENGTH_SHORT);
+                    else
+                        Toast.makeText(getApplicationContext(),"Ya eligió todas sus butacas",Toast.LENGTH_SHORT).show();
                 }
             }
             pdLoading.dismiss();

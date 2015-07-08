@@ -42,10 +42,9 @@ public class WebServices  {
     private static String AgregarReserva = "AgregarReserva";
     private static String ListarMisReserva = "ListarMisReserva";
     private static String ListarMisCompras = "ListarMisCompras";
-
     private static String EstadoButacasPlantaHorario = "EstadoButacasPlantaHorario";
     private static String SeleccionarButaca = "SeleccionarButaca";
-
+    private static String AnularReservas = "AnularReservas";
     private static String PasarReservasaPrepago = "PasarReservasaPrepago";
 
 
@@ -698,18 +697,22 @@ public class WebServices  {
                 map.put("Cod_Horario", jsonObject.getString("Cod_Horario"));
                 Map<String, Object> mapAux= new HashMap<>();
                 if(ret.size()>0){
-                    String hora1=(String)((Map)ret.get(ret.size()-1).get("ida")).get("FechaHoraReserva");
+                    String hora1;
+                    if((ret.get(ret.size()-1).containsKey("Ida")))
+                        hora1=(String)((Map)ret.get(ret.size()-1).get("Ida")).get("FechaHoraReserva");
+                    else
+                        hora1=(String)((Map)ret.get(ret.size()-1).get("Vuelta")).get("FechaHoraReserva");
                     String hora2= jsonObject.getString("FechaHoraReserva");
                     if(hora1.equals(hora2)) {
-                        Map<String, Object> aux = (Map) ret.get(ret.size() - 1);
+                        mapAux = (Map) ret.get(ret.size() - 1);
                         ret.remove(ret.size() - 1);
-                        mapAux.put("ida", map);
-                        mapAux.put("vuelta",aux.get("ida"));
+                        mapAux.put(jsonObject.getString("Sentido"), map);
                     }else
-                        mapAux.put("ida",map);
+                        mapAux.put(jsonObject.getString("Sentido"),map);
                 }
-                else
-                    mapAux.put("ida",map);
+                else {
+                    mapAux.put(jsonObject.getString("Sentido"), map);
+                }
 
                 ret.add(mapAux);
                 i++;
@@ -718,6 +721,7 @@ public class WebServices  {
         catch(Exception e){
             e.printStackTrace();
         }
+        System.out.println(ret);
         return ret;
     }
 
@@ -823,10 +827,11 @@ public class WebServices  {
     }
 
 
-    public static String callPasarReservasaPrepago(String dni, String FechaHoraReserva, Context context){
+    public static  Map<String, Object> callPasarReservasaPrepago(String dni, String FechaHoraReserva, Context context){
         String result = "";
-
-        // ArrayList<Map<String,Object>> resultCode = new ArrayList<>();
+        Integer idSell=-1;
+        Float importe=new Float(0);
+        Map<String, Object> map = new HashMap<>();
         request = new SoapObject(NAMESPACE, PasarReservasaPrepago); //le digo que metodo voy a llamar
         request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
         request.addProperty("passWS","Lep1234");
@@ -852,12 +857,72 @@ public class WebServices  {
                     context.startActivity(intentDialog);
                 }
             }
-            result= String.valueOf(envelope.getResponse());;
+            result= String.valueOf(envelope.getResponse());
+            JSONArray json= new JSONObject(result).getJSONArray("Data");
+            if(json.length()>0) {
+                JSONObject jsonObject = json.getJSONObject(0);
+                map.put("Id_Venta", jsonObject.getInt("Id_Venta"));
+                map.put("Id_Empresa", jsonObject.getInt("Id_Empresa"));
+                map.put("ID_Localidad_Destino", jsonObject.getInt("ID_Localidad_Destino"));
+                map.put("Id_Destino", jsonObject.getInt("Id_Destino"));
+                map.put("Importe_ida", jsonObject.getString("Importe"));
+                importe=Float.valueOf(jsonObject.getString("Importe"));
+                map.put("cantidad", jsonObject.getInt("cantidad"));
+                map.put("ID_Localidad_Origen", jsonObject.getInt("ID_Localidad_Origen"));
+                map.put("Cod_Horario", jsonObject.getInt("Cod_Horario"));
+            }
+            if(json.length()==2){
+                Map<String, Object> mapVuelta = new HashMap<>();
+                JSONObject jsonObject = json.getJSONObject(1);
+                mapVuelta.put("Id_Empresa",jsonObject.getInt("Id_Empresa"));
+                mapVuelta.put("ID_Localidad_Destino",jsonObject.getInt("ID_Localidad_Destino"));
+                mapVuelta.put("Id_Destino",jsonObject.getInt("Id_Destino"));
+                importe=Float.valueOf(jsonObject.getString("Importe"));
+                mapVuelta.put("Importe_vuelta", Float.valueOf(jsonObject.getString("Importe"))+importe);
+                mapVuelta.put("ID_Localidad_Origen",jsonObject.getInt("ID_Localidad_Origen"));
+                mapVuelta.put("Cod_Horario",jsonObject.getInt("Cod_Horario"));
+                map.put("vuelta",map);
+
+            }
         }
         catch(Exception e){
             e.printStackTrace();
         }
-        return result;
+        return map;
     }
 
+
+    public static  String callAnularReservas(String dni, String FechaHoraReserva, Context context){
+        String result = "";
+        request = new SoapObject(NAMESPACE, AnularReservas); //le digo que metodo voy a llamar
+        request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
+        request.addProperty("passWS","Lep1234");
+        request.addProperty("Dni", dni);
+        request.addProperty("FechaHoraReserva", FechaHoraReserva);
+        request.addProperty("Id_Plataforma", 1);
+
+        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
+        envelope.enc = SoapSerializationEnvelope.ENC2003;
+        envelope.setOutputSoapObject(request);
+        httpTransportSE = new HttpTransportSE(VALIDATION_URI); //paso la uri donde transportaré
+        try {
+            try {
+                httpTransportSE.call(NAMESPACE + "#" + AnularReservas, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+            } catch (Exception e) {
+                try {
+                    httpTransportSE.call(NAMESPACE + "#" + AnularReservas, envelope); //llamo al metodo, aca se puede cambiar soap_action por la concatenacion para hacerlo mas general
+                } catch (java.net.UnknownHostException | java.net.SocketTimeoutException ex) {
+                    String message = "Ud. no posee conexión de internet; \n acceda a través de una red wi-fi o de su prestadora telefónica";
+                    Intent intentDialog = new Intent(context, Dialog.class);
+                    intentDialog.putExtra("message", message);
+                    intentDialog.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intentDialog);
+                }
+            }
+            result = String.valueOf(envelope.getResponse());
+        }catch(Exception e){
+                e.printStackTrace();
+            }
+        return result;
+    }
 }

@@ -34,26 +34,23 @@ public class DialogReserve extends Activity {
     private String FechaHoraReservaIda;
     private String fecha_saleIda;
     private String hora_saleIda;
-    private String cantidadIda;
+    private Integer cantidad;
     private int Id_EmpresaIda;
-    private String Id_DestinoIda;
-    private String IdLocalidadHastaIda;
-    private String IdLocalidadDesdeIda;
+    private Integer Id_DestinoIda;
+    private Integer IdLocalidadHastaIda;
+    private Integer IdLocalidadDesdeIda;
     private int Cod_HorarioIda;
 
-    private String lugarVuelta="";
-    private String FechaHoraReservaVuelta="";
+
     private String fecha_saleVuelta="";
     private String hora_saleVuelta="";
-    private String cantidadVuelta="";
     private String Id_EmpresaVuelta="";
     private String Id_DestinoVuelta="";
-    private String IdLocalidadHastaVuelta="";
-    private String IdLocalidadDesdeVuelta="";
     private String Cod_HorarioVuelta="-1";
     private static String priceGo;
     private static String priceGoRet;
     private static AsyncCallerReserve asyncCallerReserve;
+    private static AsyncCallerCancelReserve asyncCallerCancelReserve;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,30 +74,20 @@ public class DialogReserve extends Activity {
         FechaHoraReservaIda= (String)((Map)reserve.get("ida")).get("FechaHoraReserva");
         fecha_saleIda= (String)((Map)reserve.get("ida")).get("fecha_sale");
         hora_saleIda= (String)((Map)reserve.get("ida")).get("hora_sale");
-        cantidadIda= (String)((Map)reserve.get("ida")).get("cantidad");
-        Id_EmpresaIda= Integer.valueOf((String)((Map)reserve.get("ida")).get("Id_Empresa"));
-        Id_DestinoIda= (String)((Map)reserve.get("ida")).get("Id_Destino");
-        IdLocalidadHastaIda= (String)((Map)reserve.get("ida")).get("IdLocalidadHasta");
-        IdLocalidadDesdeIda= (String)((Map)reserve.get("ida")).get("IdLocalidadDesde");
-        Cod_HorarioIda= Integer.valueOf((String)((Map)reserve.get("ida")).get("Cod_Horario"));
+
         if(reserve.containsKey("vuelta")) {
-            lugarVuelta = (String) ((Map) reserve.get("vuelta")).get("lugar");
-            FechaHoraReservaVuelta = (String) ((Map) reserve.get("vuelta")).get("FechaHoraReserva");
             fecha_saleVuelta = (String) ((Map) reserve.get("vuelta")).get("fecha_sale");
             hora_saleVuelta = (String) ((Map) reserve.get("vuelta")).get("hora_sale");
-            cantidadVuelta = (String) ((Map) reserve.get("vuelta")).get("cantidad");
-            Id_EmpresaVuelta = (String) ((Map) reserve.get("vuelta")).get("Id_Empresa");
-            Id_DestinoVuelta = (String) ((Map) reserve.get("vuelta")).get("Id_Destino");
-            IdLocalidadHastaVuelta = (String) ((Map) reserve.get("vuelta")).get("IdLocalidadHasta");
-            IdLocalidadDesdeVuelta = (String) ((Map) reserve.get("vuelta")).get("IdLocalidadDesde");
-            Cod_HorarioVuelta = (String) ((Map) reserve.get("vuelta")).get("Cod_Horario");
         }
 
     }
 
     public void clickBuyReserve(View view){
         reserveAndLoadSeatPicker();
+    }
 
+    public void clickCancelReserve(View view){
+        cancelReserve();
     }
 
     private void reserveAndLoadSeatPicker(){
@@ -108,25 +95,30 @@ public class DialogReserve extends Activity {
         asyncCallerReserve.execute();
     }
 
+    private void cancelReserve(){
+        asyncCallerCancelReserve= new AsyncCallerCancelReserve(this);
+        asyncCallerCancelReserve.execute();
+    }
+
         private void loadSeatPicker(boolean isGo){
         Intent i =  new Intent(this, SeatPicker.class);
         int resultCode = 4;
-        i.putExtra("cant_tickets", cantidadIda);
+        i.putExtra("cant_tickets", cantidad.toString());
         if(isGo){
             i.putExtra("isGo",1);
             i.putExtra("IDEmpresaIda",Integer.valueOf(Id_EmpresaIda));
             i.putExtra("CodHorarioIda",Integer.valueOf(Cod_HorarioIda ));
             i.putExtra("IDDestinoIda",Integer.valueOf(IdLocalidadDesdeIda));
             i.putExtra("IDDestinoVuelta",Integer.valueOf(IdLocalidadHastaIda));
-            i.putExtra("id_destino_ida", Id_DestinoIda);
+            i.putExtra("id_destino_ida", Id_DestinoIda.toString());
             i.putExtra("idVenta", idSell);
         }
         else{
             i.putExtra("isGo",0);
             i.putExtra("IDEmpresaIda",Integer.valueOf(Id_EmpresaVuelta));
             i.putExtra("CodHorarioIda",Integer.valueOf(Cod_HorarioVuelta) );
-            i.putExtra("IDDestinoIda",Integer.valueOf(IdLocalidadDesdeVuelta));
-            i.putExtra("IDDestinoVuelta",Integer.valueOf(IdLocalidadHastaVuelta));
+            i.putExtra("IDDestinoIda",Integer.valueOf(IdLocalidadHastaIda));
+            i.putExtra("IDDestinoVuelta",Integer.valueOf(IdLocalidadDesdeIda));
             i.putExtra("id_destino_ida", Id_DestinoVuelta);
             i.putExtra("idVenta", idSell);
             resultCode = 5;
@@ -156,20 +148,25 @@ public class DialogReserve extends Activity {
         @Override
         protected String doInBackground(String... params) {
             String dni = preferences.getDni();
-            String resultCode;
-            resultCode = WebServices.callPasarReservasaPrepago(dni,FechaHoraReservaIda,getApplicationContext());
-            Map<String,String> priceMap= WebServices.getPrice(Integer.valueOf(IdLocalidadDesdeIda), Integer.valueOf(IdLocalidadHastaIda), getApplicationContext());
-            priceGo=  priceMap.get("priceGo");
-            priceGoRet=  priceMap.get("priceGoRet");
-            try{
-                idSell = Integer.valueOf(resultCode);
-            }
-            catch (NumberFormatException e){
-                idSell = -1;
+            Map<String, Object> map = WebServices.callPasarReservasaPrepago(dni,FechaHoraReservaIda,getApplicationContext());
+            idSell= (Integer)map.get("Id_Venta");
+            cantidad=(Integer)map.get("cantidad");
+            Id_EmpresaIda= (Integer)map.get("Id_Empresa");
+            Id_DestinoIda=(Integer)map.get("Id_Destino");
+            IdLocalidadHastaIda=(Integer)map.get("ID_Localidad_Destino");
+            IdLocalidadDesdeIda=(Integer) map.get("ID_Localidad_Origen");
+            Cod_HorarioIda=(Integer)map.get("Cod_Horario");
+            priceGo=(String)map.get("importe");
+            if(map.containsKey("vuelta")){
+                Map<String, Object> mapVuelta= (Map)map.get("vuelta");
+                Id_EmpresaVuelta= mapVuelta.get("Id_Empresa").toString();
+                Id_DestinoVuelta=mapVuelta.get("Id_Destino").toString();
+                Cod_HorarioVuelta=mapVuelta.get("Cod_Horario").toString();
+                priceGoRet=(String)mapVuelta.get("importe");
             }
             if(idSell<=0)
                 return null;
-            return resultCode ;
+            return String.valueOf(idSell) ;
         }
 
         @Override
@@ -219,7 +216,7 @@ public class DialogReserve extends Activity {
         i.putExtra("arrival_hour1",hora_saleIda);
         i.putExtra("arrival_date2",fecha_saleVuelta);
         i.putExtra("arrival_hour2",hora_saleVuelta);
-        i.putExtra("cant_tickets",cantidadIda);
+        i.putExtra("cant_tickets",cantidad.toString());
         i.putExtra("roundtrip",Integer.valueOf(Cod_HorarioVuelta));
         i.putExtra("IDEmpresaIda",Id_EmpresaIda);
         i.putExtra("IDEmpresaVuelta",Id_EmpresaVuelta);
@@ -235,5 +232,50 @@ public class DialogReserve extends Activity {
         i.putExtra("butacasIda",butacasIda);
         i.putExtra("butacasVuelta", butacasVuelta);
         startActivity(i);
+    }
+
+
+
+    private class AsyncCallerCancelReserve extends AsyncTask<String, Void, String > {
+        ProgressDialog pdLoading = new ProgressDialog(DialogReserve.this);
+        Context context;
+
+        private AsyncCallerCancelReserve(Context context){
+            this.context = context.getApplicationContext();
+            pdLoading.setCancelable(true);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //this method will be running on UI thread
+            pdLoading.setTitle("Por favor, espere.");
+            pdLoading.setMessage("Cancelando reserva");
+            pdLoading.show();
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            String dni = preferences.getDni();
+            String result = WebServices.callAnularReservas(dni, FechaHoraReservaIda, getApplicationContext());
+            return result ;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result== null || result!= "1") {
+                Intent i= new Intent(DialogReserve.this, Dialog.class);
+                i.putExtra("message", "No se ha podido anular la reserva");
+                startActivity(i);
+                //this method will be running on UI thread
+            }
+            else{
+                Intent i= new Intent(DialogReserve.this, Dialog.class);
+                i.putExtra("message", "Se ha anulado la reserva correctamente");
+                startActivity(i);
+                finish();
+            }
+            pdLoading.dismiss();
+        }
     }
 }

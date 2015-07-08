@@ -6,29 +6,27 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Realizar compra"
         android:id="@+id/btn_buy"
         android:layout_gravity="center_horizontal"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:background="@drawable/border"
-        android:longClickable="true"
         android:onClick="clickBuyReserve"
         android:layout_marginBottom="10dp"
         android:textColor="#ff373435"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:text="Realizar compra" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cancelar Compra"
+        android:text="Cancelar reserva"
         android:id="@+id/btn_cancel"
         android:layout_gravity="center_horizontal"
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:background="@drawable/border"
-        android:longClickable="true"
-        android:onClick="clickBuyReserve"
+        android:onClick="clickCancelReserve"
         android:layout_marginBottom="10dp"
         android:textColor="#ff373435" />
 

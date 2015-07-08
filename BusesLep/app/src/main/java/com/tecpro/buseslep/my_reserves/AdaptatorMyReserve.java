@@ -30,7 +30,7 @@ public class AdaptatorMyReserve extends BaseAdapter {
 
 
     public View getView(int posicion, View vistaReciclada,ViewGroup padre) {
-        Map<String, Object> p = (Map<String, Object>)reserves.get(posicion).get("ida");
+        Map<String, Object> p = (Map<String, Object>)reserves.get(posicion).get("Ida");
 
         if (vistaReciclada == null) {
             vistaReciclada = inflador.inflate(R.layout.reserve_element, null);
@@ -51,8 +51,8 @@ public class AdaptatorMyReserve extends BaseAdapter {
         dateGo.setText(dateString);
         cant.setText((String) p.get("cantidad"));
 
-        if(reserves.get(posicion).containsKey("vuelta")){
-            Map<String, Object> ret = (Map<String, Object>)reserves.get(posicion).get("vuelta");
+        if(reserves.get(posicion).containsKey("Vuelta")){
+            Map<String, Object> ret = (Map<String, Object>)reserves.get(posicion).get("Vuelta");
             destinyRet = (TextView) vistaReciclada.findViewById(R.id.txt_destiny_ret);
             hourRet = (TextView) vistaReciclada.findViewById(R.id.txt_hour_ret);
             dateRet = (TextView) vistaReciclada.findViewById(R.id.txt_date_ret);
