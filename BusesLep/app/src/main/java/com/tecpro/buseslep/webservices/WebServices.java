@@ -328,14 +328,16 @@ public class WebServices  {
                 }
             }
             result= String.valueOf(envelope.getResponse());
-            JSONArray json= new JSONObject(result).getJSONArray("Data");
-            int i=0;
-            while(i<json.length()){
-                JSONObject jsonObject= json.getJSONObject(i);
+            if (result.equals("-1")){
                 HashMap<String,Object> map= new HashMap<>();
-                //NO SE SABE QUE DEVUELVE
+                map.put("ret","-1");
                 cities.add(map);
-                i++;
+            } else {
+                if (result.equals("1")) {
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("ret", "1");
+                    cities.add(map);
+                }
             }
         }
         catch(Exception e){
@@ -452,13 +454,6 @@ public class WebServices  {
         request.addProperty("Apellido", ape);
         request.addProperty("Email", email);
         request.addProperty("id_Plataforma", 1);
-        request.addProperty("FechaNac", null);
-        request.addProperty("Direccion", null);
-        request.addProperty("Barrio", null);
-        request.addProperty("Ciudad", null);
-        request.addProperty("Tel", null);
-        request.addProperty("Cel", null);
-        request.addProperty("Cuit", null);
         envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //no se toda esta configuracion cual esta bien y cual mal
         envelope.enc = SoapSerializationEnvelope.ENC2003;
         envelope.setOutputSoapObject(request);
@@ -484,11 +479,11 @@ public class WebServices  {
                 map.put("ret","-1");
                 cities.add(map);
             } else {
-                if (result.equals("1")) {
+
                     HashMap<String, Object> map = new HashMap<>();
                     map.put("ret", "1");
                     cities.add(map);
-                }
+
             }
         }
         catch(Exception e){

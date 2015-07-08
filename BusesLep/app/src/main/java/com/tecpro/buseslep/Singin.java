@@ -259,6 +259,10 @@ public class Singin extends Activity {
         protected void onPostExecute(Pair<String,ArrayList<Map<String,Object>>> result) {
             SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
             preferences.put("login", "true");
+            preferences.put("apellido", ape);
+            preferences.put("nombre", nombre);
+            preferences.put("email", email);
+            preferences.put("dni", String.valueOf(user));
             finish();
         }
     }

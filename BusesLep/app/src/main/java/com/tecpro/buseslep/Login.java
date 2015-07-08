@@ -204,7 +204,7 @@ public class Login extends Activity {
 
                 for (Map<String,Object> m: result.second){
                     if (m.containsKey("Apellido")){
-                        preferences.put("apellido", (String) m.get("Nombre"));
+                        preferences.put("nombre", (String) m.get("Nombre"));
                     }
                     if (m.containsKey("Nombre")){
                         preferences.put("apellido", (String) m.get("Apellido"));
