@@ -31,7 +31,6 @@ public class AdaptatorMyReserve extends BaseAdapter {
 
     public View getView(int posicion, View vistaReciclada,ViewGroup padre) {
         Map<String, Object> p = (Map<String, Object>)reserves.get(posicion).get("Ida");
-
         if (vistaReciclada == null) {
             vistaReciclada = inflador.inflate(R.layout.reserve_element, null);
         }

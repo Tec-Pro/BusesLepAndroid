@@ -95,7 +95,6 @@ public class PurchaseDetails extends Activity {
         butacasVuelta = butacasVuelta.replace("]","");
         seatNum1.setText(butacasIda);
         seatNum2.setText(butacasVuelta);
-        totalPrice = extras.getString("priceGoRet");
         if(roundtrip == -1) {  //si es ida
             findViewById(R.id.backtrip).setVisibility(View.GONE);
             totalPrice = extras.getString("priceGo");

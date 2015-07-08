@@ -70,14 +70,14 @@ public class DialogReserve extends Activity {
         reserve=((ArrayList<Map<String,Object>>)bundle.get("reserve")).get(0);
         preferences = new PreferencesUsing(this);
         preferences.init();
-        lugarIda= (String)((Map)reserve.get("ida")).get("lugar");
-        FechaHoraReservaIda= (String)((Map)reserve.get("ida")).get("FechaHoraReserva");
-        fecha_saleIda= (String)((Map)reserve.get("ida")).get("fecha_sale");
-        hora_saleIda= (String)((Map)reserve.get("ida")).get("hora_sale");
+        lugarIda= (String)((Map)reserve.get("Ida")).get("lugar");
+        FechaHoraReservaIda= (String)((Map)reserve.get("Ida")).get("FechaHoraReserva");
+        fecha_saleIda= (String)((Map)reserve.get("Ida")).get("fecha_sale");
+        hora_saleIda= (String)((Map)reserve.get("Ida")).get("hora_sale");
 
-        if(reserve.containsKey("vuelta")) {
-            fecha_saleVuelta = (String) ((Map) reserve.get("vuelta")).get("fecha_sale");
-            hora_saleVuelta = (String) ((Map) reserve.get("vuelta")).get("hora_sale");
+        if(reserve.containsKey("Vuelta")) {
+            fecha_saleVuelta = (String) ((Map) reserve.get("Vuelta")).get("fecha_sale");
+            hora_saleVuelta = (String) ((Map) reserve.get("Vuelta")).get("hora_sale");
         }
 
     }
@@ -150,19 +150,21 @@ public class DialogReserve extends Activity {
             String dni = preferences.getDni();
             Map<String, Object> map = WebServices.callPasarReservasaPrepago(dni,FechaHoraReservaIda,getApplicationContext());
             idSell= (Integer)map.get("Id_Venta");
+            String result=WebServices.callEliminarButacaSeleccionada(idSell,getApplicationContext());
+            System.out.println("eliminando "+result);
             cantidad=(Integer)map.get("cantidad");
             Id_EmpresaIda= (Integer)map.get("Id_Empresa");
             Id_DestinoIda=(Integer)map.get("Id_Destino");
             IdLocalidadHastaIda=(Integer)map.get("ID_Localidad_Destino");
             IdLocalidadDesdeIda=(Integer) map.get("ID_Localidad_Origen");
             Cod_HorarioIda=(Integer)map.get("Cod_Horario");
-            priceGo=(String)map.get("importe");
+            priceGo=((String)map.get("Importe_ida"));
             if(map.containsKey("vuelta")){
                 Map<String, Object> mapVuelta= (Map)map.get("vuelta");
                 Id_EmpresaVuelta= mapVuelta.get("Id_Empresa").toString();
                 Id_DestinoVuelta=mapVuelta.get("Id_Destino").toString();
                 Cod_HorarioVuelta=mapVuelta.get("Cod_Horario").toString();
-                priceGoRet=(String)mapVuelta.get("importe");
+                priceGoRet=((String)mapVuelta.get("Importe_vuelta"));
             }
             if(idSell<=0)
                 return null;
