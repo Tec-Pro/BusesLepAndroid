@@ -15,6 +15,7 @@ import com.tecpro.buseslep.Dialog;
 import com.tecpro.buseslep.PurchaseDetails;
 import com.tecpro.buseslep.R;
 import com.tecpro.buseslep.SeatPicker;
+import com.tecpro.buseslep.search_scheludes.SearchScheludes;
 import com.tecpro.buseslep.utils.PreferencesUsing;
 import com.tecpro.buseslep.webservices.WebServices;
 
@@ -265,17 +266,20 @@ public class DialogReserve extends Activity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (result== null || result!= "1") {
+            if (result== null || !result.equals("1")) {
                 Intent i= new Intent(DialogReserve.this, Dialog.class);
                 i.putExtra("message", "No se ha podido anular la reserva");
                 startActivity(i);
                 //this method will be running on UI thread
             }
             else{
+                Intent in= new Intent(DialogReserve.this,SearchScheludes.class);
+                finish();
+                startActivity(in);
                 Intent i= new Intent(DialogReserve.this, Dialog.class);
                 i.putExtra("message", "Se ha anulado la reserva correctamente");
                 startActivity(i);
-                finish();
+
             }
             pdLoading.dismiss();
         }

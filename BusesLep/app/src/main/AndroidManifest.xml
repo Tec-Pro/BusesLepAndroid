@@ -128,7 +128,10 @@
             android:name=".my_reserves.DialogReserve"
             android:label="@string/app_name"
             android:theme="@style/Base.Theme.AppCompat.Light.Dialog" />
-
+        <activity
+            android:name=".EndReserve"
+            android:label="@string/app_name"
+            android:theme="@style/Base.Theme.AppCompat.Light.Dialog" />
     </application>
 
 </manifest>

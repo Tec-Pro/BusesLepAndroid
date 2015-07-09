@@ -14,13 +14,13 @@ import com.tecpro.buseslep.search_scheludes.SearchScheludes;
 /**
  * Created by nico on 27/06/15.
  */
-public class EndPurchase extends Activity {
+public class EndReserve extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.end_purchase);
-        ActionBar actionBar = getActionBar();
+        setContentView(R.layout.end_reserve);
+ /*       ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowCustomEnabled(false);
         getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -30,9 +30,11 @@ public class EndPurchase extends Activity {
                         ActionBar.LayoutParams.MATCH_PARENT,
                         Gravity.CENTER
                 )
-        );
-        Bundle bundle= getIntent().getExtras();
-        ((TextView)findViewById(R.id.txtTiketCode) ).setText(bundle.getString("code"));
+        );*/
+        String email= getIntent().getExtras().getString("email","");
+        TextView txtView =((TextView) findViewById(R.id.txtEmail));
+        txtView.setText(email);
+        this.setFinishOnTouchOutside(false);
     }
 
     public void clickFinish(View v){
@@ -41,7 +43,6 @@ public class EndPurchase extends Activity {
         startActivity(i);
 
     }
-
     @Override
     public void onBackPressed() {
         Intent i= new Intent(this,SearchScheludes.class);
