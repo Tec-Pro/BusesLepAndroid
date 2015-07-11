@@ -383,11 +383,11 @@ public class WebServices  {
                 map.put("ret","-1");
                 cities.add(map);
             } else {
-                if (result.equals("1")) {
+
                     HashMap<String, Object> map = new HashMap<>();
                     map.put("ret", "1");
                     cities.add(map);
-                }
+
             }
         }
         catch(Exception e){
