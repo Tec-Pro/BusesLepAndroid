@@ -129,8 +129,8 @@ public class SearchScheludes extends Activity  {
     private DrawerLayout drawerLayout;
     private ListView drawer;
     private ActionBarDrawerToggle toggle;
-    private static final String[] opciones = {"Recargar ciudades", "Últimas Búsquedas","Editar Perfil","Cambiar Contraseña" ,"Mis Reservas","Mis Compras", "Cerrar Sesion"};
-    private static final String[] optionsNotSesion= {"Recargar ciudades", "Últimas Búsquedas"};
+    private static final String[] opciones = {"Recargar ciudades", "Últimas Búsquedas","Editar Perfil","Cambiar Contraseña" ,"Mis Reservas","Mis Compras", "Cerrar Sesion","Compartir App"};
+    private static final String[] optionsNotSesion= {"Recargar ciudades", "Últimas Búsquedas","Compartir App"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +190,7 @@ public class SearchScheludes extends Activity  {
             items.add(new DrawerItem(opciones[4],R.drawable.reservas));
             items.add(new DrawerItem(opciones[5],R.drawable.compras));
             items.add(new DrawerItem(opciones[6],R.drawable.cerrar_sesion));
+            items.add(new DrawerItem(opciones[7],R.drawable.compartir_app));
 
             drawer.setAdapter(new DrawerListAdapter(this, items));
         }else {
@@ -197,8 +198,12 @@ public class SearchScheludes extends Activity  {
             ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
             items.add(new DrawerItem(optionsNotSesion[0],R.drawable.localidades));
             items.add(new DrawerItem(optionsNotSesion[1], R.drawable.busqueda));
+            items.add(new DrawerItem(optionsNotSesion[2],R.drawable.compartir_app));
 
-            drawer.setAdapter(new DrawerListAdapter(this, items));        }drawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            drawer.setAdapter(new DrawerListAdapter(this, items));
+        }
+        drawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                 if(preferences.isOnline()) { //si el usuario tiene una sesion
@@ -230,6 +235,13 @@ public class SearchScheludes extends Activity  {
                             findViewById(R.id.btnLogin).setVisibility(View.VISIBLE);
                             dniLogged=null;
                             break;
+                        case 7:
+                            Intent sendIntent = new Intent();
+                            sendIntent.setAction(Intent.ACTION_SEND);
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, "Te invito a descargar la aplicación buses Lep a través de https://play.google.com/store/apps/details?id=com.tecpro.buseslep ");
+                            sendIntent.setType("text/plain");
+                            startActivity(Intent.createChooser(sendIntent,"Compartir la app via "));
+                            break;
                     }
                 }
                 else{
@@ -241,6 +253,13 @@ public class SearchScheludes extends Activity  {
                             break;
                         case 1:
                             loadLastSearches();
+                            break;
+                        case 2:
+                            Intent sendIntent = new Intent();
+                            sendIntent.setAction(Intent.ACTION_SEND);
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, "Te invito a descargar la aplicación buses Lep a través de https://play.google.com/store/apps/details?id=com.tecpro.buseslep ");
+                            sendIntent.setType("text/plain");
+                            startActivity(Intent.createChooser(sendIntent,"Compartir la app via "));
                             break;
                     }
                 }

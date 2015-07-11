@@ -32,7 +32,8 @@ public class ImageAdapter extends BaseAdapter {
 
     public int color;
 
-    public Integer[][] seatsArr = { {None,0}, {None,0}, {None,0}, {None,0}, {None,0},
+    public Integer[][] seatsArr = {
+            {None,0}, {None,0}, {None,0}, {None,0}, {None,0},
             {None,0}, {None,0}, {None,0}, {None,0}, {None,0},
             {None,0}, {None,0}, {None,0}, {None,0}, {None,0},
             {None,0}, {None,0}, {None,0}, {None,0}, {None,0},
@@ -172,6 +173,17 @@ public class ImageAdapter extends BaseAdapter {
                 seatsArr[seatsArr.length - 1][1] = 0;
             }
         }
+
+
+
+        Integer[][] aux= seatsArr.clone();
+        int iAux=seatsArr.length-1;
+        for(int i=0; i<seatsArr.length; i++){
+            aux[iAux]=seatsArr[i];
+            iAux--;
+        }
+        seatsArr= aux.clone();
+
     }
 
     public int getCount() {
