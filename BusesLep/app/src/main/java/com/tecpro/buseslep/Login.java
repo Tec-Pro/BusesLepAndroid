@@ -201,7 +201,6 @@ public class Login extends Activity {
             }else{
                 Toast.makeText(getApplicationContext(), "Sesión iniciada", Toast.LENGTH_SHORT).show();
                 SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
-
                 for (Map<String,Object> m: result.second){
                     if (m.containsKey("Apellido")){
                         preferences.put("nombre", (String) m.get("Nombre"));

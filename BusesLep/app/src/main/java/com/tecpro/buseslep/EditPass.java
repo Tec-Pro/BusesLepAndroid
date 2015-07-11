@@ -130,7 +130,7 @@ public class EditPass extends Activity {
     public void editPass(View v){
         nuevapass = ((EditText) findViewById(R.id.txtPass)).getText().toString();
         String passConfirm =  ((EditText) findViewById(R.id.txtPassConfirm)).getText().toString();
-        if (nuevapass.isEmpty() || pass.isEmpty()){
+        if (nuevapass.isEmpty() || passConfirm.isEmpty()){
             Intent i= new Intent(this, Dialog.class);
             i.putExtra("message", "Por favor complete todos los campos");
             startActivity(i);
@@ -188,15 +188,15 @@ public class EditPass extends Activity {
             else{
                 for (Map<String,Object> m: result.second){
                     if (m.containsKey("ret")){
-                        if (((String) m.get("ret")).equals("-1")){
-                            Intent i= new Intent(EditPass.this, Dialog.class);
-                            i.putExtra("message", "No se ha podido editadar la contraseña");
-                            startActivity(i);
-                        } else {
+                        if (((String) m.get("ret")).equals("1")){
                             Toast.makeText(getApplicationContext(), "Contraseña editada", Toast.LENGTH_LONG).show();
                             SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
                             preferences.put("pass", nuevapass);
                             finish();
+                        } else {
+                            Intent i= new Intent(EditPass.this, Dialog.class);
+                            i.putExtra("message", "No se ha podido editadar la contraseña");
+                            startActivity(i);
                         }
                     }
                 }

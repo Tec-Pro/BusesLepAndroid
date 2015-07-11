@@ -185,11 +185,7 @@ public class EditProfile extends Activity {
             else{
                 for (Map<String,Object> m: result.second){
                     if (m.containsKey("ret")){
-                        if (((String) m.get("ret")).equals("-1")){
-                            Intent i= new Intent(EditProfile.this, Dialog.class);
-                            i.putExtra("message", "No se ha podido editar el perfil");
-                            startActivity(i);
-                        } else {
+                        if (((String) m.get("ret")).equals("1")){
                             Toast.makeText(getApplicationContext(), "Perfil editado", Toast.LENGTH_SHORT).show();
                             SecurePreferences preferences = new SecurePreferences(getApplication(), "my-preferences", "BusesLepCordoba", true);
                             preferences.put("apellido", ape);
@@ -197,6 +193,10 @@ public class EditProfile extends Activity {
                             preferences.put("email", email);
                             preferences.put("dni", dni);
                             finish();
+                        } else {
+                            Intent i= new Intent(EditProfile.this, Dialog.class);
+                            i.putExtra("message", "No se ha podido editar el perfil");
+                            startActivity(i);
                         }
                     }
                 }

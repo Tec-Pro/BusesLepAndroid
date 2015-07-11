@@ -177,13 +177,13 @@ public class RecoverPass extends Activity{
             else{
                 for (Map<String,Object> m: result.second){
                     if (m.containsKey("ret")){
-                        if (((String) m.get("ret")).equals("-1")){
+                        if (((String) m.get("ret")).equals("1")){
+                            Toast.makeText(getBaseContext(), "Se ha enviado a su email la contraseña", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
                             Intent i= new Intent(RecoverPass.this, Dialog.class);
                             i.putExtra("message", "La cuenta no existe o no esta activada");
                             startActivity(i);
-                        } else {
-                            Toast.makeText(getBaseContext(), "Se ha enviado a su email la contraseña", Toast.LENGTH_SHORT).show();
-                            finish();
                         }
                     }
                 }

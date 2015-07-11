@@ -399,7 +399,7 @@ public class WebServices  {
     public static ArrayList<Map<String,Object>> CallRecuperarContrasena(int dni, String email, Context context){
         String result;
         ArrayList<Map<String,Object>> cities = new ArrayList<>();
-        request = new SoapObject(NAMESPACE, RegistrarUsuario); //le digo que metodo voy a llamar
+        request = new SoapObject(NAMESPACE, RecuperarContrasena); //le digo que metodo voy a llamar
         request.addProperty("userWS","UsuarioLep"); //paso los parametros que pide el metodo
         request.addProperty("passWS","Lep1234");
         request.addProperty("Dni", dni);
@@ -425,6 +425,7 @@ public class WebServices  {
                 }
             }
             result= String.valueOf(envelope.getResponse());
+            System.out.println(result + "sssssssssssssssssss");
             if (result.equals("-1")){
                 HashMap<String,Object> map= new HashMap<>();
                 map.put("ret","-1");

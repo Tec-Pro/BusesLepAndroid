@@ -212,13 +212,13 @@ public class Singin extends Activity {
             }else{
                 for (Map<String,Object> m: result.second){
                     if (m.containsKey("ret")){
-                        if (((String) m.get("ret")).equals("-1")){
+                        if (((String) m.get("ret")).equals("1")){
+                            Toast.makeText(getApplicationContext(), "Cuenta registrada", Toast.LENGTH_LONG).show();
+                            loadLogin(String.valueOf(user), pass);
+                        } else {
                             Intent i = new Intent(Singin.this, Dialog.class);
                             i.putExtra("message", "Usted ya tiene una cuenta creada");
                             startActivity(i);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Cuenta registrada, sola por esta ves se le permitirá reservar sin activar la cuenta, la próxima vez que desee iniciar sesión active debe activar su cuenta con anterioridad desde su correo electrónico", Toast.LENGTH_LONG).show();
-                            loadLogin(String.valueOf(user), pass);
                         }
                     }
                 }
