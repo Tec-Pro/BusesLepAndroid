@@ -48,7 +48,7 @@ public class WebServices  {
     private static String PasarReservasaPrepago = "PasarReservasaPrepago";
     private static String EliminarButacaSeleccionada = "EliminarButacaSeleccionada";
 
-    private static String VALIDATION_URI = "http://webservices.buseslep.com.ar:8080/WebServices/WebServiceLep.dll/soap/ILepWebService";//tiene que ser la uri que muestra el xml, por donde bindea
+    private static String VALIDATION_URI = "https://webservices.buseslep.com.ar/WebServices/WebServiceLep.dll/soap/ILepWebService";//tiene que ser la uri que muestra el xml, por donde bindea
     private static SoapSerializationEnvelope envelope = null;
     private static SoapObject request = null;
     private static HttpTransportSE httpTransportSE = null;
@@ -730,7 +730,7 @@ public class WebServices  {
          */
         String namespaceMP ="urn:WSCobroMercadoPagoIntf-IWSCobroMercadoPago";
         String RealizarCobroMercadoPago = "RealizarCobroMercadoPago";
-        String validationUri = "http://webservices.buseslep.com.ar:8080/WebServices/WSCobroMercadoPago.dll/soap/ILepWebService";//tiene que ser la uri que muestra el xml, por donde bindea
+        String validationUri = "https://webservices.buseslep.com.ar/WebServices/WSCobroMercadoPago.dll/soap/ILepWebService";//tiene que ser la uri que muestra el xml, por donde bindea
 
         request = new SoapObject(namespaceMP, RealizarCobroMercadoPago); //le digo que metodo voy a llamar
         request.addProperty("UserCobro","54GFDG2224785486DG"); //paso los parametros que pide el metodo

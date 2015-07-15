@@ -51,7 +51,7 @@ public class PaymentUtils {
     public static final int ADVANCED_VAULT_REQUEST_CODE = 11;
 
     // * Merchant public key
-    public static final String MERCHANT_PUBLIC_KEY = "TEST-2e5d7d95-7cb8-48d3-8bd6-cfde1bc34254";
+    public static final String MERCHANT_PUBLIC_KEY = "APP_USR-3f8dc194-8894-4d07-bb6c-b4a786a19c6c";
     // DUMMY_MERCHANT_PUBLIC_KEY_AR = "444a9ef5-8a6b-429f-abdf-587639155d88";
 
 
@@ -85,7 +85,9 @@ public class PaymentUtils {
 
             PreferencesUsing preferences= new PreferencesUsing(activity);
             preferences.init();
-            PaymentTecPro paymentTecPro = new PaymentTecPro("boletos","boleto:"+idVenta,installments,preferences.getEmail(),paymentMethodId,token,amount);//pago a enviar al server
+            PayerTecProName payerName= new PayerTecProName(preferences.getNombre(),preferences.getApellido());
+            AditionalInfo additionalInfo= new AditionalInfo(payerName);
+            PaymentTecPro paymentTecPro = new PaymentTecPro("boletos","boleto:"+idVenta,installments,preferences.getEmail(),paymentMethodId,token,amount, additionalInfo);//pago a enviar al server
             String datosCompra = mGson.toJson(paymentTecPro); //lo convierto en json
             AsyncCallerCompraMP asyncCallerCompraMP= new AsyncCallerCompraMP(activity.getApplicationContext());
             asyncCallerCompraMP.execute(datosCompra);

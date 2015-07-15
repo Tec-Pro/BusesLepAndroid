@@ -14,8 +14,9 @@ public class PaymentTecPro {
     private String paymentMethodId;
     private String token;
     private BigDecimal transactionAmount;
+    private AditionalInfo additionalInfo;
 
-    public PaymentTecPro(String description, String externalReference, Integer installments, String email, String paymentMethodId, String token, BigDecimal transactionAmount) {
+    public PaymentTecPro(String description, String externalReference, Integer installments, String email, String paymentMethodId, String token, BigDecimal transactionAmount, AditionalInfo additionalInfo) {
         this.description = description;
         this.externalReference = externalReference;
         this.installments = installments;
@@ -23,5 +24,6 @@ public class PaymentTecPro {
         this.paymentMethodId = paymentMethodId;
         this.token = token;
         this.transactionAmount = transactionAmount;
+        this.additionalInfo= additionalInfo;
     }
 }

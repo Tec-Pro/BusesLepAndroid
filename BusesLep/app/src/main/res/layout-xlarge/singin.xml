@@ -42,7 +42,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Registo de Usuario"
+                android:text="Registro de Usuario"
                 android:id="@+id/textView2"
                 android:textColor="#ff000000"
                 android:textStyle="bold|normal|italic"
@@ -61,14 +61,16 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint=" Nombre"
-                android:id="@+id/txtName"/>
+                android:id="@+id/txtName"
+                android:capitalize="words" />
 
 
             <EditText
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint=" Apellido"
-                android:id="@+id/txtSurname" />
+                android:id="@+id/txtSurname"
+                android:capitalize="words" />
 
 
             <EditText

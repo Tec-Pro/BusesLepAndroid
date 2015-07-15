@@ -41,7 +41,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Edicion de perfil"
+                    android:text="Edición de perfil"
                     android:id="@+id/textView2"
                     android:textColor="#ff000000"
                     android:textStyle="bold|normal|italic"

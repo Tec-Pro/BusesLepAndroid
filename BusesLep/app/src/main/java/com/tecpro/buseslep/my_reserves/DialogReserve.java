@@ -227,8 +227,11 @@ public class DialogReserve extends Activity {
         i.putExtra("CodHorarioVuelta", Integer.valueOf(Cod_HorarioVuelta));
         i.putExtra("IDDestinoIda", Integer.valueOf(IdLocalidadDesdeIda));
         i.putExtra("IDDestinoVuelta", Integer.valueOf(IdLocalidadHastaIda));
-        i.putExtra("priceGo", priceGo);//precio ida
-        i.putExtra("priceGoRet", priceGoRet); //precio ida vuelta
+        i.putExtra("priceGo", String.valueOf(Float.valueOf(priceGo) / cantidad));//precio ida
+        if(priceGoRet!=null && !priceGoRet.isEmpty())
+            i.putExtra("priceGoRet", String.valueOf(Float.valueOf(priceGoRet)/cantidad)); //precio ida vuelta
+        else
+            i.putExtra("priceGoRet",priceGoRet); //precio ida vuelta
         i.putExtra("id_destino_ida", Id_DestinoIda);
         i.putExtra("id_destino_vuelta", Id_DestinoVuelta);
         i.putExtra("idVenta", idSell);
