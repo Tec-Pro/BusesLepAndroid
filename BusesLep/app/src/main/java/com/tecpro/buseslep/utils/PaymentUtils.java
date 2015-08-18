@@ -85,9 +85,7 @@ public class PaymentUtils {
 
             PreferencesUsing preferences= new PreferencesUsing(activity);
             preferences.init();
-            PayerTecProName payerName= new PayerTecProName(preferences.getNombre(),preferences.getApellido());
-            AditionalInfo additionalInfo= new AditionalInfo(payerName);
-            PaymentTecPro paymentTecPro = new PaymentTecPro("boletos","boleto:"+idVenta,installments,preferences.getEmail(),paymentMethodId,token,amount, additionalInfo);//pago a enviar al server
+            PaymentTecPro paymentTecPro = new PaymentTecPro("boletos","boleto:"+idVenta,installments,preferences.getEmail(),paymentMethodId,token,amount);//pago a enviar al server
             String datosCompra = mGson.toJson(paymentTecPro); //lo convierto en json
             AsyncCallerCompraMP asyncCallerCompraMP= new AsyncCallerCompraMP(activity.getApplicationContext());
             asyncCallerCompraMP.execute(datosCompra);
