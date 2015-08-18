@@ -69,6 +69,12 @@ public class DialogReserve extends Activity {
         window.setAttributes(lp);
         Bundle bundle= getIntent().getExtras();
         reserve=((ArrayList<Map<String,Object>>)bundle.get("reserve")).get(0);
+        if(!reserve.containsKey("Ida")){
+            if(reserve.containsKey("Vuelta")){
+                reserve.put("Ida",reserve.get("Vuelta"));
+                reserve.remove("Vuelta");
+            }
+        }
         preferences = new PreferencesUsing(this);
         preferences.init();
         lugarIda= (String)((Map)reserve.get("Ida")).get("lugar");
